@@ -36,6 +36,7 @@ import { useToggle } from "../ui/hooks/useToggle";
 import { Loader } from "../ui/components/Loader";
 import { executeGetRequest } from "../services/executeGetRequest";
 import { formErrors } from "../res/translations/en";
+import { executePostRequest } from "../services/executePostRequest";
 
 interface Props extends StackScreenProps<RootStackParams, "SigninScreen"> {}
 
@@ -97,8 +98,11 @@ export const SigninScreen = ({ navigation, route }: Props) => {
     setIsLoading(true);
     setErrors({});
 
+    //TODO: me gustaria meter toda esta logica en una clase/metodo
+    // de manera de tener una clase por transaccion e.g. LogInUserService
+    // por parametro se le puede mandar un callback para el isLoading
     try {
-      const respLogin = await executeGetRequest('GET');
+      const respLogin = await executePostRequest(form, '/post');
       navigation.navigate("HomeScreen");
 
     } catch (err: any) {
