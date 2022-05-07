@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import { RootStackParams } from "../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
-import { useTranslation } from "react-i18next";
 import { useState } from "react";
 
 import { useForm } from "../ui/hooks/useForm";
@@ -27,7 +26,6 @@ import { spacing } from "../res/spacing";
 import { Input } from "../ui/components/Input";
 import { MainButton } from "../ui/components/MainButton";
 import { Either, isLeft, isRight, left } from "fp-ts/lib/Either";
-import { TFunction } from "i18next";
 import {
   doValidate,
   ValidationComponents,
@@ -37,6 +35,7 @@ import { record } from "fp-ts/lib/Record";
 import { useToggle } from "../ui/hooks/useToggle";
 import { Loader } from "../ui/components/Loader";
 import { requestService } from "../services/RequestService";
+import { formErrors } from "../res/translations/en";
 
 interface Props extends StackScreenProps<RootStackParams, "SigninScreen"> {}
 
@@ -45,7 +44,6 @@ type LoginErrorData = { [K in keyof LoginServiceParameters]?: string };
 export const SigninScreen = ({ navigation, route }: Props) => {
   const params = route.params;
 
-  const { t } = useTranslation("formErrors");
   const [errors, setErrors] = useState<LoginErrorData>({});
   const [isLoading, setIsLoading] = useState(false);
 
@@ -84,7 +82,7 @@ export const SigninScreen = ({ navigation, route }: Props) => {
   };
 
   const tryLogin = async () => {
-    const validationResult = validate(form, t);
+    const validationResult = validate(form);
 
     if (!isRight(validationResult)) {
       console.log(validationResult);
@@ -102,6 +100,7 @@ export const SigninScreen = ({ navigation, route }: Props) => {
     try {
       const respLogin = await requestService();
       navigation.navigate("HomeScreen");
+
     } catch (err: any) {
       if (
         err.code == "auth/user-not-found" ||
@@ -206,8 +205,7 @@ export interface LoginServiceParameters {
 }
 
 function validate(
-  data: Partial<LoginServiceParameters>,
-  t: TFunction
+  data: Partial<LoginServiceParameters>
 ): Either<LoginErrorData, LoginServiceParameters> {
   const result = doValidate({
     email: Validations.isEmail,
@@ -230,15 +228,10 @@ function validate(
   return left(
     record.map(result.left, (error) => {
       if (error === undefined) {
-        return t("VALUE_MISSING");
+        return formErrors["VALUE_MISSING"];
       }
 
-      return (
-        t(error.type, {
-          defaultValue: null,
-          ...error,
-        }) ?? t("VALUE_MISSING")
-      );
+      return formErrors[error.type];
     })
   );
 }
