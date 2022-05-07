@@ -34,7 +34,7 @@ import {
 import { record } from "fp-ts/lib/Record";
 import { useToggle } from "../ui/hooks/useToggle";
 import { Loader } from "../ui/components/Loader";
-import { requestService } from "../services/RequestService";
+import { executeGetRequest } from "../services/executeGetRequest";
 import { formErrors } from "../res/translations/en";
 
 interface Props extends StackScreenProps<RootStackParams, "SigninScreen"> {}
@@ -98,7 +98,7 @@ export const SigninScreen = ({ navigation, route }: Props) => {
     setErrors({});
 
     try {
-      const respLogin = await requestService();
+      const respLogin = await executeGetRequest('GET');
       navigation.navigate("HomeScreen");
 
     } catch (err: any) {
