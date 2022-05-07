@@ -33,15 +33,3 @@ export const MyStack = () => {
     </Stack.Navigator>
   );
 };
-
-//let [fontStyles] = useFonts(fonts);
-// if (!fontStyles) {
-//  return <AppLoading />;
-// } else {
-//  return (
-//   <NavigationContainer>
-//     <StatusBar translucent backgroundColor={"transparent"} />
-//     <MyStack />
-//   </NavigationContainer>
-// );
-// }
