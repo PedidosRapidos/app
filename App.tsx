@@ -8,7 +8,7 @@ import { useFonts } from "expo-font";
 import { fonts } from "./src/res/typography";
 
 LogBox.ignoreLogs(["[react-native-gesture-handler]"]);
-LogBox.ignoreLogs(["[expo-app-loading]"]);
+LogBox.ignoreLogs(["expo-app-loading"]);
 
 const App = () => {
   let [fontStyles] = useFonts(fonts);

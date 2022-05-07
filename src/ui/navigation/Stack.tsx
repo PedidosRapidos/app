@@ -3,15 +3,17 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { WelcomeScreen } from "../../screens/WelcomeScreen";
 import { SigninScreen } from "../../screens/SigninScreen";
 import { SignupScreen } from "../../screens/SignupScreen";
+import { HomeScreen } from "../../screens/HomeScreen";
 
 export type RootStackParams = {
   WelcomeScreen: undefined;
   SigninScreen: { email: string; password: string };
   SignupScreen: undefined;
-  ComingSoon: undefined;
+  HomeScreen: undefined;
 };
 
 const Stack = createStackNavigator();
+
 export const MyStack = () => {
   return (
     <Stack.Navigator>
@@ -28,6 +30,15 @@ export const MyStack = () => {
       <Stack.Screen
         name={"SigninScreen"}
         component={SigninScreen}
+        options={{ headerShown: false }}
+        initialParams={{
+          email: "",
+          password: "",
+        }}
+      />
+      <Stack.Screen
+        name={"HomeScreen"}
+        component={HomeScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

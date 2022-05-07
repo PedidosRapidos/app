@@ -1,5 +1,251 @@
-import { Text } from "react-native";
+import React, { useEffect, useRef } from "react";
+import {
+  Text,
+  TouchableOpacity,
+  View,
+  StyleSheet,
+  Animated,
+} from "react-native";
+import { RootStackParams } from "../ui/navigation/Stack";
+import { StackScreenProps } from "@react-navigation/stack";
+import { useTranslation } from "react-i18next";
+import { useState } from "react";
 
-export const SigninScreen = () => {
-  return <Text>Signin</Text>;
+import { useForm } from "../ui/hooks/useForm";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { globalStyles } from "../res/globalStyles";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { BackButton } from "../ui/components/BackButton";
+import { Title } from "../ui/components/Title";
+import {
+  normalizeSize,
+  SemiBoldTypography,
+  Typography,
+} from "../res/typography";
+import { colors, colorWithOpacity } from "../res/colors";
+import { spacing } from "../res/spacing";
+import { Input } from "../ui/components/Input";
+import { MainButton } from "../ui/components/MainButton";
+import { Either, isLeft, isRight, left } from "fp-ts/lib/Either";
+import { TFunction } from "i18next";
+import {
+  doValidate,
+  ValidationComponents,
+  Validations,
+} from "../model/Validations";
+import { record } from "fp-ts/lib/Record";
+import { useToggle } from "../ui/hooks/useToggle";
+import { Loader } from "../ui/components/Loader";
+
+interface Props extends StackScreenProps<RootStackParams, "SigninScreen"> {}
+
+type LoginErrorData = { [K in keyof LoginServiceParameters]?: string };
+
+export const SigninScreen = ({ navigation, route }: Props) => {
+  const params = route.params;
+
+  const { t } = useTranslation("formErrors");
+  const [errors, setErrors] = useState<LoginErrorData>({});
+  const [isLoading, toggleIsLoading] = useToggle(false);
+
+  //const dispatch = useDispatch();
+
+  const { email, password, form, onChange } = useForm({
+    email: params.email,
+    password: params.password,
+  });
+
+  const shakeAnimation = useRef(new Animated.Value(0)).current;
+
+  const startShake = () => {
+    Animated.sequence([
+      Animated.timing(shakeAnimation, {
+        toValue: 10,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(shakeAnimation, {
+        toValue: -10,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(shakeAnimation, {
+        toValue: 10,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(shakeAnimation, {
+        toValue: 0,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
+
+  const tryLogin = async () => {
+    const validationResult = validate(form, t);
+
+    if (!isRight(validationResult)) {
+      console.log(validationResult);
+      setErrors(validationResult.left);
+      console.log(validationResult.left);
+
+      startShake();
+      return;
+    }
+
+    toggleIsLoading();
+    setErrors({});
+
+    try {
+      navigation.navigate("HomeScreen");
+      /*const respLogin = await dispatch(login(email, password));
+
+      toggleIsLoading();
+
+      if (!isRight(respLogin)) {
+        console.log(JSON.stringify(respLogin.left, null, 2));
+      } else {
+        navigation.navigate("ComingSoon");
+      }*/
+    } catch (err: any) {
+      toggleIsLoading();
+      if (
+        err.code == "auth/user-not-found" ||
+        err.code == "auth/wrong-password"
+      ) {
+        console.log("ERROR: Los datos son incorrectos");
+      } else {
+        console.log(err.message);
+      }
+    } finally {
+      toggleIsLoading();
+    }
+  };
+
+  return (
+    <SafeAreaView style={globalStyles.generalContainer}>
+      <KeyboardAwareScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+        style={globalStyles.innerContainer}
+      >
+        <BackButton />
+        <Title text="Welcome back!" />
+
+        <View style={{ marginTop: 8 }}>
+          <Typography style={[styles.section, styles.sectionMarginBotton]}>
+            Enter your data to sign in
+          </Typography>
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Input
+            onChangeText={(nextEmail) => onChange("email", nextEmail)}
+            value={email}
+            placeholder="Email"
+            error={{
+              isError: errors.email !== undefined,
+              errorMessage: errors.email!,
+            }}
+            keyboardType="email-address"
+          />
+
+          <Input
+            onChangeText={(nextPassword) => onChange("password", nextPassword)}
+            value={password}
+            placeholder="Password"
+            error={{
+              isError: errors.password !== undefined,
+              errorMessage: errors.password!,
+            }}
+            allowSecureTextEntry
+            marginBottom={(spacing.inputSpacing * 2) / 3}
+          />
+        </View>
+
+        <View
+          style={{
+            flex: 1,
+            paddingBottom: spacing.inputSpacing,
+            marginTop: spacing.inputSpacing,
+          }}
+        >
+          <Animated.View
+            style={{
+              transform: [{ translateX: shakeAnimation }],
+            }}
+          >
+            <MainButton
+              text="Sign in"
+              onPress={() => {
+                tryLogin();
+              }}
+              backgroundColor={colors.orange}
+            />
+          </Animated.View>
+        </View>
+      </KeyboardAwareScrollView>
+      <Loader visible={isLoading} />
+    </SafeAreaView>
+  );
 };
+
+const styles = StyleSheet.create({
+  section: {
+    color: colorWithOpacity(colors.white, 0.6),
+    fontSize: normalizeSize(17),
+  },
+  sectionMarginBotton: {
+    marginBottom: (spacing.inputSpacing * 2) / 3,
+  },
+  inputContainer: {
+    marginTop: (spacing.inputSpacing * 2) / 3,
+  },
+  forgotPasswordText: {
+    fontSize: normalizeSize(13),
+  },
+});
+
+export interface LoginServiceParameters {
+  email: string;
+  password: string;
+}
+
+function validate(
+  data: Partial<LoginServiceParameters>,
+  t: TFunction
+): Either<LoginErrorData, LoginServiceParameters> {
+  const result = doValidate({
+    email: Validations.isEmail,
+    password: ValidationComponents.combine(
+      ValidationComponents.notNull(),
+      ValidationComponents.minLength(1)
+    ),
+  })(data);
+
+  if (isLeft(result)) {
+    console.log(JSON.stringify(data, null, 2));
+    console.log(JSON.stringify(result.left, null, 2));
+  }
+
+  if (isRight(result)) {
+    //@ts-ignore
+    return result;
+  }
+
+  return left(
+    record.map(result.left, (error) => {
+      if (error === undefined) {
+        return t("VALUE_MISSING");
+      }
+
+      return (
+        t(error.type, {
+          defaultValue: null,
+          ...error,
+        }) ?? t("VALUE_MISSING")
+      );
+    })
+  );
+}

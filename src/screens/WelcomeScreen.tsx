@@ -70,7 +70,7 @@ export const WelcomeScreen = ({ navigation }: Props) => {
           <MainButton
             text="Continue with email"
             onPress={() => {
-              navigation.navigate("SignupScreen");
+              navigation.navigate("SigninScreen", { email: "", password: "" });
             }}
           />
 

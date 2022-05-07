@@ -35,8 +35,8 @@ export const fonts = {
   FiraSansELightItalic: FiraSans_200ExtraLight_Italic,
   FiraSansLight: FiraSans_300Light,
   FiraSans_300Light_Italic,
-  FiraSans_400Regular,
-  FiraSans_400Regular_Italic,
+  FireSansRegular: FiraSans_400Regular,
+  FireSansRegularItalic: FiraSans_400Regular_Italic,
   FiraSans_500Medium,
   FiraSans_500Medium_Italic,
   FiraSans_600SemiBold,
@@ -65,7 +65,7 @@ export const Typography = (props: WithAnimatedObject<TextProps>) => {
   return (
     <Animated.Text
       {...props}
-      style={[styles.text, props.style, { fontFamily: "FiraSans_400Regular" }]}
+      style={[styles.text, props.style, { fontFamily: "FireSansRegular" }]}
     />
   );
 };
@@ -84,6 +84,15 @@ export const BoldTypography = (props: WithAnimatedObject<TextProps>) => {
     <Animated.Text
       {...props}
       style={[styles.text, props.style, { fontFamily: "FiraSans_700Bold" }]}
+    />
+  );
+};
+
+export const SemiBoldTypography = (props: WithAnimatedObject<TextProps>) => {
+  return (
+    <Animated.Text
+      {...props}
+      style={[styles.text, props.style, { fontFamily: "FiraSans_600SemiBold" }]}
     />
   );
 };
