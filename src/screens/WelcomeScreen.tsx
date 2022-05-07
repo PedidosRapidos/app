@@ -9,12 +9,17 @@ import {
 } from "react-native";
 import { RootStackParams } from "../ui/navigation/Stack";
 import { globalStyles } from "../res/globalStyles";
-import { normalizeSize } from "../res/typography";
+import {
+  normalizeSize,
+  BoldTypography,
+  MediumTypography,
+} from "../res/typography";
 import { height, heightPercentageToDP, width } from "../res/responsive";
 import { StyleSheet, LogBox } from "react-native";
 import { colors, colorWithOpacity } from "../res/colors";
 import { ScrollView } from "react-native-gesture-handler";
 import { MainButton } from "../ui/components/MainButton";
+import { Typography } from "../res/typography";
 
 interface Props extends StackScreenProps<RootStackParams, "WelcomeScreen"> {}
 
@@ -42,7 +47,7 @@ export const WelcomeScreen = ({ navigation }: Props) => {
               marginTop: "13%",
             }}
           >
-            <Text
+            <MediumTypography
               style={{
                 fontSize: normalizeSize(22),
                 textAlign: "center",
@@ -53,7 +58,7 @@ export const WelcomeScreen = ({ navigation }: Props) => {
               }}
             >
               Fastest delivery in the world!
-            </Text>
+            </MediumTypography>
           </View>
         </ImageBackground>
         <View
@@ -75,32 +80,25 @@ export const WelcomeScreen = ({ navigation }: Props) => {
               flexWrap: "wrap",
               justifyContent: "center",
               alignItems: "center",
-              marginTop: 20,
+              marginTop: 25,
             }}
           >
-            <Text
+            <Typography
               style={{
                 fontSize: normalizeSize(13),
-                textAlign: "center",
-                marginTop: 20,
-                color: colors.white,
+                color: colorWithOpacity(colors.white, 0.6),
               }}
             >
               Don't have an account?{" "}
-            </Text>
+            </Typography>
             <TouchableOpacity>
-              <Text
+              <BoldTypography
                 onPress={() => {
                   navigation.navigate("SignupScreen");
                 }}
-                style={{
-                  fontSize: normalizeSize(13),
-                  fontWeight: "bold",
-                  color: colors.white,
-                }}
               >
                 Sign up
-              </Text>
+              </BoldTypography>
             </TouchableOpacity>
           </View>
         </View>

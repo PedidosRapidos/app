@@ -2,7 +2,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { WelcomeScreen } from "../../screens/WelcomeScreen";
 import { SigninScreen } from "../../screens/SigninScreen";
-import { SignupScreen } from "../../screens/SIgnupScreen";
+import { SignupScreen } from "../../screens/SignupScreen";
 
 export type RootStackParams = {
   WelcomeScreen: undefined;
@@ -33,3 +33,15 @@ export const MyStack = () => {
     </Stack.Navigator>
   );
 };
+
+//let [fontStyles] = useFonts(fonts);
+// if (!fontStyles) {
+//  return <AppLoading />;
+// } else {
+//  return (
+//   <NavigationContainer>
+//     <StatusBar translucent backgroundColor={"transparent"} />
+//     <MyStack />
+//   </NavigationContainer>
+// );
+// }
