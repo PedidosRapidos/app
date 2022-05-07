@@ -36,6 +36,7 @@ import {
 import { record } from "fp-ts/lib/Record";
 import { useToggle } from "../ui/hooks/useToggle";
 import { Loader } from "../ui/components/Loader";
+import { requestService } from "../services/RequestService";
 
 interface Props extends StackScreenProps<RootStackParams, "SigninScreen"> {}
 
@@ -46,7 +47,7 @@ export const SigninScreen = ({ navigation, route }: Props) => {
 
   const { t } = useTranslation("formErrors");
   const [errors, setErrors] = useState<LoginErrorData>({});
-  const [isLoading, toggleIsLoading] = useToggle(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   //const dispatch = useDispatch();
 
@@ -94,22 +95,14 @@ export const SigninScreen = ({ navigation, route }: Props) => {
       return;
     }
 
-    toggleIsLoading();
+
+    setIsLoading(true);
     setErrors({});
 
     try {
+      const respLogin = await requestService();
       navigation.navigate("HomeScreen");
-      /*const respLogin = await dispatch(login(email, password));
-
-      toggleIsLoading();
-
-      if (!isRight(respLogin)) {
-        console.log(JSON.stringify(respLogin.left, null, 2));
-      } else {
-        navigation.navigate("ComingSoon");
-      }*/
     } catch (err: any) {
-      toggleIsLoading();
       if (
         err.code == "auth/user-not-found" ||
         err.code == "auth/wrong-password"
@@ -119,7 +112,7 @@ export const SigninScreen = ({ navigation, route }: Props) => {
         console.log(err.message);
       }
     } finally {
-      toggleIsLoading();
+      setIsLoading(false);
     }
   };
 
