@@ -34,6 +34,7 @@ import {
 
 import { Loader } from "../ui/components/Loader";
 import { formErrors } from "../res/translations/en";
+import { executePostRequest } from "../services/executePostRequest";
 
 export interface SignUpServiceParameters {
   userName: string;
@@ -52,7 +53,7 @@ type SignupErrorData = { [K in keyof SignupFieldData]?: string };
 interface Props extends StackScreenProps<RootStackParams, "SignupScreen"> {}
 
 export const SignupScreen = ({ navigation }: Props) => {
-  const [isLoading, toggleIsLoading] = useToggle(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<SignupErrorData>({});
 
   const {
@@ -107,18 +108,13 @@ export const SignupScreen = ({ navigation }: Props) => {
       startShake();
       return;
     }
-    //toggleIsLoading();
+    setIsLoading(true);
     setErrors({});
 
     try {
-      //const respSignUp = await dispatch(signUp(form));
-
-      //if (!isRight(respSignUp)) {
-      // console.log(JSON.stringify(respSignUp.left, null, 2));
-      //} else {
-
+      const respLogin = await executePostRequest(form, 'post')
       navigation.navigate("SigninScreen", { email, password });
-      // }
+
     } catch (err: any) {
       if (
         err.code == "auth/user-not-found" ||
@@ -128,8 +124,9 @@ export const SignupScreen = ({ navigation }: Props) => {
       } else {
         console.log(err.message);
       }
+    } finally {
+      setIsLoading(false);
     }
-    //toggleIsLoading();
   };
 
   return (
