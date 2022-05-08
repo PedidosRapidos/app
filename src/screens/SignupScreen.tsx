@@ -125,6 +125,7 @@ export const SignupScreen = ({ navigation }: Props) => {
         console.log(err.message);
       }
     } finally {
+      //TODO: ver si salta update state on unmounted component
       setIsLoading(false);
     }
   };

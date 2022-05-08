@@ -9,6 +9,11 @@ export async function executeGetRequest (endpoint) {
         },
     })
 
+    if (!response.ok){
+        console.log("DEGUG: Respuesta de red OK pero HTTP no:" + json.detail);
+        throw {code:json.detail};
+    }
+
     const json = await response.json();
     return json;
 }

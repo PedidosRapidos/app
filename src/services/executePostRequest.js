@@ -11,6 +11,12 @@ export async function executePostRequest (form, endpoint) {
     })
 
     const json = await response.json();
+
+    if (!response.ok){
+        console.log("DEGUG: Respuesta de red OK pero HTTP no:" + json.detail);
+        throw {code:json.detail};
+    }
+
     return json;
 }
 
