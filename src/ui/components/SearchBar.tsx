@@ -4,6 +4,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { colors, colorWithOpacity } from "../../res/colors";
 import { spacing } from "../../res/spacing";
 import { normalizeSize } from "../../res/typography";
+import { Title } from "./Title";
 
 interface Props {
     onChangeText: (text: string) => void;
@@ -22,8 +23,7 @@ export const SearchBar = ({
     keyboardType = "default"
 } : Props) => {
     return (
-        
-        <View style={{marginBottom}}>
+        <View>
             <View style={styles.inputContainer}>
                 <View style={styles.searchIcon}>
                     <Icon name="eye-sharp" size={25} color={colorWithOpacity(colors.grayLight, 0.61)}>
@@ -40,22 +40,20 @@ export const SearchBar = ({
                 />
             </View>
         </View>
-    
     )
 }
 
 const styles = StyleSheet.create({
     inputContainer: {
-      backgroundColor: colorWithOpacity(colors.gray, 0.5),
-      borderWidth: 1,
-      //borderBottomColor: colorWithOpacity(colors.blue, 0.5),
+      backgroundColor: colorWithOpacity(colors.gray, 0.1),
+      //borderWidth: 1,
       flexDirection: "row",
       borderRadius: 5,
     },
     searchBar: {
         flex: 1,
         padding: 7,
-        paddingBottom: 11,
+        paddingBottom: 10,
         paddingLeft: 11,
         fontSize: normalizeSize(14),
         color: colorWithOpacity(colors.white, 1.0),
