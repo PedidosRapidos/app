@@ -23,7 +23,15 @@ export const HomeScreen = () => {
   const searchProducts = async () => {
     setIsLoading(true);
     try {
-      const respLogin = await executeGetRequest();
+      
+      /**parsea cada palabra clave y la convierto en una lista de queryParam */
+      const words = searchValue.split(' ');
+      let paramsString = "?q="
+      paramsString += words;
+      const endpoint = "products" + paramsString;
+
+      const respLogin = await executeGetRequest(endpoint);
+    
     } catch (err: any) {
       if (
         err.code == "auth/user-not-found" ||
@@ -31,6 +39,7 @@ export const HomeScreen = () => {
       ) {
         console.log("ERROR: Los datos son incorrectos");
       } else {
+        console.log("Error any")
         console.log(err.message);
       }
     } finally {
