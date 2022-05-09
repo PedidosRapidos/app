@@ -1,5 +1,5 @@
 export async function executeGetRequest (endpoint) {
-    const baseURL = 'http://httpbin.org/'    
+    const baseURL = 'https://pedidos-rapidos.herokuapp.com'    
 
     const url = baseURL + endpoint;
     console.log("Fetching: " + url)

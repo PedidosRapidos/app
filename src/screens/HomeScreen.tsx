@@ -30,13 +30,11 @@ export const HomeScreen = () => {
       const words = searchValue.split(' ');
       let paramsString = "?q="
       paramsString += words;
-      const endpoint = "products" + paramsString;
+      const endpoint = "/products" + paramsString;
 
-      setProducts([{name:"pancho", price:10, id:1}]);
-      console.log(products);
+      const resp = await executeGetRequest(endpoint);
+      setProducts(resp);
 
-      const respLogin = await executeGetRequest(endpoint);
-      
     } catch (err: any) {
       if (
         err.code == "auth/user-not-found" ||
@@ -77,6 +75,7 @@ export const HomeScreen = () => {
             />
       </SectionContainer>
       <SectionContainer>
+        {products.length != 0 ? <SectionTitle text="Results"/> : null}
         {products.map((item:any, index:any) => (
           <View key={item.id}>
             <ProductPreview
@@ -96,7 +95,7 @@ export const HomeScreen = () => {
           {/*TODO: Convertir en un componente CategorieIcon*/}
           <View>
             <Image source={require("../res/img/Hamb.png")} style={imageStyles.categorieIcon}></Image>
-            <Typography>Hamburguers</Typography>
+            <Typography>Hamburgers</Typography>
           </View>
         </View>
       </SectionContainer>
