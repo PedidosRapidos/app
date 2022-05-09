@@ -112,8 +112,10 @@ export const SignupScreen = ({ navigation }: Props) => {
     setErrors({});
 
     try {
-      const respLogin = await executePostRequest(form, 'post')
-      navigation.navigate("SigninScreen", { email, password });
+      const respSignUp = await executePostRequest(form, '/sellers/')
+      console.log(respSignUp);
+      // TODO: deberia pasar la respSingUp.email en vez de email?
+      navigation.navigate("SigninScreen", {email, password});
 
     } catch (err: any) {
       if (
