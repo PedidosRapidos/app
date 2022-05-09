@@ -102,7 +102,9 @@ export const SigninScreen = ({ navigation, route }: Props) => {
     // de manera de tener una clase por transaccion e.g. LogInUserService
     // por parametro se le puede mandar un callback para el isLoading
     try {
-      const respLogin = await executePostRequest(form, '/post');
+      // TODO: backend no valida usuarios en sigin asi que por el momento no envio nada
+      //const endpoint = "users"
+      //const respLogin = await executePostRequest(form, '/post');
       navigation.navigate("HomeScreen");
 
     } catch (err: any) {

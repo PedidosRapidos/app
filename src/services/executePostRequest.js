@@ -1,5 +1,5 @@
 export async function executePostRequest (form, endpoint) {
-    const baseURL = 'http://httpbin.org/'    
+    const baseURL = 'https://pedidos-rapidos.herokuapp.com'    
 
     const response = await fetch(baseURL + endpoint, {
         method: 'POST',
