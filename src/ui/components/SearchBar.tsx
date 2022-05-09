@@ -26,7 +26,7 @@ export const SearchBar = ({
         <View>
             <View style={styles.inputContainer}>
                 <View style={styles.searchIcon}>
-                    <Icon name="eye-sharp" size={25} color={colorWithOpacity(colors.grayLight, 0.61)}>
+                    <Icon name="search-outline" size={25} color={colorWithOpacity(colors.grayLight, 0.61)}>
 
                     </Icon>
                 </View>

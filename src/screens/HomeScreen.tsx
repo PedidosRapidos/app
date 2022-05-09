@@ -15,10 +15,12 @@ import { imageStyles } from "../res/imageStyles";
 import { MainButton } from "../ui/components/MainButton";
 import { executeGetRequest } from "../services/executeGetRequest";
 import { Loader } from "../ui/components/Loader";
+import { ProductPreview } from "../ui/components/ProductPreview";
 
 export const HomeScreen = () => {
   const [searchValue, setSearchValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [products, setProducts] = useState<any>([]);
 
   const searchProducts = async () => {
     setIsLoading(true);
@@ -30,8 +32,11 @@ export const HomeScreen = () => {
       paramsString += words;
       const endpoint = "products" + paramsString;
 
+      setProducts([{name:"pancho", price:10, id:1}]);
+      console.log(products);
+
       const respLogin = await executeGetRequest(endpoint);
-    
+      
     } catch (err: any) {
       if (
         err.code == "auth/user-not-found" ||
@@ -72,17 +77,26 @@ export const HomeScreen = () => {
             />
       </SectionContainer>
       <SectionContainer>
+        {products.map((item:any, index:any) => (
+          <View key={item.id}>
+            <ProductPreview
+              product={item}
+            />
+          </View>
+        ))}
+      </SectionContainer>
+      <SectionContainer>
         <SectionTitle text="Categories"/>
         <View style={styles.row}>
           {/*TODO: Convertir en un componente CategorieIcon*/}
           <View>
-            <Image source={require("../res/img/logo.png")} style={imageStyles.categorieIcon}></Image>
-            <Typography>Food</Typography>
+            <Image source={require("../res/img/Carne.png")} style={imageStyles.categorieIcon}></Image>
+            <Typography>Meat</Typography>
           </View>
           {/*TODO: Convertir en un componente CategorieIcon*/}
           <View>
-            <Image source={require("../res/img/logo.png")} style={imageStyles.categorieIcon}></Image>
-            <Typography>Products</Typography>
+            <Image source={require("../res/img/Hamb.png")} style={imageStyles.categorieIcon}></Image>
+            <Typography>Hamburguers</Typography>
           </View>
         </View>
       </SectionContainer>

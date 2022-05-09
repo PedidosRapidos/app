@@ -16,6 +16,6 @@ export const imageStyles = StyleSheet.create({
     opacity: 0.98,
     aspectRatio: 1,
     height: heightPercentageToDP("9%"),
-    marginBottom: "5%",
+    marginHorizontal: 5,
   },
 });
