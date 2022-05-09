@@ -75,7 +75,7 @@ export const HomeScreen = () => {
             />
       </SectionContainer>
       <SectionContainer>
-        {products.length != 0 ? <SectionTitle text="Results"/> : null}
+        {products.length != 0 ? <SectionTitle text="Results"/> : <Typography>No search results</Typography>}
         {products.map((item:any, index:any) => (
           <View key={item.id}>
             <ProductPreview
