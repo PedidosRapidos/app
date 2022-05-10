@@ -5,6 +5,7 @@ import { SigninScreen } from "../../screens/SigninScreen";
 import { SignupScreen } from "../../screens/SignupScreen";
 import { HomeScreen } from "../../screens/HomeScreen";
 import { AddShopScreen } from "../../screens/AddShopScreen";
+import { UploadProductScreen } from "../../screens/UploadProductScreen";
 
 export type RootStackParams = {
   WelcomeScreen: undefined;
@@ -51,7 +52,7 @@ export const MyStack = () => {
       />
       <Stack.Screen
         name={"UploadProductScreen"}
-        component={HomeScreen}
+        component={UploadProductScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
