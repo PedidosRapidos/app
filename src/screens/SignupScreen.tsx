@@ -115,7 +115,11 @@ export const SignupScreen = ({ navigation }: Props) => {
       const respSignUp = await executePostRequest(form, '/sellers/')
       console.log(respSignUp);
       // TODO: deberia pasar la respSingUp.email en vez de email?
-      navigation.navigate("SigninScreen", {email, password});
+      if (form.isOwner) {
+        navigation.navigate("AddShopScreen", {sellerId:respSignUp.id})
+      } else {
+        navigation.navigate("SigninScreen", {email, password});
+      }
 
     } catch (err: any) {
       if (

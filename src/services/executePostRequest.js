@@ -1,22 +1,23 @@
-export async function executePostRequest (form, endpoint) {
-    const baseURL = 'https://pedidos-rapidos.herokuapp.com'    
+import { API_URL } from "./config";
 
-    const response = await fetch(baseURL + endpoint, {
-        method: 'POST',
-        headers:{
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(form)
-    })
+export async function executePostRequest(form, endpoint) {
+  const baseURL = API_URL;
 
-    const json = await response.json();
+  const response = await fetch(baseURL + endpoint, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(form),
+  });
 
-    if (!response.ok){
-        console.log("DEGUG: Respuesta de red OK pero HTTP no: " + json.detail);
-        throw {code: json.detail};
-    }
+  const json = await response.json();
 
-    return json;
+  if (!response.ok) {
+    console.log("DEGUG: Respuesta de red OK pero HTTP no: " + json.detail);
+    throw { code: json.detail };
+  }
+
+  return json;
 }
-
