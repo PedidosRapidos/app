@@ -7,6 +7,7 @@ import { spacing } from "../../res/spacing";
 import { normalizeSize, Typography } from "../../res/typography";
 import { Title } from "./Title";
 
+import {API_URL} from "../../services/config"
 interface Props {
     product: any;
   }
@@ -15,7 +16,7 @@ interface Props {
 export const ProductPreview = ({product} : Props) => {
     return (
         <View>
-            <Image source={require("../../res/img/Carne.png")} style={imageStyles.categorieIcon}></Image>
+            <Image source={{uri:`${API_URL}/products/${product.id}/image`}} style={imageStyles.categorieIcon}></Image>
             <Typography>{product.name}</Typography>
             <Typography>{product.price}</Typography>
         </View>
