@@ -12,4 +12,5 @@ export const formErrors = {
   MISSING_CAPS: "Password should contain at least 1 upper letter",
   MISSING_NUMBERS: "Password should contain at least 1 number",
   WHITE_SPACES: "Password can't contain any white spaces",
+  NUMERIC_SEQUENCE: "This must be a sequence of numbers"
 };

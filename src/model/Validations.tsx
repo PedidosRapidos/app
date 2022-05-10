@@ -6,6 +6,8 @@ export const Validations = {
     combineChecks(notNull(), minLength(1)),
     matchesRegex(/.@./, { type: "NOT_EMAIL" } as const)
   ),
+  isCBU: combineChecks(combineChecks(notNull(), minLength(22)),
+                       matchesRegex(/[0-9]+/, { type: "NUMERIC_SEQUENCE" } as const)),
   isPassword: combineChecks(
     combineChecks(
       combineChecks(
@@ -109,13 +111,16 @@ function equalTo<T, E>(expected: T, error: E): Validator<T, T, E> {
   return (value) => (value === expected ? right(expected) : left(error));
 }
 
+function isEmpty(value:any) {
+  return ((typeof value === "string") && value.trim().length === 0);
+}
 function notNull<T>(): Validator<
   T | null | undefined,
   T,
   { type: "VALUE_MISSING" }
 > {
   return (value) =>
-    value !== null && value !== undefined
+    value !== null && value !== undefined && !isEmpty(value)
       ? right(value)
       : left({ type: "VALUE_MISSING" });
 }
