@@ -17,38 +17,42 @@ import { Input } from "../ui/components/Input";
 import { MainButton } from "../ui/components/MainButton";
 import { Shakeable } from "../ui/components/Shakeable";
 
-import { Either, isLeft, isRight, left } from "fp-ts/lib/Either";
+import { isRight } from "fp-ts/lib/Either";
 import {
-  doValidate,
+  createValidator,
   ValidationComponents,
   Validations,
 } from "../model/Validations";
-import { record } from "fp-ts/lib/Record";
 import { Loader } from "../ui/components/Loader";
-import { formErrors } from "../res/translations/en";
 import client from "../services/config";
 
 interface Props extends StackScreenProps<RootStackParams, "AddShopScreen"> {}
 
-type AddShopErrorData = { [K in keyof AddShopServiceParameters]?: string };
+export interface AddShopForm {
+  cbu: string;
+  address: string;
+}
+
+const validateShopForm = createValidator({
+  cbu: Validations.isCBU,
+  address: ValidationComponents.notNull(),
+});
 
 export const AddShopScreen = ({ navigation, route }: Props) => {
   const { sellerId } = route.params;
-  const [errors, setErrors] = useState<AddShopErrorData>({});
   const [isLoading, setIsLoading] = useState(false);
-
-  const { cbu, address, form, onChange } = useForm({
+  const [errors, setErrors] = useState<Partial<AddShopForm>>({});
+  const { cbu, address, form, onChange } = useForm<AddShopForm>({
     cbu: "",
     address: "",
   });
 
   const addShop = async () => {
-    const validationResult = validate(form);
+    const validationResult = validateShopForm(form);
     console.log("form/validationResult", form, validationResult);
     if (!isRight(validationResult)) {
-      console.log(validationResult);
       setErrors(validationResult.left);
-      console.log(validationResult.left);
+      console.log("validation errors", validationResult.left);
       return;
     }
 
@@ -95,10 +99,7 @@ export const AddShopScreen = ({ navigation, route }: Props) => {
             onChangeText={(v) => onChange("cbu", v)}
             value={cbu}
             placeholder="CBU"
-            error={{
-              isError: errors.cbu !== undefined,
-              errorMessage: errors.cbu!,
-            }}
+            error={errors.cbu}
             keyboardType="numeric"
           />
 
@@ -106,10 +107,7 @@ export const AddShopScreen = ({ navigation, route }: Props) => {
             onChangeText={(v) => onChange("address", v)}
             value={address}
             placeholder="Address"
-            error={{
-              isError: errors.address !== undefined,
-              errorMessage: errors.address!,
-            }}
+            error={errors.address}
           />
         </View>
 
@@ -149,37 +147,3 @@ const styles = StyleSheet.create({
     fontSize: normalizeSize(13),
   },
 });
-
-export interface AddShopServiceParameters {
-  cbu: string;
-  address: string;
-}
-
-function validate(
-  data: Partial<AddShopServiceParameters>
-): Either<AddShopErrorData, AddShopServiceParameters> {
-  const result = doValidate({
-    cbu: Validations.isCBU,
-    address: ValidationComponents.notNull(),
-  })(data);
-
-  if (isLeft(result)) {
-    console.log(JSON.stringify(data, null, 2));
-    console.log(JSON.stringify(result.left, null, 2));
-  }
-
-  if (isRight(result)) {
-    //@ts-ignore
-    return result;
-  }
-
-  return left(
-    record.map(result.left, (error) => {
-      if (error === undefined) {
-        return formErrors["VALUE_MISSING"];
-      }
-
-      return formErrors[error.type];
-    })
-  );
-}

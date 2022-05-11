@@ -1,4 +1,5 @@
 import { Either, left, right, either, isRight } from "fp-ts/lib/Either";
+import { formatError } from "../res/translations/en";
 
 export const Validations = {
   isUserName: combineChecks(notNull(), minLength(1)),
@@ -6,8 +7,10 @@ export const Validations = {
     combineChecks(notNull(), minLength(1)),
     matchesRegex(/.@./, { type: "NOT_EMAIL" } as const)
   ),
-  isCBU: combineChecks(combineChecks(notNull(), minLength(22)),
-                       matchesRegex(/[0-9]+/, { type: "NUMERIC_SEQUENCE" } as const)),
+  isCBU: combineChecks(
+    combineChecks(notNull(), minLength(22)),
+    matchesRegex(/[0-9]+/, { type: "NUMERIC_SEQUENCE" } as const)
+  ),
   isPassword: combineChecks(
     combineChecks(
       combineChecks(
@@ -67,6 +70,39 @@ export function doValidate<V, K extends keyof V>(validations: V) {
   };
 }
 
+type Schema = Record<string, Validator<any, any, any>>;
+
+type Form<V extends Schema> = {
+  [key in keyof V]: V[key] extends Validator<any, infer Out, any> ? Out : never;
+};
+
+type Errors<V extends Schema> = { [key in keyof V]?: string };
+
+export function createValidator<S extends Schema>(
+  schema: S | ((data: Partial<Form<S>>) => S)
+) {
+  return (values: Partial<Form<S>>): Either<Errors<S>, Form<S>> => {
+    const validations = typeof schema === "function" ? schema(values) : schema;
+    const errors: Errors<S> = {};
+    const result: Partial<Form<S>> = {};
+    for (const key in validations) {
+      const value = values[key];
+      const validator = validations[key];
+      const check = validator(value);
+      if (isRight(check)) {
+        result[key] = check.right;
+      } else {
+        errors[key] = formatError(check.left);
+      }
+    }
+    if (Object.entries(errors).length === 0) {
+      return right<Errors<S>, Form<S>>(result as Form<S>);
+    } else {
+      return left<Errors<S>, Form<S>>(errors);
+    }
+  };
+}
+
 function combineChecks<In, Mid, Out, E1, E2>(
   first: Validator<In, Mid, E1>,
   second: Validator<Mid, Out, E2>
@@ -86,6 +122,7 @@ interface LengthValidationFailure {
   length: number;
   min: number;
 }
+
 function minLength(
   min: number
 ): Validator<
@@ -111,8 +148,8 @@ function equalTo<T, E>(expected: T, error: E): Validator<T, T, E> {
   return (value) => (value === expected ? right(expected) : left(error));
 }
 
-function isEmpty(value:any) {
-  return ((typeof value === "string") && value.trim().length === 0);
+function isEmpty(value: any) {
+  return typeof value === "string" && value.trim().length === 0;
 }
 function notNull<T>(): Validator<
   T | null | undefined,
