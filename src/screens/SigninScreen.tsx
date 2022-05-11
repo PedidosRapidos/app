@@ -1,11 +1,5 @@
-import React, { useEffect, useRef } from "react";
-import {
-  Text,
-  TouchableOpacity,
-  View,
-  StyleSheet,
-  Animated,
-} from "react-native";
+import React from "react";
+import { View, StyleSheet } from "react-native";
 import { RootStackParams } from "../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 import { useState } from "react";
@@ -16,15 +10,12 @@ import { globalStyles } from "../res/globalStyles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { BackButton } from "../ui/components/BackButton";
 import { Title } from "../ui/components/Title";
-import {
-  normalizeSize,
-  SemiBoldTypography,
-  Typography,
-} from "../res/typography";
+import { normalizeSize, Typography } from "../res/typography";
 import { colors, colorWithOpacity } from "../res/colors";
 import { spacing } from "../res/spacing";
 import { Input } from "../ui/components/Input";
 import { MainButton } from "../ui/components/MainButton";
+import { Shakeable } from "../ui/components/Shakeable";
 import { Either, isLeft, isRight, left } from "fp-ts/lib/Either";
 import {
   doValidate,
@@ -32,11 +23,8 @@ import {
   Validations,
 } from "../model/Validations";
 import { record } from "fp-ts/lib/Record";
-import { useToggle } from "../ui/hooks/useToggle";
 import { Loader } from "../ui/components/Loader";
-import { executeGetRequest } from "../services/executeGetRequest";
 import { formErrors } from "../res/translations/en";
-import { executePostRequest } from "../services/executePostRequest";
 
 interface Props extends StackScreenProps<RootStackParams, "SigninScreen"> {}
 
@@ -55,33 +43,6 @@ export const SigninScreen = ({ navigation, route }: Props) => {
     password: params.password,
   });
 
-  const shakeAnimation = useRef(new Animated.Value(0)).current;
-
-  const startShake = () => {
-    Animated.sequence([
-      Animated.timing(shakeAnimation, {
-        toValue: 10,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimation, {
-        toValue: -10,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimation, {
-        toValue: 10,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimation, {
-        toValue: 0,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  };
-
   const tryLogin = async () => {
     const validationResult = validate(form);
 
@@ -89,11 +50,8 @@ export const SigninScreen = ({ navigation, route }: Props) => {
       console.log(validationResult);
       setErrors(validationResult.left);
       console.log(validationResult.left);
-
-      startShake();
       return;
     }
-
 
     setIsLoading(true);
     setErrors({});
@@ -106,7 +64,6 @@ export const SigninScreen = ({ navigation, route }: Props) => {
       //const endpoint = "users"
       //const respLogin = await executePostRequest(form, '/post');
       navigation.navigate("HomeScreen");
-
     } catch (err: any) {
       if (
         err.code == "auth/user-not-found" ||
@@ -169,19 +126,13 @@ export const SigninScreen = ({ navigation, route }: Props) => {
             marginTop: spacing.inputSpacing,
           }}
         >
-          <Animated.View
-            style={{
-              transform: [{ translateX: shakeAnimation }],
-            }}
-          >
+          <Shakeable shake={Object.entries(errors).length !== 0}>
             <MainButton
               text="Sign in"
-              onPress={() => {
-                tryLogin();
-              }}
+              onPress={tryLogin}
               backgroundColor={colors.orange}
             />
-          </Animated.View>
+          </Shakeable>
         </View>
       </KeyboardAwareScrollView>
       <Loader visible={isLoading} />

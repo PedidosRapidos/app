@@ -1,9 +1,5 @@
-import React, { useRef } from "react";
-import {
-  View,
-  StyleSheet,
-  Animated,
-} from "react-native";
+import React from "react";
+import { View, StyleSheet } from "react-native";
 import { RootStackParams } from "../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 import { useState } from "react";
@@ -14,14 +10,13 @@ import { globalStyles } from "../res/globalStyles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { BackButton } from "../ui/components/BackButton";
 import { Title } from "../ui/components/Title";
-import {
-  normalizeSize,
-  Typography,
-} from "../res/typography";
+import { normalizeSize, Typography } from "../res/typography";
 import { colors, colorWithOpacity } from "../res/colors";
 import { spacing } from "../res/spacing";
 import { Input } from "../ui/components/Input";
 import { MainButton } from "../ui/components/MainButton";
+import { Shakeable } from "../ui/components/Shakeable";
+
 import { Either, isLeft, isRight, left } from "fp-ts/lib/Either";
 import {
   doValidate,
@@ -37,8 +32,8 @@ interface Props extends StackScreenProps<RootStackParams, "AddShopScreen"> {}
 
 type AddShopErrorData = { [K in keyof AddShopServiceParameters]?: string };
 
-export const AddShopScreen = ({ navigation , route}: Props) => {
-  const {sellerId} = route.params
+export const AddShopScreen = ({ navigation, route }: Props) => {
+  const { sellerId } = route.params;
   const [errors, setErrors] = useState<AddShopErrorData>({});
   const [isLoading, setIsLoading] = useState(false);
 
@@ -47,44 +42,15 @@ export const AddShopScreen = ({ navigation , route}: Props) => {
     address: "",
   });
 
-  const shakeAnimation = useRef(new Animated.Value(0)).current;
-
-  const startShake = () => {
-    Animated.sequence([
-      Animated.timing(shakeAnimation, {
-        toValue: 10,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimation, {
-        toValue: -10,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimation, {
-        toValue: 10,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimation, {
-        toValue: 0,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  };
-
   const addShop = async () => {
     const validationResult = validate(form);
-    console.log("form/validationResult",form, validationResult);
+    console.log("form/validationResult", form, validationResult);
     if (!isRight(validationResult)) {
       console.log(validationResult);
       setErrors(validationResult.left);
       console.log(validationResult.left);
-      startShake();
       return;
     }
-
 
     setIsLoading(true);
     setErrors({});
@@ -93,10 +59,14 @@ export const AddShopScreen = ({ navigation , route}: Props) => {
     // de manera de tener una clase por transaccion e.g. LogInUserService
     // por parametro se le puede mandar un callback para el isLoading
     try {
-      const shop = await executePostRequest(form, `/sellers/${sellerId}/shops/`);
-      navigation.navigate("UploadProductScreen",
-                          {sellerId : sellerId as number,
-                           shopId: shop.id as number});
+      const shop = await executePostRequest(
+        form,
+        `/sellers/${sellerId}/shops/`
+      );
+      navigation.navigate("UploadProductScreen", {
+        sellerId: sellerId as number,
+        shopId: shop.id as number,
+      });
     } catch (err: any) {
       if (
         err.code == "auth/user-not-found" ||
@@ -157,17 +127,13 @@ export const AddShopScreen = ({ navigation , route}: Props) => {
             marginTop: spacing.inputSpacing,
           }}
         >
-          <Animated.View
-            style={{
-              transform: [{ translateX: shakeAnimation }],
-            }}
-          >
+          <Shakeable shake={Object.entries(errors).length !== 0}>
             <MainButton
               text="Add Shop"
               onPress={addShop}
               backgroundColor={colors.orange}
             />
-          </Animated.View>
+          </Shakeable>
         </View>
       </KeyboardAwareScrollView>
       <Loader visible={isLoading} />
@@ -201,7 +167,7 @@ function validate(
 ): Either<AddShopErrorData, AddShopServiceParameters> {
   const result = doValidate({
     cbu: Validations.isCBU,
-    address: ValidationComponents.notNull()
+    address: ValidationComponents.notNull(),
   })(data);
 
   if (isLeft(result)) {
