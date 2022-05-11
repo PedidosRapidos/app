@@ -1,16 +1,8 @@
-import React, { useRef, useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  useWindowDimensions,
-  Animated,
-} from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet } from "react-native";
 import { RootStackParams } from "../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ScrollView } from "react-native-gesture-handler";
 import { globalStyles } from "../res/globalStyles";
 import { BackButton } from "../ui/components/BackButton";
 import { colors, colorWithOpacity } from "../res/colors";
@@ -21,8 +13,8 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { useForm } from "../ui/hooks/useForm";
 import { spacing } from "../res/spacing";
 import Checkbox from "expo-checkbox";
-import { useToggle } from "../ui/hooks/useToggle";
 import { MainButton } from "../ui/components/MainButton";
+import { Shakeable } from "../ui/components/Shakeable";
 import { record } from "fp-ts/lib/Record";
 import { Either, isLeft, isRight, left } from "fp-ts/lib/Either";
 
@@ -74,53 +66,24 @@ export const SignupScreen = ({ navigation }: Props) => {
     isCLient: false,
   });
 
-  const shakeAnimation = useRef(new Animated.Value(0)).current;
-
-  const startShake = () => {
-    Animated.sequence([
-      Animated.timing(shakeAnimation, {
-        toValue: 10,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimation, {
-        toValue: -10,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimation, {
-        toValue: 10,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(shakeAnimation, {
-        toValue: 0,
-        duration: 100,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  };
-
   const trySingup = async () => {
     const validationResult = validate(form);
     if (!isRight(validationResult)) {
       setErrors(validationResult.left);
-      startShake();
       return;
     }
     setIsLoading(true);
     setErrors({});
 
     try {
-      const respSignUp = await executePostRequest(form, '/sellers/')
+      const respSignUp = await executePostRequest(form, "/sellers/");
       console.log(respSignUp);
       // TODO: deberia pasar la respSingUp.email en vez de email?
       if (form.isOwner) {
-        navigation.navigate("AddShopScreen", {sellerId:respSignUp.id})
+        navigation.navigate("AddShopScreen", { sellerId: respSignUp.id });
       } else {
-        navigation.navigate("SigninScreen", {email, password});
+        navigation.navigate("SigninScreen", { email, password });
       }
-
     } catch (err: any) {
       if (
         err.code == "auth/user-not-found" ||
@@ -243,19 +206,14 @@ export const SignupScreen = ({ navigation }: Props) => {
           </View>
         </View>
 
-        <Animated.View
-          style={{
-            marginBottom: (spacing.inputSpacing * 4) / 3,
-            transform: [{ translateX: shakeAnimation }],
-          }}
-        >
+        <Shakeable shake={Object.entries(errors).length !== 0}>
           <MainButton
             text="Sign up"
             onPress={trySingup}
             backgroundColor={colors.orange}
             disable={!isCLient && !isOwner}
           />
-        </Animated.View>
+        </Shakeable>
       </KeyboardAwareScrollView>
       <Loader visible={isLoading} />
     </SafeAreaView>
