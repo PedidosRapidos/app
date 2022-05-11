@@ -3,19 +3,19 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../res/globalStyles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Animated, Image, SectionList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { colors, colorWithOpacity } from "../res/colors";
 import { Typography, normalizeSize } from "../res/typography";
 import { spacing } from "../res/spacing";
 import { Input } from "../ui/components/Input";
 import { useForm } from "../ui/hooks/useForm";
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import { MainButton } from "../ui/components/MainButton";
-import { executePostRequest } from "../services/executePostRequest";
+import client from "../services/config";
 
-
-interface Props extends StackScreenProps<RootStackParams, "UploadProductScreen"> { }
+interface Props
+  extends StackScreenProps<RootStackParams, "UploadProductScreen"> {}
 
 const styles = StyleSheet.create({
   section: {
@@ -26,39 +26,35 @@ const styles = StyleSheet.create({
     marginBottom: (spacing.inputSpacing * 2) / 3,
   },
   button: {
-    backgroundColor: 'blue',
+    backgroundColor: "blue",
     padding: 20,
     borderRadius: 5,
-    width: '50%'
+    width: "50%",
   },
   buttonText: {
     color: colorWithOpacity(colors.white, 0.6),
     fontSize: normalizeSize(17),
-    textAlign: 'center',
+    textAlign: "center",
   },
   thumbnail: {
     width: 100,
     height: 100,
-    left: 60
-  }
+    left: 60,
+  },
 });
 
 export const UploadProductScreen = ({ navigation, route }: Props) => {
-  const {
-    productName,
-    description,
-    price,
-    onChange,
-  } = useForm({
+  const { productName, description, price, onChange } = useForm({
     productName: "",
     description: "",
-    price: ""
+    price: "",
   });
 
   const [selectedImage, setSelectedImage] = useState<any>(null);
 
   let openImagePickerAsync = async () => {
-    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    let permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
       alert("Permission to access camera roll is required!");
@@ -74,42 +70,47 @@ export const UploadProductScreen = ({ navigation, route }: Props) => {
     }
 
     setSelectedImage(pickerResult);
-
-  }
+  };
 
   const sendForm = async () => {
     let formData = new FormData();
 
-    formData.append('name', productName)
-    formData.append('description', description)
-    formData.append('price', price)
+    formData.append("name", productName);
+    formData.append("description", description);
+    formData.append("price", price);
 
     // Infer the type of the image
 
-    let filename = selectedImage.uri.split('/').pop();
-    
+    let filename = selectedImage.uri.split("/").pop();
+
     let match = /\.(\w+)$/.exec(filename);
     let type = match ? `image/${match[1]}` : `image`;
 
-    formData.append('image', {
+    formData.append("image", {
       uri: selectedImage.uri,
       name: filename,
-      type: type
+      type: type,
       //data: selectedImage.data
-    })
+    });
 
-    const {sellerId, shopId} = route.params
-
-    const url = `/sellers/${sellerId}/shops/${shopId}/products`
+    const { sellerId, shopId } = route.params;
 
     try {
-      const respUploadProduct = await executePostRequest(formData, url, true)
+      const respUploadProduct = await client.post(
+        `/sellers/${sellerId}/shops/${shopId}/products`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
       console.log(respUploadProduct);
       navigation.navigate("HomeScreen"); // Ver que se le pasa
     } catch (err: any) {
-      console.log(err)
+      console.error(
+        "Request failed, response:",
+        err.response?.data || err.message || err
+      );
     }
-
   };
 
   return (
@@ -125,12 +126,16 @@ export const UploadProductScreen = ({ navigation, route }: Props) => {
           </Typography>
         </View>
         <Input
-          onChangeText={(nextProductName) => onChange("productName", nextProductName)}
+          onChangeText={(nextProductName) =>
+            onChange("productName", nextProductName)
+          }
           value={productName}
           placeholder="Product Name"
         />
         <Input
-          onChangeText={(nextDescription) => onChange("description", nextDescription)}
+          onChangeText={(nextDescription) =>
+            onChange("description", nextDescription)
+          }
           value={description}
           placeholder="Description"
         />
@@ -139,29 +144,30 @@ export const UploadProductScreen = ({ navigation, route }: Props) => {
           value={price}
           placeholder="Price"
         />
-        
-        <View style={{flexDirection:'row', alignItems: 'center'}}>
-          <TouchableOpacity onPress={openImagePickerAsync} style={styles.button}>
+
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <TouchableOpacity
+            onPress={openImagePickerAsync}
+            style={styles.button}
+          >
             <Text style={styles.buttonText}>Pick image</Text>
           </TouchableOpacity>
-          {selectedImage && 
+          {selectedImage && (
             <Image
               source={{ uri: selectedImage.uri }}
               style={styles.thumbnail}
             />
-          }
+          )}
         </View>
 
-        <View style={{marginTop: 60}}>
+        <View style={{ marginTop: 60 }}>
           <MainButton
             text="Upload"
             onPress={() => sendForm()}
             backgroundColor={colors.orange}
           />
         </View>
-    
       </KeyboardAwareScrollView>
     </SafeAreaView>
-  )
-}
-
+  );
+};

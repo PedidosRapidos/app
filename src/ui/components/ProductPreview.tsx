@@ -1,26 +1,14 @@
 import React from "react";
-import {
-  KeyboardTypeOptions,
-  StyleSheet,
-  TextInput,
-  Image,
-  View,
-  Text,
-} from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
-import { colors, colorWithOpacity } from "../../res/colors";
+import { Image, View } from "react-native";
 import { imageStyles } from "../../res/imageStyles";
-import { spacing } from "../../res/spacing";
-import { normalizeSize, Typography } from "../../res/typography";
-import { Title } from "./Title";
-
+import { Typography } from "../../res/typography";
 import { API_URL } from "../../services/config";
+
 interface Props {
   product: any;
 }
 
 export const ProductPreview = ({ product }: Props) => {
-  console.log(`${API_URL}/products/${product.id}/image`);
   return (
     <View>
       <Image
@@ -34,5 +22,3 @@ export const ProductPreview = ({ product }: Props) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({});

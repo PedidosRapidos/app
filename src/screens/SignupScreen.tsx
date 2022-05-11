@@ -26,7 +26,7 @@ import {
 
 import { Loader } from "../ui/components/Loader";
 import { formErrors } from "../res/translations/en";
-import { executePostRequest } from "../services/executePostRequest";
+import client from "../services/config";
 
 export interface SignUpServiceParameters {
   userName: string;
@@ -76,23 +76,18 @@ export const SignupScreen = ({ navigation }: Props) => {
     setErrors({});
 
     try {
-      const respSignUp = await executePostRequest(form, "/sellers/");
+      const { data: respSignUp } = await client.post("/sellers/", form);
       console.log(respSignUp);
-      // TODO: deberia pasar la respSingUp.email en vez de email?
       if (form.isOwner) {
         navigation.navigate("AddShopScreen", { sellerId: respSignUp.id });
       } else {
         navigation.navigate("SigninScreen", { email, password });
       }
     } catch (err: any) {
-      if (
-        err.code == "auth/user-not-found" ||
-        err.code == "auth/wrong-password"
-      ) {
-        console.log("ERROR: Los datos son incorrectos");
-      } else {
-        console.log(err.message);
-      }
+      console.error(
+        "Request failed, response:",
+        err.response?.data || err.message || err
+      );
     } finally {
       //TODO: ver si salta update state on unmounted component
       setIsLoading(false);
