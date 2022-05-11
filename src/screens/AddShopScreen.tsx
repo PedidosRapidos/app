@@ -26,7 +26,7 @@ import {
 import { record } from "fp-ts/lib/Record";
 import { Loader } from "../ui/components/Loader";
 import { formErrors } from "../res/translations/en";
-import { executePostRequest } from "../services/executePostRequest";
+import client from "../services/config";
 
 interface Props extends StackScreenProps<RootStackParams, "AddShopScreen"> {}
 
@@ -55,27 +55,20 @@ export const AddShopScreen = ({ navigation, route }: Props) => {
     setIsLoading(true);
     setErrors({});
 
-    //TODO: me gustaria meter toda esta logica en una clase/metodo
-    // de manera de tener una clase por transaccion e.g. LogInUserService
-    // por parametro se le puede mandar un callback para el isLoading
     try {
-      const shop = await executePostRequest(
-        form,
-        `/sellers/${sellerId}/shops/`
+      const { data: shop } = await client.post(
+        `/sellers/${sellerId}/shops/`,
+        form
       );
       navigation.navigate("UploadProductScreen", {
         sellerId: sellerId as number,
         shopId: shop.id as number,
       });
     } catch (err: any) {
-      if (
-        err.code == "auth/user-not-found" ||
-        err.code == "auth/wrong-password"
-      ) {
-        console.log("ERROR: Los datos son incorrectos");
-      } else {
-        console.log(err.message);
-      }
+      console.error(
+        "Request failed, response:",
+        err.response?.data || err.message || err
+      );
     } finally {
       setIsLoading(false);
     }
