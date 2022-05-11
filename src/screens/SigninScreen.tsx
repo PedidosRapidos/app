@@ -16,17 +16,28 @@ import { spacing } from "../res/spacing";
 import { Input } from "../ui/components/Input";
 import { MainButton } from "../ui/components/MainButton";
 import { Shakeable } from "../ui/components/Shakeable";
-import { Either, isLeft, isRight, left } from "fp-ts/lib/Either";
+import { isRight } from "fp-ts/lib/Either";
 import {
-  doValidate,
+  createValidator,
   ValidationComponents,
   Validations,
 } from "../model/Validations";
-import { record } from "fp-ts/lib/Record";
 import { Loader } from "../ui/components/Loader";
-import { formErrors } from "../res/translations/en";
 
 interface Props extends StackScreenProps<RootStackParams, "SigninScreen"> {}
+
+export interface LoginServiceParameters {
+  email: string;
+  password: string;
+}
+
+const validateSignInForm = createValidator({
+  email: Validations.isEmail,
+  password: ValidationComponents.combine(
+    ValidationComponents.notNull(),
+    ValidationComponents.minLength(1)
+  ),
+});
 
 type LoginErrorData = { [K in keyof LoginServiceParameters]?: string };
 
@@ -44,12 +55,11 @@ export const SigninScreen = ({ navigation, route }: Props) => {
   });
 
   const tryLogin = async () => {
-    const validationResult = validate(form);
+    const validationResult = validateSignInForm(form);
 
     if (!isRight(validationResult)) {
-      console.log(validationResult);
+      console.log("validations errors: ", validationResult.left);
       setErrors(validationResult.left);
-      console.log(validationResult.left);
       return;
     }
 
@@ -99,10 +109,7 @@ export const SigninScreen = ({ navigation, route }: Props) => {
             onChangeText={(nextEmail) => onChange("email", nextEmail)}
             value={email}
             placeholder="Email"
-            error={{
-              isError: errors.email !== undefined,
-              errorMessage: errors.email!,
-            }}
+            error={errors.email}
             keyboardType="email-address"
           />
 
@@ -110,10 +117,7 @@ export const SigninScreen = ({ navigation, route }: Props) => {
             onChangeText={(nextPassword) => onChange("password", nextPassword)}
             value={password}
             placeholder="Password"
-            error={{
-              isError: errors.password !== undefined,
-              errorMessage: errors.password!,
-            }}
+            error={errors.password}
             allowSecureTextEntry
             marginBottom={(spacing.inputSpacing * 2) / 3}
           />
@@ -155,40 +159,3 @@ const styles = StyleSheet.create({
     fontSize: normalizeSize(13),
   },
 });
-
-export interface LoginServiceParameters {
-  email: string;
-  password: string;
-}
-
-function validate(
-  data: Partial<LoginServiceParameters>
-): Either<LoginErrorData, LoginServiceParameters> {
-  const result = doValidate({
-    email: Validations.isEmail,
-    password: ValidationComponents.combine(
-      ValidationComponents.notNull(),
-      ValidationComponents.minLength(1)
-    ),
-  })(data);
-
-  if (isLeft(result)) {
-    console.log(JSON.stringify(data, null, 2));
-    console.log(JSON.stringify(result.left, null, 2));
-  }
-
-  if (isRight(result)) {
-    //@ts-ignore
-    return result;
-  }
-
-  return left(
-    record.map(result.left, (error) => {
-      if (error === undefined) {
-        return formErrors["VALUE_MISSING"];
-      }
-
-      return formErrors[error.type];
-    })
-  );
-}

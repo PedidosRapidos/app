@@ -15,17 +15,15 @@ import { spacing } from "../res/spacing";
 import Checkbox from "expo-checkbox";
 import { MainButton } from "../ui/components/MainButton";
 import { Shakeable } from "../ui/components/Shakeable";
-import { record } from "fp-ts/lib/Record";
-import { Either, isLeft, isRight, left } from "fp-ts/lib/Either";
+import { isRight } from "fp-ts/lib/Either";
 
 import {
   Validations,
   ValidationComponents,
-  doValidate,
+  createValidator,
 } from "../model/Validations";
 
 import { Loader } from "../ui/components/Loader";
-import { formErrors } from "../res/translations/en";
 import client from "../services/config";
 
 export interface SignUpServiceParameters {
@@ -43,6 +41,30 @@ export interface SignupFieldData extends SignUpServiceParameters {
 type SignupErrorData = { [K in keyof SignupFieldData]?: string };
 
 interface Props extends StackScreenProps<RootStackParams, "SignupScreen"> {}
+
+const validateSignupForm = createValidator((data) => ({
+  userName: Validations.isUserName,
+  email: Validations.isEmail,
+  password: Validations.isPassword,
+  confirmPassword: ValidationComponents.combine(
+    ValidationComponents.equalTo(data.password, {
+      type: "PASSWORD_MISMATCH",
+    } as const),
+    ValidationComponents.notNull()
+  ),
+  isCLient: ValidationComponents.combine(
+    ValidationComponents.atLeastOneSelected(data.isOwner, {
+      type: "ROLE_MISSING",
+    } as const),
+    ValidationComponents.notNull()
+  ),
+  isOwner: ValidationComponents.combine(
+    ValidationComponents.atLeastOneSelected(data.isCLient, {
+      type: "ROLE_MISSING",
+    } as const),
+    ValidationComponents.notNull()
+  ),
+}));
 
 export const SignupScreen = ({ navigation }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -67,7 +89,7 @@ export const SignupScreen = ({ navigation }: Props) => {
   });
 
   const trySingup = async () => {
-    const validationResult = validate(form);
+    const validationResult = validateSignupForm(form);
     if (!isRight(validationResult)) {
       setErrors(validationResult.left);
       return;
@@ -113,20 +135,14 @@ export const SignupScreen = ({ navigation }: Props) => {
           onChangeText={(nextUserName) => onChange("userName", nextUserName)}
           value={userName}
           placeholder="User Name"
-          error={{
-            isError: errors.userName !== undefined,
-            errorMessage: errors.userName!,
-          }}
+          error={errors.userName}
         />
 
         <Input
           onChangeText={(nextEmail) => onChange("email", nextEmail)}
           value={email}
           placeholder="Email"
-          error={{
-            isError: errors.email !== undefined,
-            errorMessage: errors.email!,
-          }}
+          error={errors.email}
           keyboardType="email-address"
         />
 
@@ -134,10 +150,7 @@ export const SignupScreen = ({ navigation }: Props) => {
           onChangeText={(nextPassword) => onChange("password", nextPassword)}
           value={password}
           placeholder="Password"
-          error={{
-            isError: errors.password !== undefined,
-            errorMessage: errors.password!,
-          }}
+          error={errors.password}
           allowSecureTextEntry
         />
 
@@ -147,10 +160,7 @@ export const SignupScreen = ({ navigation }: Props) => {
           }
           value={confirmPassword}
           placeholder="Confirm password"
-          error={{
-            isError: errors.confirmPassword !== undefined,
-            errorMessage: errors.confirmPassword!,
-          }}
+          error={errors.confirmPassword}
           allowSecureTextEntry
         />
 
@@ -224,51 +234,3 @@ const styles = StyleSheet.create({
     marginBottom: (spacing.inputSpacing * 2) / 3,
   },
 });
-
-function validate(
-  data: Partial<SignupFieldData>
-): Either<SignupErrorData, SignUpServiceParameters> {
-  const result = doValidate({
-    userName: Validations.isUserName,
-    email: Validations.isEmail,
-    password: Validations.isPassword,
-    confirmPassword: ValidationComponents.combine(
-      ValidationComponents.equalTo(data.password, {
-        type: "PASSWORD_MISMATCH",
-      } as const),
-      ValidationComponents.notNull()
-    ),
-    isCLient: ValidationComponents.combine(
-      ValidationComponents.atLeastOneSelected(data.isOwner, {
-        type: "ROLE_MISSING",
-      } as const),
-      ValidationComponents.notNull()
-    ),
-    isOwner: ValidationComponents.combine(
-      ValidationComponents.atLeastOneSelected(data.isCLient, {
-        type: "ROLE_MISSING",
-      } as const),
-      ValidationComponents.notNull()
-    ),
-  })(data);
-
-  if (isLeft(result)) {
-    console.log(JSON.stringify(data, null, 2));
-    console.log(JSON.stringify(result.left, null, 2));
-  }
-
-  if (isRight(result)) {
-    //@ts-ignore
-    return result;
-  }
-
-  return left(
-    record.map(result.left, (error) => {
-      if (error === undefined) {
-        return formErrors["VALUE_MISSING"];
-      }
-
-      return formErrors[error.type];
-    })
-  );
-}

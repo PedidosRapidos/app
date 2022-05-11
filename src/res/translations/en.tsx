@@ -12,5 +12,18 @@ export const formErrors = {
   MISSING_CAPS: "Password should contain at least 1 upper letter",
   MISSING_NUMBERS: "Password should contain at least 1 number",
   WHITE_SPACES: "Password can't contain any white spaces",
-  NUMERIC_SEQUENCE: "This must be a sequence of numbers"
+  NUMERIC_SEQUENCE: "This must be a sequence of numbers",
+};
+
+export const formatError = (objOrCode: { type: string }) => {
+  try {
+    const { type: code, ...args } = objOrCode;
+    const template = formErrors[code as keyof typeof formErrors] || code;
+    return Object.entries(args).reduce((acc, [key, val]) => {
+      return acc.replace(`{{${key}}}`, val);
+    }, template);
+  } catch (e) {
+    console.error("formaError failed, args", objOrCode);
+    throw e;
+  }
 };

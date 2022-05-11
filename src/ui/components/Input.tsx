@@ -14,10 +14,7 @@ import { spacing } from "../../res/spacing";
 import { useToggle } from "../hooks/useToggle";
 import Icon from "react-native-vector-icons/Ionicons";
 
-type ErrorType = {
-  isError: boolean;
-  errorMessage: string;
-};
+type ErrorType = string | undefined | null | false;
 
 interface Props {
   onChangeText: (text: string) => void;
@@ -34,15 +31,15 @@ export const Input = ({
   value,
   allowSecureTextEntry = false,
   placeholder,
-  error = { isError: false, errorMessage: "" },
+  error = undefined,
   marginBottom = spacing.inputSpacing,
   keyboardType = "default",
 }: Props) => {
   const [showText, toggleShowText] = useToggle(!allowSecureTextEntry);
 
   return (
-    <View style={{ marginBottom: error.isError ? 0 : marginBottom }}>
-      <View style={error.isError ? styles.inputError : styles.inputContainer}>
+    <View style={{ marginBottom: error ? 0 : marginBottom }}>
+      <View style={error ? styles.inputError : styles.inputContainer}>
         <TextInput
           style={styles.inputGeneric}
           onChangeText={onChangeText}
@@ -81,10 +78,10 @@ export const Input = ({
           </TouchableOpacity>
         ) : null}
       </View>
-      {error.isError ? (
+      {error ? (
         <View style={{ height: marginBottom }}>
           <SemiBoldTypography style={styles.errorText}>
-            {error.errorMessage}
+            {error}
           </SemiBoldTypography>
         </View>
       ) : null}
