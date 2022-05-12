@@ -1,30 +1,30 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { RootStackParams } from "../ui/navigation/Stack";
+import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 import { useState } from "react";
 
-import { useForm } from "../ui/hooks/useForm";
+import { useForm } from "../../ui/hooks/useForm";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { globalStyles } from "../res/globalStyles";
+import { globalStyles } from "../../res/globalStyles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { BackButton } from "../ui/components/BackButton";
-import { Title } from "../ui/components/Title";
-import { normalizeSize, Typography } from "../res/typography";
-import { colors, colorWithOpacity } from "../res/colors";
-import { spacing } from "../res/spacing";
-import { Input } from "../ui/components/Input";
-import { MainButton } from "../ui/components/MainButton";
-import { Shakeable } from "../ui/components/Shakeable";
+import { BackButton } from "../../ui/components/BackButton";
+import { Title } from "../../ui/components/Title";
+import { normalizeSize, Typography } from "../../res/typography";
+import { colors, colorWithOpacity } from "../../res/colors";
+import { spacing } from "../../res/spacing";
+import { Input } from "../../ui/components/Input";
+import { MainButton } from "../../ui/components/MainButton";
+import { Shakeable } from "../../ui/components/Shakeable";
 
 import { isRight } from "fp-ts/lib/Either";
 import {
   createValidator,
   ValidationComponents,
   Validations,
-} from "../model/Validations";
-import { Loader } from "../ui/components/Loader";
-import client from "../services/config";
+} from "../../model/Validations";
+import { Loader } from "../../ui/components/Loader";
+import client from "../../services/config";
 
 interface Props extends StackScreenProps<RootStackParams, "AddShopScreen"> {}
 

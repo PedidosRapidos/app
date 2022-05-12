@@ -24,6 +24,8 @@ import {
 } from "../model/Validations";
 import { Loader } from "../ui/components/Loader";
 import client from "../services/config";
+import { useToggle } from "../ui/hooks/useToggle";
+import { ErrorPopUp } from "../ui/components/ErrorPopUp";
 
 interface Props extends StackScreenProps<RootStackParams, "SigninScreen"> {}
 
@@ -53,6 +55,12 @@ export const SigninScreen = ({ navigation, route }: Props) => {
     password: params.password,
   });
 
+  const [showError, toggleShowError] = useToggle(false);
+
+  const [respError, setRespError] = useState({
+    title: "",
+    message: "",
+  });
   const tryLogin = async () => {
     const validationResult = validateSignInForm(form);
 
@@ -66,18 +74,37 @@ export const SigninScreen = ({ navigation, route }: Props) => {
     setErrors({});
 
     try {
-      /*const { data: respSignUp } = await client.post("/sellers/", form);
-      console.log(respSignUp);
-      if (form.isOwner) {
-        navigation.navigate("AddShopScreen", { sellerId: respSignUp.id });
+      const { data: respSignIn } = await client.post("user/login/", form);
+      console.log(respSignIn);
+      if (respSignIn.isOwner) {
+        navigation.navigate("HomeScreenOwner", {
+          sellerId: respSignIn.id,
+          sellerName: respSignIn.name,
+        });
       } else {
-        navigation.navigate("SigninScreen", { email, password });
-      }*/
+        navigation.navigate("HomeScreenClient", {
+          clientId: respSignIn.id,
+          clientName: respSignIn.name,
+        });
+      }
     } catch (err: any) {
       console.error(
         "Request failed, response:",
         err.response?.data || err.message || err
       );
+      if (err.request) {
+        setRespError({
+          title: "Oh no! something went wrong",
+          message: err.message,
+        });
+        toggleShowError();
+      } else if (err.response) {
+        setRespError({
+          title: "Oh no there was an error! check your data",
+          message: err.message,
+        });
+        toggleShowError();
+      }
     } finally {
       setIsLoading(false);
     }
@@ -135,6 +162,13 @@ export const SigninScreen = ({ navigation, route }: Props) => {
         </View>
       </KeyboardAwareScrollView>
       <Loader visible={isLoading} />
+      <ErrorPopUp
+        visible={showError}
+        buttonOnPress={toggleShowError}
+        onRequestClose={toggleShowError}
+        title={respError.title}
+        description={respError.message}
+      />
     </SafeAreaView>
   );
 };

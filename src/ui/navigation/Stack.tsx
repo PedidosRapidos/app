@@ -3,17 +3,19 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { WelcomeScreen } from "../../screens/WelcomeScreen";
 import { SigninScreen } from "../../screens/SigninScreen";
 import { SignupScreen } from "../../screens/SignupScreen";
-import { HomeScreen } from "../../screens/HomeScreen";
-import { AddShopScreen } from "../../screens/AddShopScreen";
-import { UploadProductScreen } from "../../screens/UploadProductScreen";
+import { HomeScreenClient } from "../../screens/clientScreens/HomeScreenClient";
+import { AddShopScreen } from "../../screens/ownerScreens/AddShopScreen";
+import { UploadProductScreen } from "../../screens/ownerScreens/UploadProductScreen";
+import { HomeScreenOwner } from "../../screens/ownerScreens/HomeScreenOwner";
 
 export type RootStackParams = {
   WelcomeScreen: undefined;
   SigninScreen: { email: string; password: string };
   SignupScreen: undefined;
-  HomeScreen: undefined;
-  AddShopScreen: {sellerId: number};
-  UploadProductScreen: {sellerId:number, shopId:number};
+  HomeScreenOwner: { sellerId: number; sellerName: string };
+  HomeScreenClient: { clientId: number; clientName: string };
+  AddShopScreen: { sellerId: number };
+  UploadProductScreen: { sellerId: number; shopId: number };
 };
 
 const Stack = createStackNavigator();
@@ -41,8 +43,13 @@ export const MyStack = () => {
         }}
       />
       <Stack.Screen
-        name={"HomeScreen"}
-        component={HomeScreen}
+        name={"HomeScreenClient"}
+        component={HomeScreenClient}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={"HomeScreenOwner"}
+        component={HomeScreenOwner}
         options={{ headerShown: false }}
       />
       <Stack.Screen

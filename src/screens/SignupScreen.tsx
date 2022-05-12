@@ -54,14 +54,14 @@ const validateSignupForm = createValidator((data) => ({
     } as const),
     ValidationComponents.notNull()
   ),
-  isCLient: ValidationComponents.combine(
+  isClient: ValidationComponents.combine(
     ValidationComponents.atLeastOneSelected(data.isOwner, {
       type: "ROLE_MISSING",
     } as const),
     ValidationComponents.notNull()
   ),
   isOwner: ValidationComponents.combine(
-    ValidationComponents.atLeastOneSelected(data.isCLient, {
+    ValidationComponents.atLeastOneSelected(data.isClient, {
       type: "ROLE_MISSING",
     } as const),
     ValidationComponents.notNull()
@@ -84,7 +84,7 @@ export const SignupScreen = ({ navigation }: Props) => {
     password,
     confirmPassword,
     isOwner,
-    isCLient,
+    isClient,
     onChange,
     form,
   } = useForm({
@@ -93,7 +93,7 @@ export const SignupScreen = ({ navigation }: Props) => {
     password: "",
     confirmPassword: "",
     isOwner: false,
-    isCLient: false,
+    isClient: false,
   });
 
   const trySingup = async () => {
@@ -106,7 +106,7 @@ export const SignupScreen = ({ navigation }: Props) => {
     setErrors({});
 
     try {
-      const { data: respSignUp } = await client.post("/register/", form);
+      const { data: respSignUp } = await client.post("/user/register/", form);
       console.log(respSignUp);
       navigation.navigate("SigninScreen", { email, password });
     } catch (err: any) {
@@ -117,6 +117,12 @@ export const SignupScreen = ({ navigation }: Props) => {
       if (err.request) {
         setRespError({
           title: "Oh no! something went wrong",
+          message: err.message,
+        });
+        toggleShowError();
+      } else if (err.response) {
+        setRespError({
+          title: "Oh no there was an error! check your data",
           message: err.message,
         });
         toggleShowError();
@@ -210,9 +216,9 @@ export const SignupScreen = ({ navigation }: Props) => {
             }}
           >
             <Checkbox
-              value={isCLient}
-              onValueChange={(value) => onChange("isCLient", value)}
-              color={isCLient ? colors.orange : colors.gray}
+              value={isClient}
+              onValueChange={(value) => onChange("isClient", value)}
+              color={isClient ? colors.orange : colors.gray}
               style={{
                 marginRight: spacing.paddingHorizontal / 4,
                 marginTop: "4%",
@@ -227,7 +233,7 @@ export const SignupScreen = ({ navigation }: Props) => {
             text="Sign up"
             onPress={trySingup}
             backgroundColor={colors.orange}
-            disable={(!isCLient && !isOwner) || (isCLient && isOwner)}
+            disable={(!isClient && !isOwner) || (isClient && isOwner)}
           />
         </Shakeable>
       </KeyboardAwareScrollView>

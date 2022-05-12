@@ -1,18 +1,18 @@
-import { RootStackParams } from "../ui/navigation/Stack";
+import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { globalStyles } from "../res/globalStyles";
+import { globalStyles } from "../../res/globalStyles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { colors, colorWithOpacity } from "../res/colors";
-import { Typography, normalizeSize } from "../res/typography";
-import { spacing } from "../res/spacing";
-import { Input } from "../ui/components/Input";
-import { useForm } from "../ui/hooks/useForm";
+import { colors, colorWithOpacity } from "../../res/colors";
+import { Typography, normalizeSize } from "../../res/typography";
+import { spacing } from "../../res/spacing";
+import { Input } from "../../ui/components/Input";
+import { useForm } from "../../ui/hooks/useForm";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
-import { MainButton } from "../ui/components/MainButton";
-import client from "../services/config";
+import { MainButton } from "../../ui/components/MainButton";
+import client from "../../services/config";
 
 interface Props
   extends StackScreenProps<RootStackParams, "UploadProductScreen"> {}
@@ -104,7 +104,7 @@ export const UploadProductScreen = ({ navigation, route }: Props) => {
         }
       );
       console.log(respUploadProduct);
-      navigation.navigate("HomeScreen"); // Ver que se le pasa
+      //navigation.navigate("HomeScreen"); // Ver que se le pasa
     } catch (err: any) {
       console.error(
         "Request failed, response:",

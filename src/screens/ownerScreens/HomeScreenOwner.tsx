@@ -1,20 +1,20 @@
 import { StyleSheet, View, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { globalStyles } from "../res/globalStyles";
+import { globalStyles } from "../../res/globalStyles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { SearchBar } from "../ui/components/SearchBar";
+import { SearchBar } from "../../ui/components/SearchBar";
 import React, { useState } from "react";
-import { Typography } from "../res/typography";
-import { colors } from "../res/colors";
-import { SectionTitle } from "../ui/components/SectionTitle";
-import { SectionContainer } from "../ui/components/SectionContainer";
-import { imageStyles } from "../res/imageStyles";
-import { MainButton } from "../ui/components/MainButton";
-import client from "../services/config";
-import { Loader } from "../ui/components/Loader";
-import { ProductPreview } from "../ui/components/ProductPreview";
+import { Typography } from "../../res/typography";
+import { colors } from "../../res/colors";
+import { SectionTitle } from "../../ui/components/SectionTitle";
+import { SectionContainer } from "../../ui/components/SectionContainer";
+import { imageStyles } from "../../res/imageStyles";
+import { MainButton } from "../../ui/components/MainButton";
+import client from "../../services/config";
+import { Loader } from "../../ui/components/Loader";
+import { ProductPreview } from "../../ui/components/ProductPreview";
 
-export const HomeScreen = () => {
+export const HomeScreenOwner = () => {
   const [searchValue, setSearchValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [products, setProducts] = useState<any>([]);
@@ -69,27 +69,6 @@ export const HomeScreen = () => {
               <ProductPreview product={item} />
             </View>
           ))}
-        </SectionContainer>
-        <SectionContainer>
-          <SectionTitle text="Categories" />
-          <View style={styles.row}>
-            {/*TODO: Convertir en un componente CategorieIcon*/}
-            <View>
-              <Image
-                source={require("../res/img/Carne.png")}
-                style={imageStyles.categorieIcon}
-              ></Image>
-              <Typography>Meat</Typography>
-            </View>
-            {/*TODO: Convertir en un componente CategorieIcon*/}
-            <View>
-              <Image
-                source={require("../res/img/Hamb.png")}
-                style={imageStyles.categorieIcon}
-              ></Image>
-              <Typography>Hamburgers</Typography>
-            </View>
-          </View>
         </SectionContainer>
       </KeyboardAwareScrollView>
       <Loader visible={isLoading} />
