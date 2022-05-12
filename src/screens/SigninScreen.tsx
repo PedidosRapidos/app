@@ -79,12 +79,12 @@ export const SigninScreen = ({ navigation, route }: Props) => {
       if (respSignIn.isOwner) {
         navigation.navigate("HomeScreenOwner", {
           sellerId: respSignIn.id,
-          sellerName: respSignIn.name,
+          sellerName: respSignIn.username,
         });
       } else {
         navigation.navigate("HomeScreenClient", {
           clientId: respSignIn.id,
-          clientName: respSignIn.name,
+          clientName: respSignIn.username,
         });
       }
     } catch (err: any) {

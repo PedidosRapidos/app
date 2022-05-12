@@ -29,7 +29,7 @@ import { ErrorPopUp } from "../ui/components/ErrorPopUp";
 import { useToggle } from "../ui/hooks/useToggle";
 
 export interface SignUpServiceParameters {
-  userName: string;
+  username: string;
   email: string;
   isOwner: boolean;
   isCLient: boolean;
@@ -45,7 +45,7 @@ type SignupErrorData = { [K in keyof SignupFieldData]?: string };
 interface Props extends StackScreenProps<RootStackParams, "SignupScreen"> {}
 
 const validateSignupForm = createValidator((data) => ({
-  userName: Validations.isUserName,
+  username: Validations.isUserName,
   email: Validations.isEmail,
   password: Validations.isPassword,
   confirmPassword: ValidationComponents.combine(
@@ -79,7 +79,7 @@ export const SignupScreen = ({ navigation }: Props) => {
   });
 
   const {
-    userName,
+    username,
     email,
     password,
     confirmPassword,
@@ -88,7 +88,7 @@ export const SignupScreen = ({ navigation }: Props) => {
     onChange,
     form,
   } = useForm({
-    userName: "",
+    username: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -106,7 +106,7 @@ export const SignupScreen = ({ navigation }: Props) => {
     setErrors({});
 
     try {
-      const { data: respSignUp } = await client.post("/user/register/", form);
+      const { data: respSignUp } = await client.post("/user/register", form);
       console.log(respSignUp);
       navigation.navigate("SigninScreen", { email, password });
     } catch (err: any) {
@@ -149,10 +149,10 @@ export const SignupScreen = ({ navigation }: Props) => {
           </Typography>
         </View>
         <Input
-          onChangeText={(nextUserName) => onChange("userName", nextUserName)}
-          value={userName}
+          onChangeText={(nextUserName) => onChange("username", nextUserName)}
+          value={username}
           placeholder="User Name"
-          error={errors.userName}
+          error={errors.username}
         />
 
         <Input
