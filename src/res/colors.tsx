@@ -14,6 +14,9 @@ export const colors = {
   white: "#FFFFFF",
   lightBlue: "#E6F2FF",
   grayLight: "#ADADAD",
+  pureBlack: "#000000",
+  popupBackground: "#2F3141",
+  cream: "#FFEEEE",
 };
 
 export const colorWithOpacity = (

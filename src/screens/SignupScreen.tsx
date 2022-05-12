@@ -25,6 +25,8 @@ import {
 
 import { Loader } from "../ui/components/Loader";
 import client from "../services/config";
+import { ErrorPopUp } from "../ui/components/ErrorPopUp";
+import { useToggle } from "../ui/hooks/useToggle";
 
 export interface SignUpServiceParameters {
   userName: string;
@@ -69,6 +71,12 @@ const validateSignupForm = createValidator((data) => ({
 export const SignupScreen = ({ navigation }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<SignupErrorData>({});
+  const [showError, toggleShowError] = useToggle(false);
+
+  const [respError, setRespError] = useState({
+    title: "",
+    message: "",
+  });
 
   const {
     userName,
@@ -98,18 +106,21 @@ export const SignupScreen = ({ navigation }: Props) => {
     setErrors({});
 
     try {
-      const { data: respSignUp } = await client.post("/sellers/", form);
+      const { data: respSignUp } = await client.post("/register/", form);
       console.log(respSignUp);
-      if (form.isOwner) {
-        navigation.navigate("AddShopScreen", { sellerId: respSignUp.id });
-      } else {
-        navigation.navigate("SigninScreen", { email, password });
-      }
+      navigation.navigate("SigninScreen", { email, password });
     } catch (err: any) {
       console.error(
         "Request failed, response:",
         err.response?.data || err.message || err
       );
+      if (err.request) {
+        setRespError({
+          title: "Oh no! something went wrong",
+          message: err.message,
+        });
+        toggleShowError();
+      }
     } finally {
       //TODO: ver si salta update state on unmounted component
       setIsLoading(false);
@@ -216,11 +227,19 @@ export const SignupScreen = ({ navigation }: Props) => {
             text="Sign up"
             onPress={trySingup}
             backgroundColor={colors.orange}
-            disable={!isCLient && !isOwner}
+            disable={(!isCLient && !isOwner) || (isCLient && isOwner)}
           />
         </Shakeable>
       </KeyboardAwareScrollView>
       <Loader visible={isLoading} />
+
+      <ErrorPopUp
+        visible={showError}
+        buttonOnPress={toggleShowError}
+        onRequestClose={toggleShowError}
+        title={respError.title}
+        description={respError.message}
+      />
     </SafeAreaView>
   );
 };

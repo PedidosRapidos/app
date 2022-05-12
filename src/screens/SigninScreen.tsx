@@ -23,6 +23,7 @@ import {
   Validations,
 } from "../model/Validations";
 import { Loader } from "../ui/components/Loader";
+import client from "../services/config";
 
 interface Props extends StackScreenProps<RootStackParams, "SigninScreen"> {}
 
@@ -47,8 +48,6 @@ export const SigninScreen = ({ navigation, route }: Props) => {
   const [errors, setErrors] = useState<LoginErrorData>({});
   const [isLoading, setIsLoading] = useState(false);
 
-  //const dispatch = useDispatch();
-
   const { email, password, form, onChange } = useForm({
     email: params.email,
     password: params.password,
@@ -66,23 +65,19 @@ export const SigninScreen = ({ navigation, route }: Props) => {
     setIsLoading(true);
     setErrors({});
 
-    //TODO: me gustaria meter toda esta logica en una clase/metodo
-    // de manera de tener una clase por transaccion e.g. LogInUserService
-    // por parametro se le puede mandar un callback para el isLoading
     try {
-      // TODO: backend no valida usuarios en sigin asi que por el momento no envio nada
-      //const endpoint = "users"
-      //const respLogin = await executePostRequest(form, '/post');
-      navigation.navigate("HomeScreen");
-    } catch (err: any) {
-      if (
-        err.code == "auth/user-not-found" ||
-        err.code == "auth/wrong-password"
-      ) {
-        console.log("ERROR: Los datos son incorrectos");
+      /*const { data: respSignUp } = await client.post("/sellers/", form);
+      console.log(respSignUp);
+      if (form.isOwner) {
+        navigation.navigate("AddShopScreen", { sellerId: respSignUp.id });
       } else {
-        console.log(err.message);
-      }
+        navigation.navigate("SigninScreen", { email, password });
+      }*/
+    } catch (err: any) {
+      console.error(
+        "Request failed, response:",
+        err.response?.data || err.message || err
+      );
     } finally {
       setIsLoading(false);
     }
