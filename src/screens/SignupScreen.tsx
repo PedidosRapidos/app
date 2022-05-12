@@ -110,6 +110,10 @@ export const SignupScreen = ({ navigation }: Props) => {
       console.log(respSignUp);
       navigation.navigate("SigninScreen", { email, password });
     } catch (err: any) {
+      console.log("ACAAA");
+
+      console.log(err.response?.data.detail);
+
       console.error(
         "Request failed, response:",
         err.response?.data || err.message || err
@@ -117,16 +121,10 @@ export const SignupScreen = ({ navigation }: Props) => {
       if (err.request) {
         setRespError({
           title: "Oh no! something went wrong",
-          message: err.message,
+          message: err.response?.data.detail,
         });
         toggleShowError();
-      } else if (err.response) {
-        setRespError({
-          title: "Oh no there was an error! check your data",
-          message: err.message,
-        });
-        toggleShowError();
-      }
+      } //TODO: error custom para 500 y 404
     } finally {
       //TODO: ver si salta update state on unmounted component
       setIsLoading(false);

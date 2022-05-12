@@ -2,7 +2,6 @@ import { StyleSheet, View, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../../res/globalStyles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { SearchBar } from "../../ui/components/SearchBar";
 import React, { useState } from "react";
 import { Typography } from "../../res/typography";
 import { colors } from "../../res/colors";
@@ -13,13 +12,18 @@ import { MainButton } from "../../ui/components/MainButton";
 import client from "../../services/config";
 import { Loader } from "../../ui/components/Loader";
 import { ProductPreview } from "../../ui/components/ProductPreview";
+import { RootStackParams } from "../../ui/navigation/Stack";
+import { StackScreenProps } from "@react-navigation/stack";
 
-export const HomeScreenOwner = () => {
+interface Props extends StackScreenProps<RootStackParams, "HomeScreenOwner"> {}
+
+export const HomeScreenOwner = ({ navigation, route }: Props) => {
   const [searchValue, setSearchValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [products, setProducts] = useState<any>([]);
+  const params = route.params;
 
-  const searchProducts = async () => {
+  const getShops = async () => {
     setIsLoading(true);
     try {
       const { data: products } = await client.get(`/products`, {
@@ -44,16 +48,12 @@ export const HomeScreenOwner = () => {
         style={globalStyles.innerContainer}
       >
         <SectionContainer>
-          <SectionTitle text="Search" />
-          <SearchBar
-            onChangeText={(nextSearchValue) => setSearchValue(nextSearchValue)}
-            value={searchValue}
-            placeholder="Search product name"
-          />
           <MainButton
-            text="Search"
+            text="Add shop"
             onPress={() => {
-              searchProducts();
+              navigation.navigate("AddShopScreen", {
+                sellerId: params.sellerId,
+              });
             }}
             backgroundColor={colors.orange}
           />
@@ -62,7 +62,7 @@ export const HomeScreenOwner = () => {
           {products.length != 0 ? (
             <SectionTitle text="Results" />
           ) : (
-            <Typography>No search results</Typography>
+            <Typography>No shops results</Typography>
           )}
           {products.map((item: any, index: any) => (
             <View key={item.id}>

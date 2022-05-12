@@ -74,7 +74,7 @@ export const SigninScreen = ({ navigation, route }: Props) => {
     setErrors({});
 
     try {
-      const { data: respSignIn } = await client.post("user/login/", form);
+      const { data: respSignIn } = await client.post("user/login", form);
       console.log(respSignIn);
       if (respSignIn.isOwner) {
         navigation.navigate("HomeScreenOwner", {
