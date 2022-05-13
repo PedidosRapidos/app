@@ -7,7 +7,8 @@ import { HomeScreenClient } from "../../screens/clientScreens/HomeScreenClient";
 import { AddShopScreen } from "../../screens/ownerScreens/AddShopScreen";
 import { UploadProductScreen } from "../../screens/ownerScreens/UploadProductScreen";
 import { HomeScreenOwner } from "../../screens/ownerScreens/HomeScreenOwner";
-import { ProductDetailScreen } from '../../screens/ProductDetailScreen';
+import { ProductDetailScreen } from "../../screens/ProductDetailScreen";
+import { SessionProvider } from "../../contexts/SessionContext";
 
 export type RootStackParams = {
   WelcomeScreen: undefined;
@@ -17,58 +18,60 @@ export type RootStackParams = {
   HomeScreenClient: { clientId: number; clientName: string };
   AddShopScreen: { sellerId: number };
   UploadProductScreen: { sellerId: number; shopId: number };
-  ProductDetailScreen: {product: any};
+  ProductDetailScreen: { product: any };
 };
 
 const Stack = createStackNavigator();
 
 export const MyStack = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name={"WelcomeScreen"}
-        component={WelcomeScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name={"SignupScreen"}
-        component={SignupScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name={"SigninScreen"}
-        component={SigninScreen}
-        options={{ headerShown: false }}
-        initialParams={{
-          email: "",
-          password: "",
-        }}
-      />
-      <Stack.Screen
-        name={"HomeScreenClient"}
-        component={HomeScreenClient}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name={"HomeScreenOwner"}
-        component={HomeScreenOwner}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name={"AddShopScreen"}
-        component={AddShopScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name={"UploadProductScreen"}
-        component={UploadProductScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name={"ProductDetailScreen"}
-        component={ProductDetailScreen}
-        options={{ headerShown: false }}
-      />
-    </Stack.Navigator>
+    <SessionProvider>
+      <Stack.Navigator>
+        <Stack.Screen
+          name={"WelcomeScreen"}
+          component={WelcomeScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={"SignupScreen"}
+          component={SignupScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={"SigninScreen"}
+          component={SigninScreen}
+          options={{ headerShown: false }}
+          initialParams={{
+            email: "",
+            password: "",
+          }}
+        />
+        <Stack.Screen
+          name={"HomeScreenClient"}
+          component={HomeScreenClient}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={"HomeScreenOwner"}
+          component={HomeScreenOwner}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={"AddShopScreen"}
+          component={AddShopScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={"UploadProductScreen"}
+          component={UploadProductScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={"ProductDetailScreen"}
+          component={ProductDetailScreen}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    </SessionProvider>
   );
 };

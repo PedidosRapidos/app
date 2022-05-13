@@ -3,12 +3,14 @@ import { Image, View } from "react-native";
 import { imageStyles } from "../../res/imageStyles";
 import { Typography } from "../../res/typography";
 import { API_URL } from "../../services/config";
+import { SmallButton } from "./SmallButton";
 
 interface Props {
   product: any;
+  onPress: (e: any) => void;
 }
 
-export const ProductPreview = ({ product }: Props) => {
+export const ProductPreview = ({ product, onPress }: Props) => {
   return (
     <View>
       <Image
@@ -19,6 +21,7 @@ export const ProductPreview = ({ product }: Props) => {
       ></Image>
       <Typography>{product.name}</Typography>
       <Typography>{product.price}</Typography>
+      <SmallButton onPress={onPress} text="+" />
     </View>
   );
 };
