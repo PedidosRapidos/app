@@ -2,12 +2,12 @@ import React from "react";
 import { Image, View } from "react-native";
 import { colors } from "../../res/colors";
 import { imageStyles } from "../../res/imageStyles";
+import { widthPercentageToDP } from "../../res/responsive";
 import {
   Typography,
   SemiBoldTypography,
   normalizeSize,
 } from "../../res/typography";
-import { API_URL } from "../../services/config";
 import { SmallButton } from "./SmallButton";
 
 interface Props {
@@ -21,6 +21,7 @@ export const ShopPreview = ({ shop }: Props) => {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
+        marginBottom: "3%",
       }}
     >
       <View
@@ -33,16 +34,23 @@ export const ShopPreview = ({ shop }: Props) => {
           source={require("../../res/img/store.png")}
           style={{
             ...imageStyles.categorieIcon,
-            width: "35%",
+            width: "30%",
             marginRight: "5%",
           }}
         ></Image>
 
         <View style={{ flexDirection: "column" }}>
-          <SemiBoldTypography style={{ fontSize: normalizeSize(15) }}>
+          <SemiBoldTypography
+            style={{
+              fontSize: normalizeSize(15),
+              width: widthPercentageToDP("30"),
+            }}
+          >
             {shop.name}
           </SemiBoldTypography>
-          <Typography>{shop.address}</Typography>
+          <Typography style={{ width: widthPercentageToDP("30") }}>
+            {shop.address}
+          </Typography>
         </View>
       </View>
 

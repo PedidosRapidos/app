@@ -2,16 +2,14 @@ import { StyleSheet, View, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../../res/globalStyles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Typography } from "../../res/typography";
 import { colors } from "../../res/colors";
 import { SectionTitle } from "../../ui/components/SectionTitle";
 import { SectionContainer } from "../../ui/components/SectionContainer";
-import { imageStyles } from "../../res/imageStyles";
 import { MainButton } from "../../ui/components/MainButton";
 import client from "../../services/config";
 import { Loader } from "../../ui/components/Loader";
-import { ProductPreview } from "../../ui/components/ProductPreview";
 import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 import { ShopPreview } from "../../ui/components/ShopPreview";
@@ -45,6 +43,11 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
     }
   };
 
+  useEffect(() => {
+    // write your code here, it's like componentWillMount
+    getShops();
+  }, []);
+
   return (
     <SafeAreaView style={globalStyles.generalContainer}>
       <KeyboardAwareScrollView
@@ -52,18 +55,6 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
         showsVerticalScrollIndicator={false}
         style={globalStyles.innerContainer}
       >
-        <SectionContainer>
-          <MainButton
-            text="Add shop"
-            onPress={() => {
-              /*navigation.navigate("AddShopScreen", {
-                sellerId: params.sellerId,
-              });*/
-              getShops();
-            }}
-            backgroundColor={colors.orange}
-          />
-        </SectionContainer>
         <SectionContainer>
           {products.length != 0 ? (
             <SectionTitle text="My shops:" />
@@ -75,6 +66,17 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
               <ShopPreview shop={item} />
             </View>
           ))}
+        </SectionContainer>
+        <SectionContainer>
+          <MainButton
+            text="Add shop"
+            onPress={() => {
+              navigation.navigate("AddShopScreen", {
+                sellerId: params.sellerId,
+              });
+            }}
+            backgroundColor={colors.orange}
+          />
         </SectionContainer>
       </KeyboardAwareScrollView>
       <Loader visible={isLoading} />
