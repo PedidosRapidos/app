@@ -110,19 +110,30 @@ export const SignupScreen = ({ navigation }: Props) => {
       console.log(respSignUp);
       navigation.navigate("SigninScreen", { email, password });
     } catch (err: any) {
-      console.log("ACAAA");
-
-      console.log(err.response?.data.detail);
+      console.log(err);
 
       console.error(
         "Request failed, response:",
         err.response?.data || err.message || err
       );
       if (err.request) {
-        setRespError({
-          title: "Oh no! something went wrong",
-          message: err.response?.data.detail,
-        });
+        if (err.message.endsWith("500")) {
+          setRespError({
+            title: "Oh no! the server is dead",
+            message: "There was a server error try again later",
+          });
+        } else if (err.message.endsWith("404")) {
+          setRespError({
+            title: "Oh no! something went wrong",
+            message: "endpoint not found",
+          });
+        } else {
+          setRespError({
+            title: "Oh no! something went wrong",
+            message: err.message,
+          });
+        }
+
         toggleShowError();
       } //TODO: error custom para 500 y 404
     } finally {

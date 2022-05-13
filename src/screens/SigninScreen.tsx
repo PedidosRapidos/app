@@ -93,18 +93,24 @@ export const SigninScreen = ({ navigation, route }: Props) => {
         err.response?.data || err.message || err
       );
       if (err.request) {
-        setRespError({
-          title: "Oh no! something went wrong",
-          message: err.message,
-        });
-        toggleShowError();
-      } else if (err.response) {
-        setRespError({
-          title: "Oh no there was an error! check your data",
-          message: err.message,
-        });
-        toggleShowError();
+        if (err.message.endsWith("500")) {
+          setRespError({
+            title: "Oh no! the server is dead",
+            message: "There was a server error try again later",
+          });
+        } else if (err.message.endsWith("404")) {
+          setRespError({
+            title: "Oh no! is your data right?",
+            message: "Please check your email and password",
+          });
+        } else {
+          setRespError({
+            title: "Oh no! something went wrong",
+            message: err.message,
+          });
+        }
       }
+      toggleShowError();
     } finally {
       setIsLoading(false);
     }
