@@ -29,11 +29,13 @@ import client from "../../services/config";
 interface Props extends StackScreenProps<RootStackParams, "AddShopScreen"> {}
 
 export interface AddShopForm {
+  name: string;
   cbu: string;
   address: string;
 }
 
 const validateShopForm = createValidator({
+  name: ValidationComponents.notNull(),
   cbu: Validations.isCBU,
   address: ValidationComponents.notNull(),
 });
@@ -42,7 +44,8 @@ export const AddShopScreen = ({ navigation, route }: Props) => {
   const { sellerId } = route.params;
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Partial<AddShopForm>>({});
-  const { cbu, address, form, onChange } = useForm<AddShopForm>({
+  const { name, cbu, address, form, onChange } = useForm<AddShopForm>({
+    name: "",
     cbu: "",
     address: "",
   });
@@ -95,6 +98,13 @@ export const AddShopScreen = ({ navigation, route }: Props) => {
         </View>
 
         <View style={styles.inputContainer}>
+          <Input
+            onChangeText={(v) => onChange("name", v)}
+            value={name}
+            placeholder="Name"
+            error={errors.name}
+          />
+
           <Input
             onChangeText={(v) => onChange("cbu", v)}
             value={cbu}

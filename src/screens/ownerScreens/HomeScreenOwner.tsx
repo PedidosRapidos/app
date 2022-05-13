@@ -14,6 +14,7 @@ import { Loader } from "../../ui/components/Loader";
 import { ProductPreview } from "../../ui/components/ProductPreview";
 import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
+import { ShopPreview } from "../../ui/components/ShopPreview";
 
 interface Props extends StackScreenProps<RootStackParams, "HomeScreenOwner"> {}
 
@@ -22,13 +23,17 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [products, setProducts] = useState<any>([]);
   const params = route.params;
+  const [page, setPage] = useState(1);
 
   const getShops = async () => {
     setIsLoading(true);
     try {
-      const { data: products } = await client.get(`/products`, {
-        params: { q: searchValue.split(" ") },
-      });
+      const { data: products } = await client.get(
+        `/sellers/${params.sellerId}/shops/?page=${page}`,
+        {
+          params: { q: searchValue.split(" ") },
+        }
+      );
       setProducts(products);
     } catch (err: any) {
       console.error(
@@ -51,22 +56,23 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
           <MainButton
             text="Add shop"
             onPress={() => {
-              navigation.navigate("AddShopScreen", {
+              /*navigation.navigate("AddShopScreen", {
                 sellerId: params.sellerId,
-              });
+              });*/
+              getShops();
             }}
             backgroundColor={colors.orange}
           />
         </SectionContainer>
         <SectionContainer>
           {products.length != 0 ? (
-            <SectionTitle text="Results" />
+            <SectionTitle text="My shops:" />
           ) : (
             <Typography>No shops results</Typography>
           )}
           {products.map((item: any, index: any) => (
             <View key={item.id}>
-              <ProductPreview product={item} />
+              <ShopPreview shop={item} />
             </View>
           ))}
         </SectionContainer>
