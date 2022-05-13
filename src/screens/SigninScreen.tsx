@@ -74,7 +74,7 @@ export const SigninScreen = ({ navigation, route }: Props) => {
     setErrors({});
 
     try {
-      const { data: respSignIn } = await client.post("user/login", form);
+      const { data: respSignIn } = await client.post("users/login", form);
       console.log(respSignIn);
       if (respSignIn.isOwner) {
         navigation.navigate("HomeScreenOwner", {
@@ -98,7 +98,7 @@ export const SigninScreen = ({ navigation, route }: Props) => {
             title: "Oh no! the server is dead",
             message: "There was a server error try again later",
           });
-        } else if (err.message.endsWith("404")) {
+        } else if (err.message.endsWith("400")) {
           setRespError({
             title: "Oh no! is your data right?",
             message: "Please check your email and password",
@@ -106,7 +106,7 @@ export const SigninScreen = ({ navigation, route }: Props) => {
         } else {
           setRespError({
             title: "Oh no! something went wrong",
-            message: err.message,
+            message: err.response?.data.detail,
           });
         }
       }

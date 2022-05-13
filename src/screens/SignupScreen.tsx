@@ -106,7 +106,7 @@ export const SignupScreen = ({ navigation }: Props) => {
     setErrors({});
 
     try {
-      const { data: respSignUp } = await client.post("/user/register", form);
+      const { data: respSignUp } = await client.post("/users/register", form);
       console.log(respSignUp);
       navigation.navigate("SigninScreen", { email, password });
     } catch (err: any) {
@@ -130,7 +130,7 @@ export const SignupScreen = ({ navigation }: Props) => {
         } else {
           setRespError({
             title: "Oh no! something went wrong",
-            message: err.message,
+            message: err.response?.data.detail,
           });
         }
 
