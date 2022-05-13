@@ -7,6 +7,7 @@ import { HomeScreenClient } from "../../screens/clientScreens/HomeScreenClient";
 import { AddShopScreen } from "../../screens/ownerScreens/AddShopScreen";
 import { UploadProductScreen } from "../../screens/ownerScreens/UploadProductScreen";
 import { HomeScreenOwner } from "../../screens/ownerScreens/HomeScreenOwner";
+import { ProductDetailScreen } from '../../screens/ProductDetailScreen';
 
 export type RootStackParams = {
   WelcomeScreen: undefined;
@@ -16,6 +17,7 @@ export type RootStackParams = {
   HomeScreenClient: { clientId: number; clientName: string };
   AddShopScreen: { sellerId: number };
   UploadProductScreen: { sellerId: number; shopId: number };
+  ProductDetailScreen: {product: any};
 };
 
 const Stack = createStackNavigator();
@@ -60,6 +62,11 @@ export const MyStack = () => {
       <Stack.Screen
         name={"UploadProductScreen"}
         component={UploadProductScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={"ProductDetailScreen"}
+        component={ProductDetailScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

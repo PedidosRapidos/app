@@ -1,4 +1,4 @@
-import { StyleSheet, View, Image } from "react-native";
+import { StyleSheet, View, Image, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../../res/globalStyles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -13,11 +13,21 @@ import { MainButton } from "../../ui/components/MainButton";
 import client from "../../services/config";
 import { Loader } from "../../ui/components/Loader";
 import { ProductPreview } from "../../ui/components/ProductPreview";
+import { RootStackParams } from "../../ui/navigation/Stack";
+import { StackScreenProps } from "@react-navigation/stack";
 
-export const HomeScreenClient = () => {
+interface Props extends StackScreenProps<RootStackParams, "HomeScreenClient"> {}
+
+export const HomeScreenClient = ({ navigation, route }: Props) => {
   const [searchValue, setSearchValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [products, setProducts] = useState<any>([]);
+
+  const displayProductDetails = (item) => {
+    navigation.navigate("ProductDetailScreen", {
+      product: item
+    });
+  };  
 
   const searchProducts = async () => {
     setIsLoading(true);
@@ -65,9 +75,11 @@ export const HomeScreenClient = () => {
             <Typography>No search results</Typography>
           )}
           {products.map((item: any, index: any) => (
-            <View key={item.id}>
-              <ProductPreview product={item} />
-            </View>
+            <TouchableOpacity key={item.id} onPress={() => {displayProductDetails(item)}}>
+              <View>
+                <ProductPreview product={item} />
+              </View>
+            </TouchableOpacity>
           ))}
         </SectionContainer>
       </KeyboardAwareScrollView>
