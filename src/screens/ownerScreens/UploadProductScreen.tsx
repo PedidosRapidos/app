@@ -15,7 +15,7 @@ import { MainButton } from "../../ui/components/MainButton";
 import client from "../../services/config";
 
 interface Props
-  extends StackScreenProps<RootStackParams, "UploadProductScreen"> {}
+  extends StackScreenProps<RootStackParams, "UploadProductScreen"> { }
 
 const styles = StyleSheet.create({
   section: {
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     marginBottom: (spacing.inputSpacing * 2) / 3,
   },
   button: {
-    backgroundColor: "blue",
+    backgroundColor: colors.red,
     padding: 20,
     borderRadius: 5,
     width: "50%",
@@ -38,8 +38,7 @@ const styles = StyleSheet.create({
   },
   thumbnail: {
     width: 100,
-    height: 100,
-    left: 60,
+    height: 100
   },
 });
 
@@ -145,13 +144,17 @@ export const UploadProductScreen = ({ navigation, route }: Props) => {
           placeholder="Price"
         />
 
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <TouchableOpacity
-            onPress={openImagePickerAsync}
-            style={styles.button}
-          >
-            <Text style={styles.buttonText}>Pick image</Text>
-          </TouchableOpacity>
+        <View style={{
+          flexDirection: "row",
+          alignItems: "center"
+        }}>
+          <View style={{width:200, marginRight:30}}>
+            <MainButton
+              text="Pick image"
+              onPress={openImagePickerAsync}
+              backgroundColor={colors.darkBlue}
+            />
+          </View>
           {selectedImage && (
             <Image
               source={{ uri: selectedImage.uri }}
