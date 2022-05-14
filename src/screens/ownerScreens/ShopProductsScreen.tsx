@@ -30,7 +30,7 @@ export const ShopProductsScreen = ({ navigation, route }: Props) => {
     setIsLoading(true);
     try {
       const { data: products } = await client.get(
-        `/shops/${params.shopId}/products`
+        `/shops/${params.shop.id}/products`
       );
       // TODO: backend devuelve un json con un atributo products que es una lista en vez de una lista directamente
       setProducts(products.products);
@@ -53,7 +53,7 @@ export const ShopProductsScreen = ({ navigation, route }: Props) => {
   const navigateToUploadProductScreen = () => {
     navigation.navigate("UploadProductScreen", {
         sellerId: params.sellerId,
-        shopId: params.shopId,
+        shopId: params.shop.id,
       })
   }
 
@@ -70,7 +70,9 @@ export const ShopProductsScreen = ({ navigation, route }: Props) => {
       >
         <SectionContainer>
             <SectionTitle text="Shop" />
-            <Typography> TODO: Show some shop info </Typography>
+            <View>
+              <ShopPreview shop={params.shop}/>
+            </View>
         </SectionContainer>
         <SectionContainer>
             <SectionTitle text="My products" />

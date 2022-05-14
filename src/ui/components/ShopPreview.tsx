@@ -12,10 +12,11 @@ import { SmallButton } from "./SmallButton";
 
 interface Props<T>{
   shop: any;
-  onPressMyProducts: (shop: T) => void;
+  onPressMyProducts?: (shop: T) => void;
+  onPressEdit?: (shop: T) => void;
 }
 
-export const ShopPreview = ({ shop, onPressMyProducts }: Props<any>) => {
+export const ShopPreview = ({ shop, onPressMyProducts, onPressEdit }: Props<any>) => {
   return (
     <View
       style={{
@@ -61,22 +62,26 @@ export const ShopPreview = ({ shop, onPressMyProducts }: Props<any>) => {
           alignContent: "space-between",
         }}
       >
-        <SmallButton
-          text="Edit"
-          onPress={() => {
-            /*navigation.navigate("EditShopScreen", {
+        {onPressEdit ? (
+          <SmallButton
+            text="Edit"
+            onPress={() => {
+              /*navigation.navigate("EditShopScreen", {
                 sellerId: params.sellerId,
               });*/
-          }}
-          backgroundColor={colors.orange}
-        />
-        <SmallButton
-          text="My products"
-          onPress={() => {
-            onPressMyProducts(shop)
-          }}
-          backgroundColor={colors.orange}
-        />
+            }}
+            backgroundColor={colors.orange}
+          />
+          ) : (null)
+        }
+        {onPressMyProducts ? (
+          <SmallButton
+            text="My products"
+            onPress={() => {onPressMyProducts(shop)}}
+            backgroundColor={colors.orange}
+          />
+          ) : (null)
+        }
       </View>
     </View>
   );

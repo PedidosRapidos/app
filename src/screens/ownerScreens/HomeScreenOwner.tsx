@@ -44,10 +44,9 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
   };
 
   const navigateToShopProductsScreen = (shop : any) => {
-    // TODO: pasar el shop en vez del id asi puedo mostrar datos del shop 
     navigation.navigate("ShopProductsScreen", {
           sellerId: params.sellerId,
-          shopId: shop.id
+          shop: shop
       });
   }
 

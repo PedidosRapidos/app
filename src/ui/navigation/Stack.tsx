@@ -20,7 +20,7 @@ export type RootStackParams = {
   AddShopScreen: { sellerId: number };
   UploadProductScreen: { sellerId: number; shopId: number };
   ProductDetailScreen: { product: any };
-  ShopProductsScreen: { sellerId: number; shopId: number };
+  ShopProductsScreen: { sellerId: number; shop: any };
 };
 
 const Stack = createStackNavigator();
