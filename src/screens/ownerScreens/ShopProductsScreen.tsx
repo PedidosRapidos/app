@@ -13,24 +13,23 @@ import { Loader } from "../../ui/components/Loader";
 import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 import { ShopPreview } from "../../ui/components/ShopPreview";
+import { ProductPreview } from '../../ui/components/ProductPreview';
 
-interface Props extends StackScreenProps<RootStackParams, "HomeScreenOwner"> {}
+interface Props extends StackScreenProps<RootStackParams, "ShopProductsScreen"> {}
 
-export const HomeScreenOwner = ({ navigation, route }: Props) => {
+export const ShopProductsScreen = ({ navigation, route }: Props) => {
   const [searchValue, setSearchValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [products, setProducts] = useState<any>([]);
+  
   const params = route.params;
-  const [page, setPage] = useState(1);
+  
 
-  const getShops = async () => {
+  const getShopProducts = async () => {
     setIsLoading(true);
     try {
       const { data: products } = await client.get(
-        `/sellers/${params.sellerId}/shops/?page=${page}`,
-        {
-          params: { q: searchValue.split(" ") },
-        }
+        `/shops/${params.sellerId}/products/`
       );
       setProducts(products);
     } catch (err: any) {
@@ -43,17 +42,19 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
     }
   };
 
-  const navigateToShopProductsScreen = (shop : any) => {
-    // TODO: pasar el shop en vez del id asi puedo mostrar datos del shop 
-    navigation.navigate("ShopProductsScreen", {
-          sellerId: params.sellerId,
-          shopId: shop.id
-      });
+  const doNothing = () => {
+
+  }
+
+  const navigateToUploadProductScreen = () => {
+    navigation.navigate("UploadProductScreen", {
+        sellerId: params.sellerId,
+        shopId: params.shopId,
+      })
   }
 
   useEffect(() => {
-    // TODO: al agregar un nuevo shop y volver a este screen no me recarga la pagina (actualmente solo se monta una vez)
-    getShops();
+    getShopProducts();
   }, []);
 
   return (
@@ -64,25 +65,32 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
         style={globalStyles.innerContainer}
       >
         <SectionContainer>
-          {products.length != 0 ? (
-            <SectionTitle text="My shops:" />
-          ) : (
-            <Typography>No shops results</Typography>
-          )}
-          {products.map((item: any, index: any) => (
-            <View key={item.id}>
-              <ShopPreview shop={item} onPressMyProducts={navigateToShopProductsScreen}/>
-            </View>
-          ))}
+            <SectionTitle text="Shop" />
+            <Typography> TODO: Show some shop info </Typography>
+        </SectionContainer>
+        <SectionContainer>
+            <SectionTitle text="My products" />
+            {products.length != 0 ? (
+                null
+            ) : (
+                <Typography>You do not have any product in this shop</Typography>
+            )}
+            {products.map((item: any, index: any) => (
+                <View key={item.id}>
+                <ProductPreview 
+                    // TODO: ProductPreview con render condicional dependiendo de si le paso o no un OnCart? de manera de reutilizar el componente
+                    product={item} 
+                    onDetails={doNothing} 
+                    onCart={doNothing}/>
+                </View>
+            ))}
         </SectionContainer>
         <SectionContainer>
           <MainButton
-            text="Add shop"
-            onPress={() => {
-              navigation.navigate("AddShopScreen", {
-                sellerId: params.sellerId,
-              });
-            }}
+            // TODO: como hago para que el agregar producto me navegue de vuelta al shop desde donde viene y no vaya de nuevo al HomeSCreen?
+            // es decir, si el shop 1 sube un producto, vuelvo al screen del shop 1 (parametrizar la navegacion)
+            text="Add product"
+            onPress={navigateToUploadProductScreen}
             backgroundColor={colors.orange}
           />
         </SectionContainer>

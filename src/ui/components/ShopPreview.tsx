@@ -10,11 +10,12 @@ import {
 } from "../../res/typography";
 import { SmallButton } from "./SmallButton";
 
-interface Props {
+interface Props<T>{
   shop: any;
+  onPressMyProducts: (shop: T) => void;
 }
 
-export const ShopPreview = ({ shop }: Props) => {
+export const ShopPreview = ({ shop, onPressMyProducts }: Props<any>) => {
   return (
     <View
       style={{
@@ -72,7 +73,7 @@ export const ShopPreview = ({ shop }: Props) => {
         <SmallButton
           text="My products"
           onPress={() => {
-            /*ACA VOY A LA PANTALLA DE PRODUCTOS*/
+            onPressMyProducts(shop)
           }}
           backgroundColor={colors.orange}
         />
