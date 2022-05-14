@@ -18,4 +18,10 @@ export const imageStyles = StyleSheet.create({
     height: heightPercentageToDP("9%"),
     marginHorizontal: 5,
   },
+  preview: {
+    opacity: 0.98,
+    height: heightPercentageToDP("13%"),
+    width: "100%",
+    borderRadius: 10,
+  },
 });

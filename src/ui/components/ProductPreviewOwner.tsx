@@ -1,11 +1,12 @@
 import React from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { imageStyles } from "../../res/imageStyles";
-import { BoldTypography, Typography } from "../../res/typography";
+import { BoldTypography, MediumTypography, SemiBoldTypography, ThinTypography, Typography } from "../../res/typography";
 import { API_URL } from "../../services/config";
 import Icon from "react-native-vector-icons/Ionicons";
 import { colors, colorWithOpacity } from "../../res/colors";
 import { spacing } from "../../res/spacing";
+import { height, heightPercentageToDP } from "../../res/responsive";
 
 interface Props<T> {
   product: T;
@@ -16,42 +17,40 @@ interface Props<T> {
 export const ProductPreviewOwner = ({ product, onDetails, onCart }: Props<any>) => {
   return (
     <TouchableOpacity key={product.id} onPress={() => onDetails(product)}>
-      <View style={styles.rows}>
-        <View style={{ ...styles.columns, ...styles.margin }}>
+      <View style={styles.productPreviewContainer}>
+        <View style={styles.productImageContainer}>
           <Image
             source={{
               uri: `${API_URL}/products/${product.id}/image?q=${new Date()}`,
             }}
-            style={{
-              ...imageStyles.categorieIcon,
-              ...styles.round,
-              width: 200,
-              height: 200,
-            }}
+            style={
+              imageStyles.preview
+            }
           ></Image>
         </View>
-        <View style={styles.columns}>
-          <View style={styles.productInfo}>
-            <Typography style={styles.padding}>{product.name}</Typography>
+        <View style={styles.productInfoContainer}>
+          <View style={styles.productInfoRowContainer}>
+            <Typography style={styles.productName}>{product.name}</Typography>
           </View>
-          <View style={styles.productInfo}>
-            <Typography style={styles.padding}>{product.description}</Typography>
+          <View style={styles.productInfoRowContainer}>
+            <ThinTypography style={styles.productDescription}>{product.description}</ThinTypography>
           </View>
-          <BoldTypography style={styles.price}>
-            $ {product.price}
-          </BoldTypography>
-          {onCart ? 
-          (<View style={styles.buttonContainer}>
+          <View style={styles.productInfoRowContainer}>
+            <Typography style={styles.price}>
+              $ {product.price}
+            </Typography>
+          </View>
+          {onCart ? (
+          <View style={styles.buttonContainer}>
             <Icon
               name="cart"
               size={25}
               style={styles.buttonText}
               onPress={() => onCart(product)}
             ></Icon>
-            </View>
-            ): (null)
-            }
-          
+          </View>
+            ):(null)
+          }
         </View>
       </View>
     </TouchableOpacity>
@@ -59,8 +58,19 @@ export const ProductPreviewOwner = ({ product, onDetails, onCart }: Props<any>) 
 };
 
 const styles = StyleSheet.create({
-  rows: { display: "flex", flex: 1, flexDirection: "row" },
-  columns: { display: "flex", flexDirection: "column" },
+  productPreviewContainer: {  
+    flexDirection: "row",
+    marginVertical: spacing.paddingVertical,
+    //borderWidth: 1,
+    //borderColor: "white", 
+  },
+  productImageContainer:{
+    flex:1,
+  },
+  productInfoContainer: { 
+    marginHorizontal: spacing.paddingHorizontal,
+    flex: 2, 
+  },
   margin: {
     marginHorizontal: 10,
     marginVertical: 10,
@@ -68,8 +78,18 @@ const styles = StyleSheet.create({
   padding: {
     paddingVertical: 10,
   },
-  round: {
-    borderRadius: 10,
+  productInfoRowContainer: {
+    paddingVertical: spacing.textSpacing,
+  },
+  productName: {
+    fontSize: 20,
+  },
+  productDescription: {
+    color: colorWithOpacity(colors.grayLight, 1.0),
+    fontSize: 16,
+  },
+  price:{
+      fontSize: 16,
   },
   buttonContainer: {
     borderWidth: 5,
@@ -87,10 +107,4 @@ const styles = StyleSheet.create({
     color: colors.white,
     textAlign: "center",
   },
-  productInfo: {
-    flex: 3,
-  },
-  price:{
-      fontSize: 30,
-  }
 });
