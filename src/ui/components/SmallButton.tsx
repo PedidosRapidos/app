@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ColorValue,
   Text,
+  StyleProp,
 } from "react-native";
 import { colors, colorWithOpacity } from "../../res/colors";
 import { normalizeSize } from "../../res/typography";
@@ -15,6 +16,7 @@ interface Props {
   onPress: () => void;
   backgroundColor?: ColorValue;
   disable?: boolean;
+  style?: StyleProp<any>;
 }
 
 export const SmallButton = ({
@@ -22,11 +24,13 @@ export const SmallButton = ({
   onPress,
   backgroundColor = colors.orange,
   disable = false,
+  style = undefined,
 }: Props) => {
   return (
     <View
       style={{
         opacity: disable ? 0.5 : 1,
+        ...style,
       }}
     >
       <TouchableOpacity

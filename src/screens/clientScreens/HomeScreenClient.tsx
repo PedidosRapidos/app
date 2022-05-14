@@ -15,81 +15,70 @@ import { Loader } from "../../ui/components/Loader";
 import { ProductPreview } from "../../ui/components/ProductPreview";
 import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
+import ScrollList from "../../ui/components/ScrollList";
 
 interface Props extends StackScreenProps<RootStackParams, "HomeScreenClient"> {}
 
 export const HomeScreenClient = ({ navigation, route }: Props) => {
   const [searchValue, setSearchValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [products, setProducts] = useState<any>([]);
+  const [fetchMore, setFetchMore] = useState<any>({});
 
-  const displayProductDetails = (item) => {
+  const displayProductDetails = (item: any) => {
     navigation.navigate("ProductDetailScreen", {
-      product: item
+      product: item,
     });
-  };  
+  };
 
-  const searchProducts = async () => {
-    setIsLoading(true);
-    try {
-      const { data: products } = await client.get(`/products`, {
-        params: { q: searchValue.split(" ") },
-      });
-      setProducts(products);
-    } catch (err: any) {
-      console.error(
-        "Request failed, response:",
-        err.response?.data || err.message || err
-      );
-    } finally {
-      setIsLoading(false);
-    }
+  const addToCart = (item: any) => {
+    console.log("add item", item);
+  };
+
+  const searchProducts = () => {
+    const fetchPage = async (page: number) => {
+      const opts = {
+        params: {
+          q: searchValue.split(" ") || undefined,
+          page,
+          page_size: 10,
+        },
+      };
+      const { data: products } = await client.get(`/products`, opts);
+      return products;
+    };
+    setFetchMore({ fetch: fetchPage });
   };
 
   return (
     <SafeAreaView style={globalStyles.generalContainer}>
-      <KeyboardAwareScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}
-        style={globalStyles.innerContainer}
-      >
-        <SectionContainer>
-          <SectionTitle text="Search" />
-          <SearchBar
-            onChangeText={(nextSearchValue) => setSearchValue(nextSearchValue)}
-            value={searchValue}
-            placeholder="Search product name"
-          />
-          <MainButton
-            text="Search"
-            onPress={() => {
-              searchProducts();
-            }}
-            backgroundColor={colors.orange}
-          />
-        </SectionContainer>
-        <SectionContainer>
-          {products.length != 0 ? (
-            <SectionTitle text="Results" />
-          ) : (
-            <Typography>No search results</Typography>
+      <SectionContainer>
+        <SectionTitle text="Search" />
+        <SearchBar
+          onChangeText={(nextSearchValue) => setSearchValue(nextSearchValue)}
+          value={searchValue}
+          placeholder="Search product name"
+        />
+        <MainButton
+          text="Search"
+          onPress={() => {
+            searchProducts();
+          }}
+          backgroundColor={colors.orange}
+        />
+      </SectionContainer>
+      <SectionContainer>
+        <ScrollList
+          renderItem={(item: any) => (
+            <ProductPreview
+              product={item}
+              onDetails={displayProductDetails}
+              onCart={addToCart}
+            />
           )}
-          {products.map((item: any, index: any) => (
-            <TouchableOpacity key={item.id} onPress={() => {displayProductDetails(item)}}>
-              <View>
-                <ProductPreview product={item} />
-              </View>
-            </TouchableOpacity>
-          ))}
-        </SectionContainer>
-      </KeyboardAwareScrollView>
+          fetchMore={fetchMore.fetch}
+        ></ScrollList>
+      </SectionContainer>
       <Loader visible={isLoading} />
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: "row",
-  },
-});
