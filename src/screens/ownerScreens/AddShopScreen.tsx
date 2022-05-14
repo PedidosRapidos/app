@@ -67,10 +67,14 @@ export const AddShopScreen = ({ navigation, route }: Props) => {
         `/sellers/${sellerId}/shops/`,
         form
       );
-      navigation.navigate("UploadProductScreen", {
+      navigation.navigate("HomeScreenOwner", {
+        sellerId: sellerId as number,
+        sellerName: "AddShopScreenNoTieneSellerNameEnRouteParams",
+      })
+      /*navigation.navigate("UploadProductScreen", {
         sellerId: sellerId as number,
         shopId: shop.id as number,
-      });
+      });*/
     } catch (err: any) {
       console.error(
         "Request failed, response:",

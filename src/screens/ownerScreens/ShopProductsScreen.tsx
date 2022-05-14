@@ -13,26 +13,27 @@ import { Loader } from "../../ui/components/Loader";
 import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 import { ShopPreview } from "../../ui/components/ShopPreview";
+import { ProductPreview } from '../../ui/components/ProductPreview';
+import { ProductPreviewOwner } from '../../ui/components/ProductPreviewOwner';
 
-interface Props extends StackScreenProps<RootStackParams, "HomeScreenOwner"> {}
+interface Props extends StackScreenProps<RootStackParams, "ShopProductsScreen"> {}
 
-export const HomeScreenOwner = ({ navigation, route }: Props) => {
+export const ShopProductsScreen = ({ navigation, route }: Props) => {
   const [searchValue, setSearchValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [products, setProducts] = useState<any>([]);
+  
   const params = route.params;
-  const [page, setPage] = useState(1);
+  
 
-  const getShops = async () => {
+  const getShopProducts = async () => {
     setIsLoading(true);
     try {
       const { data: products } = await client.get(
-        `/sellers/${params.sellerId}/shops/?page=${page}`,
-        {
-          params: { q: searchValue.split(" ") },
-        }
+        `/shops/${params.shop.id}/products`
       );
-      setProducts(products);
+      // TODO: backend devuelve un json con un atributo products que es una lista en vez de una lista directamente
+      setProducts(products.products);
     } catch (err: any) {
       console.error(
         "Request failed, response:",
@@ -43,16 +44,21 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
     }
   };
 
-  const navigateToShopProductsScreen = (shop : any) => {
-    navigation.navigate("ShopProductsScreen", {
-          sellerId: params.sellerId,
-          shop: shop
+  const navigateToProductsDetailScreen = (product:any) => {
+    navigation.navigate("ProductDetailScreen", {
+        product: product,
       });
   }
 
+  const navigateToUploadProductScreen = () => {
+    navigation.navigate("UploadProductScreen", {
+        sellerId: params.sellerId,
+        shopId: params.shop.id,
+      })
+  }
+
   useEffect(() => {
-    // TODO: al agregar un nuevo shop y volver a este screen no me recarga la pagina (actualmente solo se monta una vez)
-    getShops();
+    getShopProducts();
   }, []);
 
   return (
@@ -63,25 +69,34 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
         style={globalStyles.innerContainer}
       >
         <SectionContainer>
-          {products.length != 0 ? (
-            <SectionTitle text="My shops:" />
-          ) : (
-            <Typography>No shops results</Typography>
-          )}
-          {products.map((item: any, index: any) => (
-            <View key={item.id}>
-              <ShopPreview shop={item} onPressMyProducts={navigateToShopProductsScreen}/>
+            <SectionTitle text="Shop" />
+            <View>
+              <ShopPreview shop={params.shop}/>
             </View>
-          ))}
+        </SectionContainer>
+        <SectionContainer>
+            <SectionTitle text="My products" />
+            {products.length != 0 ? (
+                null
+            ) : (
+                <Typography>You do not have any product in this shop</Typography>
+            )}
+            {products.map((item: any, index: any) => (
+                <View key={item.id}>
+                <ProductPreviewOwner 
+                    // TODO: ProductPreview con render condicional dependiendo de si le paso o no un OnCart? de manera de reutilizar el componente
+                    product={item} 
+                    onDetails={navigateToProductsDetailScreen} 
+                    />
+                </View>
+            ))}
         </SectionContainer>
         <SectionContainer>
           <MainButton
-            text="Add shop"
-            onPress={() => {
-              navigation.navigate("AddShopScreen", {
-                sellerId: params.sellerId,
-              });
-            }}
+            // TODO: como hago para que el agregar producto me navegue de vuelta al shop desde donde viene y no vaya de nuevo al HomeSCreen?
+            // es decir, si el shop 1 sube un producto, vuelvo al screen del shop 1 (parametrizar la navegacion)
+            text="Add product"
+            onPress={navigateToUploadProductScreen}
             backgroundColor={colors.orange}
           />
         </SectionContainer>

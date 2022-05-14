@@ -10,11 +10,13 @@ import {
 } from "../../res/typography";
 import { SmallButton } from "./SmallButton";
 
-interface Props {
+interface Props<T>{
   shop: any;
+  onPressMyProducts?: (shop: T) => void;
+  onPressEdit?: (shop: T) => void;
 }
 
-export const ShopPreview = ({ shop }: Props) => {
+export const ShopPreview = ({ shop, onPressMyProducts, onPressEdit }: Props<any>) => {
   return (
     <View
       style={{
@@ -60,22 +62,26 @@ export const ShopPreview = ({ shop }: Props) => {
           alignContent: "space-between",
         }}
       >
-        <SmallButton
-          text="Edit"
-          onPress={() => {
-            /*navigation.navigate("EditShopScreen", {
+        {onPressEdit ? (
+          <SmallButton
+            text="Edit"
+            onPress={() => {
+              /*navigation.navigate("EditShopScreen", {
                 sellerId: params.sellerId,
               });*/
-          }}
-          backgroundColor={colors.orange}
-        />
-        <SmallButton
-          text="My products"
-          onPress={() => {
-            /*ACA VOY A LA PANTALLA DE PRODUCTOS*/
-          }}
-          backgroundColor={colors.orange}
-        />
+            }}
+            backgroundColor={colors.orange}
+          />
+          ) : (null)
+        }
+        {onPressMyProducts ? (
+          <SmallButton
+            text="My products"
+            onPress={() => {onPressMyProducts(shop)}}
+            backgroundColor={colors.orange}
+          />
+          ) : (null)
+        }
       </View>
     </View>
   );

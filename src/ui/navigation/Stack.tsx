@@ -9,6 +9,7 @@ import { UploadProductScreen } from "../../screens/ownerScreens/UploadProductScr
 import { HomeScreenOwner } from "../../screens/ownerScreens/HomeScreenOwner";
 import { ProductDetailScreen } from "../../screens/ProductDetailScreen";
 import { SessionProvider } from "../../contexts/SessionContext";
+import { ShopProductsScreen } from '../../screens/ownerScreens/ShopProductsScreen';
 
 export type RootStackParams = {
   WelcomeScreen: undefined;
@@ -19,6 +20,7 @@ export type RootStackParams = {
   AddShopScreen: { sellerId: number };
   UploadProductScreen: { sellerId: number; shopId: number };
   ProductDetailScreen: { product: any };
+  ShopProductsScreen: { sellerId: number; shop: any };
 };
 
 const Stack = createStackNavigator();
@@ -69,6 +71,11 @@ export const MyStack = () => {
         <Stack.Screen
           name={"ProductDetailScreen"}
           component={ProductDetailScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={"ShopProductsScreen"}
+          component={ShopProductsScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

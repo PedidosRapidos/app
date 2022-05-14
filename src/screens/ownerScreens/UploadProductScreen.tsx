@@ -103,7 +103,7 @@ export const UploadProductScreen = ({ navigation, route }: Props) => {
         }
       );
       console.log(respUploadProduct);
-      //navigation.navigate("HomeScreen"); // Ver que se le pasa
+      navigation.navigate("HomeScreenOwner", {sellerId: sellerId, sellerName: "UploadProductScreenNoTieneRouteParamsSellerName"}); // Ver que se le pasa
     } catch (err: any) {
       console.error(
         "Request failed, response:",
