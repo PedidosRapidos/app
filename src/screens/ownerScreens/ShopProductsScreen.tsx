@@ -29,9 +29,10 @@ export const ShopProductsScreen = ({ navigation, route }: Props) => {
     setIsLoading(true);
     try {
       const { data: products } = await client.get(
-        `/shops/${params.sellerId}/products/`
+        `/shops/${params.shopId}/products`
       );
-      setProducts(products);
+      // TODO: backend devuelve un json con un atributo products que es una lista en vez de una lista directamente
+      setProducts(products.products);
     } catch (err: any) {
       console.error(
         "Request failed, response:",
