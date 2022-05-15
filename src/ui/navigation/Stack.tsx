@@ -1,4 +1,4 @@
-import React from "react";
+import React, { PropsWithChildren } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { WelcomeScreen } from "../../screens/WelcomeScreen";
 import { SigninScreen } from "../../screens/SigninScreen";
@@ -8,8 +8,14 @@ import { AddShopScreen } from "../../screens/ownerScreens/AddShopScreen";
 import { UploadProductScreen } from "../../screens/ownerScreens/UploadProductScreen";
 import { HomeScreenOwner } from "../../screens/ownerScreens/HomeScreenOwner";
 import { ProductDetailScreen } from "../../screens/ProductDetailScreen";
-import { SessionProvider } from "../../contexts/SessionContext";
-import { ShopProductsScreen } from '../../screens/ownerScreens/ShopProductsScreen';
+import {
+  useSession,
+  WithoutSession,
+  WithSession,
+} from "../../contexts/SessionContext";
+import { ShopProductsScreen } from "../../screens/ownerScreens/ShopProductsScreen";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { DrawerContent } from "./DrawerContent";
 
 export type RootStackParams = {
   WelcomeScreen: undefined;
@@ -22,63 +28,75 @@ export type RootStackParams = {
   ProductDetailScreen: { product: any };
   ShopProductsScreen: { sellerId: number; shop: any };
 };
-
+const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
 export const MyStack = () => {
+  const session = useSession();
   return (
-    <SessionProvider>
-      <Stack.Navigator>
-        <Stack.Screen
-          name={"WelcomeScreen"}
-          component={WelcomeScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name={"SignupScreen"}
-          component={SignupScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name={"SigninScreen"}
-          component={SigninScreen}
-          options={{ headerShown: false }}
-          initialParams={{
-            email: "",
-            password: "",
-          }}
-        />
-        <Stack.Screen
-          name={"HomeScreenClient"}
-          component={HomeScreenClient}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name={"HomeScreenOwner"}
-          component={HomeScreenOwner}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name={"AddShopScreen"}
-          component={AddShopScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name={"UploadProductScreen"}
-          component={UploadProductScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name={"ProductDetailScreen"}
-          component={ProductDetailScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name={"ShopProductsScreen"}
-          component={ShopProductsScreen}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    </SessionProvider>
+    <>
+      <WithoutSession>
+        <Stack.Navigator>
+          <Stack.Screen
+            name={"WelcomeScreen"}
+            component={WelcomeScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={"SignupScreen"}
+            component={SignupScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={"SigninScreen"}
+            component={SigninScreen}
+            options={{ headerShown: false }}
+            initialParams={{
+              email: "",
+              password: "",
+            }}
+          />
+        </Stack.Navigator>
+      </WithoutSession>
+      <WithSession>
+        <Drawer.Navigator
+          initialRouteName={
+            session?.user?.isOwner ? "HomeScreenOwner" : "HomeScreenClient"
+          }
+          drawerContent={(props) => <DrawerContent {...props} />}
+        >
+          <Drawer.Screen
+            name={"HomeScreenClient"}
+            component={HomeScreenClient}
+            options={{ headerShown: false }}
+          />
+          <Drawer.Screen
+            name={"HomeScreenOwner"}
+            component={HomeScreenOwner}
+            options={{ headerShown: false }}
+          />
+          <Drawer.Screen
+            name={"AddShopScreen"}
+            component={AddShopScreen}
+            options={{ headerShown: false }}
+          />
+          <Drawer.Screen
+            name={"UploadProductScreen"}
+            component={UploadProductScreen}
+            options={{ headerShown: false }}
+          />
+          <Drawer.Screen
+            name={"ProductDetailScreen"}
+            component={ProductDetailScreen}
+            options={{ headerShown: false }}
+          />
+          <Drawer.Screen
+            name={"ShopProductsScreen"}
+            component={ShopProductsScreen}
+            options={{ headerShown: false }}
+          />
+        </Drawer.Navigator>
+      </WithSession>
+    </>
   );
 };

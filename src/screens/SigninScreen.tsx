@@ -26,6 +26,7 @@ import { Loader } from "../ui/components/Loader";
 import client from "../services/config";
 import { useToggle } from "../ui/hooks/useToggle";
 import { ErrorPopUp } from "../ui/components/ErrorPopUp";
+import { useSession } from "../contexts/SessionContext";
 
 interface Props extends StackScreenProps<RootStackParams, "SigninScreen"> {}
 
@@ -46,6 +47,7 @@ type LoginErrorData = { [K in keyof LoginServiceParameters]?: string };
 
 export const SigninScreen = ({ navigation, route }: Props) => {
   const params = route.params;
+  const session = useSession();
 
   const [errors, setErrors] = useState<LoginErrorData>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -76,18 +78,9 @@ export const SigninScreen = ({ navigation, route }: Props) => {
     try {
       const { data: respSignIn } = await client.post("users/login", form);
       console.log(respSignIn);
-      if (respSignIn.isOwner) {
-        navigation.navigate("HomeScreenOwner", {
-          sellerId: respSignIn.id,
-          sellerName: respSignIn.username,
-        });
-      } else {
-        navigation.navigate("HomeScreenClient", {
-          clientId: respSignIn.id,
-          clientName: respSignIn.username,
-        });
-      }
+      session.login(respSignIn);
     } catch (err: any) {
+      setIsLoading(false);
       console.error(
         "Request failed, response:",
         err.response?.data || err.message || err
@@ -111,8 +104,6 @@ export const SigninScreen = ({ navigation, route }: Props) => {
         }
       }
       toggleShowError();
-    } finally {
-      setIsLoading(false);
     }
   };
 

@@ -20,7 +20,7 @@ export const ProductPreview = ({ product, onDetails, onCart }: Props<any>) => {
         <View style={{ ...styles.columns, ...styles.margin }}>
           <Image
             source={{
-              uri: `${API_URL}/products/${product.id}/image?q=${new Date()}`,
+              uri: `${API_URL}/products/${product.id}/image`,
             }}
             style={{
               ...imageStyles.categorieIcon,
@@ -38,12 +38,9 @@ export const ProductPreview = ({ product, onDetails, onCart }: Props<any>) => {
             $ {product.price}
           </BoldTypography>
           <View style={styles.buttonContainer}>
-            <Icon
-              name="cart"
-              size={25}
-              style={styles.buttonText}
-              onPress={() => onCart(product)}
-            ></Icon>
+            <TouchableOpacity onPress={() => onCart(product)}>
+              <Icon name="cart" size={25} style={styles.buttonText}></Icon>
+            </TouchableOpacity>
           </View>
         </View>
       </View>

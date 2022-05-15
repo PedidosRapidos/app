@@ -1,5 +1,14 @@
-import { useState, FC, useEffect } from "react";
-import { ListRenderItem, VirtualizedList } from "react-native";
+import { useState, FC, useEffect, memo } from "react";
+import {
+  ListRenderItem,
+  View,
+  VirtualizedList,
+  Text,
+  Dimensions,
+  FlatList,
+  ScrollView,
+  SafeAreaView,
+} from "react-native";
 import { Typography } from "../../res/typography";
 import { SectionTitle } from "./SectionTitle";
 
@@ -26,7 +35,6 @@ const ScrollList = ({ fetchMore, renderItem }: Props) => {
 
     const loadMore = async () => {
       try {
-        console.log("fetching more", page);
         const more = await fetchMore(page);
         if (mounted) {
           if (more.length === 0) {
@@ -49,7 +57,6 @@ const ScrollList = ({ fetchMore, renderItem }: Props) => {
   }, [end, page, fetchMore]);
 
   useEffect(() => {
-    console.log("init");
     setState({ data: [], end: false, page: 0 });
   }, [fetchMore]);
 
@@ -67,20 +74,20 @@ const ScrollList = ({ fetchMore, renderItem }: Props) => {
   // <SectionTitle text="Results" />
   return (
     <>
-      <VirtualizedList
-        contentContainerStyle={{ flexGrow: 1 }}
-        keyExtractor={(item: any) => item?.id}
-        getItemCount={(data) => data.length}
-        getItem={(data, i) => data[i]}
+      <FlatList
+        contentContainerStyle={{
+          flex: 1,
+        }}
         data={data}
         renderItem={doRenderItem}
         onEndReachedThreshold={0.1}
         onEndReached={incPage}
         onRefresh={refresh}
         refreshing={false}
+        ListFooterComponent={() => <Text>End of result </Text>}
       />
     </>
   );
 };
 
-export default ScrollList;
+export default memo(ScrollList);
