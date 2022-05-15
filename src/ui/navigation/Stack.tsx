@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from "react";
+import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { WelcomeScreen } from "../../screens/WelcomeScreen";
 import { SigninScreen } from "../../screens/SigninScreen";
@@ -16,9 +16,11 @@ import {
 import { ShopProductsScreen } from "../../screens/ownerScreens/ShopProductsScreen";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { DrawerContent } from "./DrawerContent";
+import { CartScreen } from "../../screens/clientScreens/CartScreen";
 
 export type RootStackParams = {
   WelcomeScreen: undefined;
+  CartScreen: undefined;
   SigninScreen: { email: string; password: string };
   SignupScreen: undefined;
   HomeScreenOwner: { sellerId: number; sellerName: string };
@@ -64,6 +66,7 @@ export const MyStack = () => {
             session?.user?.isOwner ? "HomeScreenOwner" : "HomeScreenClient"
           }
           drawerContent={(props) => <DrawerContent {...props} />}
+          backBehavior="history"
         >
           <Drawer.Screen
             name={"HomeScreenClient"}
@@ -73,6 +76,11 @@ export const MyStack = () => {
           <Drawer.Screen
             name={"HomeScreenOwner"}
             component={HomeScreenOwner}
+            options={{ headerShown: false }}
+          />
+          <Drawer.Screen
+            name={"CartScreen"}
+            component={CartScreen}
             options={{ headerShown: false }}
           />
           <Drawer.Screen
