@@ -35,7 +35,6 @@ const ScrollList = ({ fetchMore, renderItem }: Props) => {
 
     const loadMore = async () => {
       try {
-        console.log("fetching more", page);
         const more = await fetchMore(page);
         if (mounted) {
           if (more.length === 0) {
@@ -58,7 +57,6 @@ const ScrollList = ({ fetchMore, renderItem }: Props) => {
   }, [end, page, fetchMore]);
 
   useEffect(() => {
-    console.log("init");
     setState({ data: [], end: false, page: 0 });
   }, [fetchMore]);
 
@@ -80,9 +78,6 @@ const ScrollList = ({ fetchMore, renderItem }: Props) => {
         contentContainerStyle={{
           flex: 1,
         }}
-        // keyExtractor={(item: any) => item?.id}
-        // getItemCount={(data) => data.length}
-        // getItem={(data, i) => data[i]}
         data={data}
         renderItem={doRenderItem}
         onEndReachedThreshold={0.1}

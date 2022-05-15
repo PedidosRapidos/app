@@ -3,7 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../../res/globalStyles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SearchBar } from "../../ui/components/SearchBar";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Typography } from "../../res/typography";
 import { colors } from "../../res/colors";
 import { SectionTitle } from "../../ui/components/SectionTitle";
@@ -16,6 +16,7 @@ import { ProductPreview } from "../../ui/components/ProductPreview";
 import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 import ScrollList from "../../ui/components/ScrollList";
+import { useSession } from "../../contexts/SessionContext";
 
 interface Props extends StackScreenProps<RootStackParams, "HomeScreenClient"> {}
 
@@ -23,16 +24,28 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
   const [searchValue, setSearchValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [fetchMore, setFetchMore] = useState<any>({});
-
+  const {
+    user: { cartId, id: clientId },
+  } = useSession();
   const displayProductDetails = (item: any) => {
     navigation.navigate("ProductDetailScreen", {
       product: item,
     });
   };
 
-  const addToCart = (item: any) => {
-    console.log("add item", item);
-  };
+  const addToCart = useCallback(
+    async (item: any) => {
+      try {
+        console.log("add item", cartId, item);
+        await client.post(`/shopping_cart/${cartId}/products/`, {
+          product_id: item.id,
+        });
+      } catch (e) {
+        console.log(e.response?.data || e.message || e);
+      }
+    },
+    [cartId]
+  );
 
   const searchProducts = useCallback(() => {
     const fetchPage = async (page: number) => {

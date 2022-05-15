@@ -38,12 +38,9 @@ export const ProductPreview = ({ product, onDetails, onCart }: Props<any>) => {
             $ {product.price}
           </BoldTypography>
           <View style={styles.buttonContainer}>
-            <Icon
-              name="cart"
-              size={25}
-              style={styles.buttonText}
-              onPress={() => onCart(product)}
-            ></Icon>
+            <TouchableOpacity onPress={() => onCart(product)}>
+              <Icon name="cart" size={25} style={styles.buttonText}></Icon>
+            </TouchableOpacity>
           </View>
         </View>
       </View>

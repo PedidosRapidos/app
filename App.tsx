@@ -2,10 +2,11 @@ import "react-native-gesture-handler";
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { MyStack } from "./src/ui/navigation/Stack";
-import { LogBox, StatusBar, View } from "react-native";
+import { LogBox, StatusBar } from "react-native";
 import AppLoading from "expo-app-loading";
 import { useFonts } from "expo-font";
 import { fonts } from "./src/res/typography";
+import { SessionProvider } from "./src/contexts/SessionContext";
 
 LogBox.ignoreLogs(["[react-native-gesture-handler]"]);
 LogBox.ignoreLogs(["expo-app-loading"]);
@@ -16,10 +17,12 @@ const App = () => {
     return <AppLoading />;
   } else {
     return (
-      <NavigationContainer>
-        <StatusBar translucent backgroundColor={"transparent"} />
-        <MyStack />
-      </NavigationContainer>
+      <SessionProvider>
+        <NavigationContainer>
+          <StatusBar translucent backgroundColor={"transparent"} />
+          <MyStack />
+        </NavigationContainer>
+      </SessionProvider>
     );
   }
 };
