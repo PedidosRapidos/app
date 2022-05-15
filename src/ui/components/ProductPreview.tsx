@@ -20,7 +20,7 @@ export const ProductPreview = ({ product, onDetails, onCart }: Props<any>) => {
         <View style={{ ...styles.columns, ...styles.margin }}>
           <Image
             source={{
-              uri: `${API_URL}/products/${product.id}/image?q=${new Date()}`,
+              uri: `${API_URL}/products/${product.id}/image`,
             }}
             style={{
               ...imageStyles.categorieIcon,

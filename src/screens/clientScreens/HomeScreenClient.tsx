@@ -3,7 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../../res/globalStyles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SearchBar } from "../../ui/components/SearchBar";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Typography } from "../../res/typography";
 import { colors } from "../../res/colors";
 import { SectionTitle } from "../../ui/components/SectionTitle";
@@ -34,11 +34,11 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
     console.log("add item", item);
   };
 
-  const searchProducts = () => {
+  const searchProducts = useCallback(() => {
     const fetchPage = async (page: number) => {
       const opts = {
         params: {
-          q: searchValue.split(" ") || undefined,
+          q: searchValue.split(" ").join(",") || undefined,
           page,
           page_size: 10,
         },
@@ -47,10 +47,12 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
       return products;
     };
     setFetchMore({ fetch: fetchPage });
-  };
+  }, [searchValue]);
 
   return (
-    <SafeAreaView style={globalStyles.generalContainer}>
+    <SafeAreaView
+      style={{ ...globalStyles.generalContainer, paddingBottom: 150 }}
+    >
       <SectionContainer>
         <SectionTitle text="Search" />
         <SearchBar

@@ -9,7 +9,7 @@ import { UploadProductScreen } from "../../screens/ownerScreens/UploadProductScr
 import { HomeScreenOwner } from "../../screens/ownerScreens/HomeScreenOwner";
 import { ProductDetailScreen } from "../../screens/ProductDetailScreen";
 import { SessionProvider } from "../../contexts/SessionContext";
-import { ShopProductsScreen } from '../../screens/ownerScreens/ShopProductsScreen';
+import { ShopProductsScreen } from "../../screens/ownerScreens/ShopProductsScreen";
 
 export type RootStackParams = {
   WelcomeScreen: undefined;
@@ -24,7 +24,6 @@ export type RootStackParams = {
 };
 
 const Stack = createStackNavigator();
-
 export const MyStack = () => {
   return (
     <SessionProvider>
