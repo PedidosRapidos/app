@@ -9,13 +9,19 @@ import { globalStyles } from "../../res/globalStyles";
 import { Typography } from "../../res/typography";
 import { MainButton } from "../components/MainButton";
 
-export const DrawerContent = (props: PropsWithChildren<any>) => {
+export const DrawerContent = ({ navigation }: PropsWithChildren<any>) => {
   const session = useSession();
   return (
     <DrawerContentScrollView style={globalStyles.generalContainer}>
       <View style={{ flex: 2 }}></View>
       <View style={{ flex: 2 }}>
-        <Typography> Welcome {session.user.username}! </Typography>
+        <Typography> Welcome {session.user?.username}! </Typography>
+        {session.user?.isClient && (
+          <MainButton
+            text="My Cart"
+            onPress={() => navigation.navigate("CartScreen")}
+          />
+        )}
         <MainButton text="Logout" onPress={session.logout} />
       </View>
     </DrawerContentScrollView>

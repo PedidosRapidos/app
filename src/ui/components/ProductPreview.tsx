@@ -10,7 +10,7 @@ import { spacing } from "../../res/spacing";
 interface Props<T> {
   product: T;
   onDetails: (product: T) => void;
-  onCart: (product: T) => void;
+  onCart?: (product: T) => void;
 }
 
 export const ProductPreview = ({ product, onDetails, onCart }: Props<any>) => {
@@ -37,11 +37,13 @@ export const ProductPreview = ({ product, onDetails, onCart }: Props<any>) => {
           <BoldTypography style={{ fontSize: 30 }}>
             $ {product.price}
           </BoldTypography>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={() => onCart(product)}>
-              <Icon name="cart" size={25} style={styles.buttonText}></Icon>
-            </TouchableOpacity>
-          </View>
+          {onCart && (
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity onPress={() => onCart(product)}>
+                <Icon name="cart" size={25} style={styles.buttonText}></Icon>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </View>
     </TouchableOpacity>
