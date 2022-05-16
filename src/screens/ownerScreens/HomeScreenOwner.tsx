@@ -15,12 +15,12 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { ShopPreview } from "../../ui/components/ShopPreview";
 import { useSession } from "../../contexts/SessionContext";
 import ScrollList from "../../ui/components/ScrollList";
+import { SecondaryButton } from "../../ui/components/SecondaryButton";
 
 interface Props extends StackScreenProps<RootStackParams, "HomeScreenOwner"> {}
 
 export const HomeScreenOwner = ({ navigation, route }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [products, setProducts] = useState<any>([]);
   const {
     user: { id: sellerId },
   } = useSession();
@@ -67,11 +67,7 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
         style={globalStyles.innerContainer}
       >
         <SectionContainer>
-          {products.length != 0 ? (
-            <SectionTitle text="My shops:" />
-          ) : (
-            <Typography>No shops results</Typography>
-          )}
+        <SectionTitle text="My shops" />
           <ScrollList
             renderItem={(item) => (
               <ShopPreview
@@ -90,8 +86,7 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
                 sellerId: sellerId,
               });
             }}
-            backgroundColor={colors.orange}
-          />
+            backgroundColor={colors.orange}/>
         </SectionContainer>
       </KeyboardAwareScrollView>
       <Loader visible={isLoading} />
