@@ -14,12 +14,15 @@ interface Props {
   text: string;
   onPress: () => void;
   disable?: boolean;
+  left: boolean;
 }
 
 export const SecondaryButton = ({
   text,
   onPress,
   disable = false,
+  left = true
+
 }: Props) => {
   return (
     <View
@@ -28,10 +31,10 @@ export const SecondaryButton = ({
       }}
     >
       <TouchableOpacity
-        style={{...styles.leftJustified, ...styles.buttonContainer}}
+        style={styles.buttonContainer}
         onPress={disable ? () => {} : onPress}
         >
-        <Text style={styles.buttonText}>{text}</Text>
+        <Text style={[styles.buttonText, left ? styles.leftJustified : styles.centered]}>{text}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -39,19 +42,18 @@ export const SecondaryButton = ({
 
 const styles = StyleSheet.create({
   leftJustified:{
-    alignContent: "flex-start",
-    justifyContent: "flex-start",
+    textAlign: "left",
   },
   centered:{
-    alignContent: "flex-start",
-    justifyContent: "flex-start",
+    textAlign: "center",
   },
-    buttonContainer: {
+  buttonContainer: {
     height: 60,
+    alignContent: "center",
+    justifyContent: "center",
   },
   buttonText: {
-    color: colorWithOpacity(colors.blue, 0.8) ,
+    color: colorWithOpacity(colors.blue, 0.9),
     fontSize: normalizeSize(17),
-    //textAlign: "center",
   },
 });

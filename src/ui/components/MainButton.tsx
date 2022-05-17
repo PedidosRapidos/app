@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 15,
     height: 60,
-    marginHorizontal: spacing.paddingHorizontal / 2,
+    //marginHorizontal: spacing.paddingHorizontal / 2,
   },
   buttonText: {
     color: colors.white,
