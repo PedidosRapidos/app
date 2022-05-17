@@ -19,7 +19,6 @@ import { ProductPreviewOwner } from '../../ui/components/ProductPreviewOwner';
 interface Props extends StackScreenProps<RootStackParams, "ShopProductsScreen"> {}
 
 export const ShopProductsScreen = ({ navigation, route }: Props) => {
-  const [searchValue, setSearchValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [products, setProducts] = useState<any>([]);
   

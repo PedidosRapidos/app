@@ -61,9 +61,7 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
 
   return (
     <SafeAreaView style={globalStyles.generalContainer}>
-      <KeyboardAwareScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}
+      <View
         style={globalStyles.innerContainer}
       >
         <SectionContainer>
@@ -88,7 +86,7 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
             }}
             backgroundColor={colors.orange}/>
         </SectionContainer>
-      </KeyboardAwareScrollView>
+      </View>
       <Loader visible={isLoading} />
     </SafeAreaView>
   );
