@@ -15,6 +15,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import ScrollList from "../../ui/components/ScrollList";
 import { useCart } from "../../contexts/SessionContext";
 import { View } from 'react-native';
+import { ProductPreview2 } from '../../ui/components/ProductPreview2';
 
 
 interface Props extends StackScreenProps<RootStackParams, "HomeScreenClient"> {}
@@ -83,7 +84,7 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
         <SectionContainer>
           <ScrollList
             renderItem={(item: any) => (
-              <ProductPreview
+              <ProductPreview2
                 product={item}
                 onDetails={displayProductDetails}
                 onCart={cart.add}
