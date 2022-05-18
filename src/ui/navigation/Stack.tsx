@@ -9,7 +9,7 @@ import { UploadProductScreen } from "../../screens/ownerScreens/UploadProductScr
 import { HomeScreenOwner } from "../../screens/ownerScreens/HomeScreenOwner";
 import { ProductDetailScreen } from "../../screens/ProductDetailScreen";
 import {
-  useSession,
+  useUser,
   WithoutSession,
   WithSession,
 } from "../../contexts/SessionContext";
@@ -34,7 +34,7 @@ const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
 export const MyStack = () => {
-  const session = useSession();
+  const user = useUser();
   return (
     <>
       <WithoutSession>
@@ -63,7 +63,7 @@ export const MyStack = () => {
       <WithSession>
         <Drawer.Navigator
           initialRouteName={
-            session?.user?.isOwner ? "HomeScreenOwner" : "HomeScreenClient"
+            user.isOwner ? "HomeScreenOwner" : "HomeScreenClient"
           }
           drawerContent={(props) => <DrawerContent {...props} />}
           backBehavior="history"

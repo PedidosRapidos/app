@@ -26,7 +26,7 @@ import { Loader } from "../ui/components/Loader";
 import client from "../services/config";
 import { useToggle } from "../ui/hooks/useToggle";
 import { ErrorPopUp } from "../ui/components/ErrorPopUp";
-import { useSession } from "../contexts/SessionContext";
+import { useUser } from "../contexts/SessionContext";
 
 interface Props extends StackScreenProps<RootStackParams, "SigninScreen"> {}
 
@@ -45,9 +45,9 @@ const validateSignInForm = createValidator({
 
 type LoginErrorData = { [K in keyof LoginServiceParameters]?: string };
 
-export const SigninScreen = ({ navigation, route }: Props) => {
+export const SigninScreen = ({ route }: Props) => {
   const params = route.params;
-  const session = useSession();
+  const user = useUser();
 
   const [errors, setErrors] = useState<LoginErrorData>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -78,7 +78,7 @@ export const SigninScreen = ({ navigation, route }: Props) => {
     try {
       const { data: respSignIn } = await client.post("users/login", form);
       console.log(respSignIn);
-      session.login(respSignIn);
+      user.login(respSignIn);
     } catch (err: any) {
       setIsLoading(false);
       console.error(
