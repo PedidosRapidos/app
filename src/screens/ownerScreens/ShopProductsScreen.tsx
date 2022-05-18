@@ -13,8 +13,7 @@ import { Loader } from "../../ui/components/Loader";
 import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 import { ShopPreview } from "../../ui/components/ShopPreview";
-import { ProductPreview } from '../../ui/components/ProductPreview';
-import { ProductPreviewOwner } from '../../ui/components/ProductPreviewOwner';
+import { ProductPreview2 } from '../../ui/components/ProductPreview2';
 
 interface Props extends StackScreenProps<RootStackParams, "ShopProductsScreen"> {}
 
@@ -87,7 +86,7 @@ export const ShopProductsScreen = ({ navigation, route }: Props) => {
             )}
             {productsToShow.map((item: any, index: any) => (
                 <View key={item.id}>
-                <ProductPreviewOwner 
+                <ProductPreview2 
                     // TODO: ProductPreview con render condicional dependiendo de si le paso o no un OnCart? de manera de reutilizar el componente
                     product={item} 
                     onDetails={navigateToProductsDetailScreen} 

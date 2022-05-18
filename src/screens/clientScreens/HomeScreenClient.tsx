@@ -17,6 +17,8 @@ import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 import ScrollList from "../../ui/components/ScrollList";
 import { useSession } from "../../contexts/SessionContext";
+import { ProductPreview2 } from "../../ui/components/ProductPreview2";
+
 
 interface Props extends StackScreenProps<RootStackParams, "HomeScreenClient"> {}
 
@@ -24,6 +26,8 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
   const [searchValue, setSearchValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [fetchMore, setFetchMore] = useState<any>({});
+  const [screenProducts, setScreenProducts] = useState<any>([]);
+
   const {
     user: { cartId, id: clientId },
   } = useSession();
@@ -46,22 +50,21 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
     },
     [cartId]
   );
-
-  const searchProducts = useCallback(() => {
-    const fetchPage = async (page: number) => {
-      const opts = {
-        params: {
-          q: searchValue.split(" ").join(",") || undefined,
-          page,
-          page_size: 10,
-        },
-      };
-      const { data: products } = await client.get(`/products`, opts);
-      return products;
+  
+  const fetchPage = async (page: number) => {
+    const opts = {
+      params: {
+        q: searchValue.split(" ").join(",") || undefined,
+        page,
+        page_size: 10,
+      },
     };
-    setFetchMore({ fetch: fetchPage });
-  }, [searchValue]);
-
+    const { data: products } = await client.get(`/products`, opts);
+    console.log("setscreenproducts")
+    setScreenProducts(products);
+    return products;
+  };
+ 
   return (
     <SafeAreaView
       style={{ ...globalStyles.generalContainer, paddingBottom: 150 }}
@@ -80,23 +83,24 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
         />
         <MainButton
           text="Search"
+          // TODO: tiene hardcodeado un page:0
           onPress={() => {
-            searchProducts();
+            fetchPage(0);
           }}
           backgroundColor={colors.orange}
         />
       </SectionContainer>
       <SectionContainer>
-        <ScrollList
-          renderItem={(item: any) => (
-            <ProductPreview
-              product={item}
+        {screenProducts.map((item: any, index: any) => (
+          <View key={item.id}>
+          <ProductPreview2 
+              product={item} 
               onDetails={displayProductDetails}
               onCart={addToCart}
-            />
-          )}
-          fetchMore={fetchMore.fetch}
-        ></ScrollList>
+              />
+          </View>
+        ))
+        }
       </SectionContainer>
       </KeyboardAwareScrollView>
       <Loader visible={isLoading} />

@@ -67,8 +67,11 @@ export const AddShopScreen = ({ navigation, route }: Props) => {
         `/sellers/${sellerId}/shops/`,
         form
       );
+      /**Hago una copia del shops por parametro, lo actualizo y lo paso por params en el navigate */
       let updatedShops = shops.slice();
       updatedShops.push(shop)
+      
+      // TODO: cambiar por un pop() si es posible pq si no, te permite navegar de nuevo a esta screen desde el home y te quedas atrapado
       navigation.navigate({name: "HomeScreenOwner", params:{
         shops: updatedShops
       }, merge:true})
