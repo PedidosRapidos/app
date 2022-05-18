@@ -41,7 +41,7 @@ const validateShopForm = createValidator({
 });
 
 export const AddShopScreen = ({ navigation, route }: Props) => {
-  const { sellerId } = route.params;
+  const { sellerId , shops} = route.params;
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Partial<AddShopForm>>({});
   const { name, cbu, address, form, onChange } = useForm<AddShopForm>({
@@ -67,14 +67,11 @@ export const AddShopScreen = ({ navigation, route }: Props) => {
         `/sellers/${sellerId}/shops/`,
         form
       );
-      navigation.navigate("HomeScreenOwner", {
-        sellerId: sellerId as number,
-        sellerName: "AddShopScreenNoTieneSellerNameEnRouteParams",
-      })
-      /*navigation.navigate("UploadProductScreen", {
-        sellerId: sellerId as number,
-        shopId: shop.id as number,
-      });*/
+      let updatedShops = shops.slice();
+      updatedShops.push(shop)
+      navigation.navigate({name: "HomeScreenOwner", params:{
+        shops: updatedShops
+      }, merge:true})
     } catch (err: any) {
       console.error(
         "Request failed, response:",

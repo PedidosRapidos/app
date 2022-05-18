@@ -23,9 +23,9 @@ export type RootStackParams = {
   CartScreen: undefined;
   SigninScreen: { email: string; password: string };
   SignupScreen: undefined;
-  HomeScreenOwner: { sellerId: number; sellerName: string };
+  HomeScreenOwner: { shops: Array<any> };
   HomeScreenClient: { clientId: number; clientName: string };
-  AddShopScreen: { sellerId: number };
+  AddShopScreen: { sellerId: number, shops: Array<any> };
   UploadProductScreen: { sellerId: number; shop: any; products: Array<any> };
   ProductDetailScreen: { product: any };
   ShopProductsScreen: { sellerId: number; shop: any; products: Array<any> };
