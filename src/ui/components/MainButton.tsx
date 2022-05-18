@@ -12,7 +12,7 @@ import { spacing } from "../../res/spacing";
 
 interface Props {
   text: string;
-  onPress: () => void;
+  onPress: () => void | Promise<any>;
   backgroundColor?: ColorValue;
   disable?: boolean;
 }

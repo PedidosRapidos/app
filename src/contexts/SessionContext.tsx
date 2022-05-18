@@ -4,10 +4,13 @@ import React, {
   FC,
   PropsWithChildren,
   useEffect,
+  Dispatch,
+  SetStateAction,
 } from "react";
 import * as SecureStore from "expo-secure-store";
+import client from "../services/config";
 
-interface User {
+export interface User {
   username: string;
   id: number;
   email: string;
@@ -16,78 +19,136 @@ interface User {
   cartId: number;
 }
 
-interface Session {
-  user?: User;
-  cart: Array<number>;
+interface UserActions {
+  login: (user: User) => Promise<any>;
+  logout: () => Promise<any> | void;
 }
 
-const SessionContext = React.createContext<Session>({} as Session);
+export interface Product {
+  id: number;
+}
 
-export const useSession = (): Session => {
-  return useContext(SessionContext);
+export interface Cart {
+  id: string;
+  products: Array<Product>;
+}
+
+interface CartActions {
+  add: (productId: Product) => Promise<any>;
+}
+
+const UserContext = React.createContext<User & UserActions>(
+  {} as User & UserActions
+);
+
+export const useUser = (): User & UserActions => {
+  return useContext(UserContext);
+};
+
+type UseCart = [Cart & CartActions, Dispatch<SetStateAction<Cart>>];
+const CartContext = React.createContext<UseCart>([
+  {} as Cart & CartActions,
+  (_: any) => {},
+]);
+
+export const useCart = (): UseCart => {
+  return useContext(CartContext);
 };
 
 export const SessionProvider: FC = ({ children }: PropsWithChildren<any>) => {
-  const [state, setState] = useState<Session>({
-    cart: [],
-  });
-  const session = {
-    ...state,
+  const [user, setUser] = useState<User>({} as User);
+  const [cart, setCart] = useState<Cart>({} as Cart);
+
+  const userActions = {
+    ...user,
     async logout() {
       try {
-        await SecureStore.deleteItemAsync("session");
+        await SecureStore.deleteItemAsync("user");
       } catch (e) {
-        console.log(e);
+        console.log("logout user", e);
       }
-      setState({ cart: [] });
+      setUser({} as User);
     },
     async login(user: User) {
-      const session: Session = { cart: [], user };
       try {
-        await SecureStore.setItemAsync("session", JSON.stringify(session));
+        await SecureStore.setItemAsync("user", JSON.stringify(user));
       } catch (e) {
-        console.log(e);
+        console.log("login user", e);
       }
-      setState(session);
+      setUser(user);
     },
     async restore() {
       try {
-        const json = await SecureStore.getItemAsync("session");
+        const json = await SecureStore.getItemAsync("user");
         if (json) {
-          const session: Session = JSON.parse(json);
-          setState(session);
+          const user: User = JSON.parse(json);
+          setUser(user);
         }
       } catch (e) {
-        console.log(e);
+        console.log("restore user:", e);
       }
-    },
-    addToCart(productId: number) {
-      const cart = state.cart || [];
-      setState({ ...state, cart: [...cart, productId] });
     },
   };
 
   useEffect(() => {
-    session.restore();
+    userActions.restore();
   }, []);
+
+  useEffect(() => {
+    const init = async (cartId: number) => {
+      try {
+        const { data: cart } = await client.get(`/shopping_cart/${cartId}`);
+        setCart(cart);
+      } catch (e) {
+        console.log("user init:", e);
+      }
+    };
+    if (user.cartId) {
+      init(user?.cartId);
+    }
+  }, [user.cartId]);
+
+  const cartActions = {
+    ...cart,
+    async add({ id: productId }: { id: number }) {
+      if (cart.id) {
+        try {
+          const { data: updatedCart } = await client.post(
+            `/shopping_cart/${cart.id}/products/`,
+            {
+              product_id: productId,
+            }
+          );
+          setCart(updatedCart);
+        } catch (e) {
+          console.log("add item", e);
+        }
+      } else {
+        console.log("trying to add item, but cart doesnt exits");
+      }
+    },
+  };
+
   return (
-    <SessionContext.Provider value={session}>
-      {children}
-    </SessionContext.Provider>
+    <UserContext.Provider value={userActions}>
+      <CartContext.Provider value={[cartActions, setCart]}>
+        {children}
+      </CartContext.Provider>
+    </UserContext.Provider>
   );
 };
 
 export const WithSession = ({ children }: PropsWithChildren<any>) => {
-  const session = useSession();
-  if (session.user) {
+  const user = useUser();
+  if (user.id) {
     return children;
   }
   return null;
 };
 
 export const WithoutSession = ({ children }: PropsWithChildren<any>) => {
-  const session = useSession();
-  if (session.user) {
+  const user = useUser();
+  if (user.id) {
     return null;
   }
   return children;
