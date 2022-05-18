@@ -20,19 +20,17 @@ interface Props extends StackScreenProps<RootStackParams, "ShopProductsScreen"> 
 
 export const ShopProductsScreen = ({ navigation, route }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [products, setProducts] = useState<any>([]);
+  const [productsToShow, setProductsToShow] = useState<any>([]);
+  let {sellerId, shop, products} = route.params;
   
-  const params = route.params;
-  
-
   const getShopProducts = async () => {
     setIsLoading(true);
     try {
-      const { data: products } = await client.get(
-        `/shops/${params.shop.id}/products`
+      const { data: fetchProducts } = await client.get(
+        `/shops/${shop.id}/products`
       );
-      // TODO: backend devuelve un json con un atributo products que es una lista en vez de una lista directamente
-      setProducts(products.products);
+      console.log(fetchProducts.products);
+      setProductsToShow(fetchProducts.products);
     } catch (err: any) {
       console.error(
         "Request failed, response:",
@@ -51,14 +49,21 @@ export const ShopProductsScreen = ({ navigation, route }: Props) => {
 
   const navigateToUploadProductScreen = () => {
     navigation.navigate("UploadProductScreen", {
-        sellerId: params.sellerId,
-        shopId: params.shop.id,
+        sellerId: sellerId,
+        shop: shop,
+        products: productsToShow
       })
   }
 
   useEffect(() => {
-    getShopProducts();
+    getShopProducts()
   }, []);
+
+  useEffect(() => {
+    if(products.length > productsToShow.length){
+      setProductsToShow(products)
+    }
+  }, [products]);
 
   return (
     <SafeAreaView style={globalStyles.generalContainer}>
@@ -70,17 +75,17 @@ export const ShopProductsScreen = ({ navigation, route }: Props) => {
         <SectionContainer>
             <SectionTitle text="Shop" />
             <View>
-              <ShopPreview shop={params.shop}/>
+              <ShopPreview shop={shop}/>
             </View>
         </SectionContainer>
         <SectionContainer>
             <SectionTitle text="My products" />
-            {products.length != 0 ? (
+            {productsToShow.length != 0 ? (
                 null
             ) : (
                 <Typography>You do not have any product in this shop</Typography>
             )}
-            {products.map((item: any, index: any) => (
+            {productsToShow.map((item: any, index: any) => (
                 <View key={item.id}>
                 <ProductPreviewOwner 
                     // TODO: ProductPreview con render condicional dependiendo de si le paso o no un OnCart? de manera de reutilizar el componente

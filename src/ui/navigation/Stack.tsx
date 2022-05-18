@@ -26,9 +26,9 @@ export type RootStackParams = {
   HomeScreenOwner: { sellerId: number; sellerName: string };
   HomeScreenClient: { clientId: number; clientName: string };
   AddShopScreen: { sellerId: number };
-  UploadProductScreen: { sellerId: number; shopId: number };
+  UploadProductScreen: { sellerId: number; shop: any; products: Array<any> };
   ProductDetailScreen: { product: any };
-  ShopProductsScreen: { sellerId: number; shop: any };
+  ShopProductsScreen: { sellerId: number; shop: any; products: Array<any> };
 };
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();

@@ -95,18 +95,21 @@ export const UploadProductScreen = ({ navigation, route }: Props) => {
       //data: selectedImage.data
     });
 
-    const { sellerId, shopId } = route.params;
+    const { sellerId, shop, products } = route.params;
 
     try {
-      const respUploadProduct = await client.post(
-        `/sellers/${sellerId}/shops/${shopId}/products`,
+      const { data: product } = await client.post(
+        `/sellers/${sellerId}/shops/${shop.id}/products`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-      console.log(respUploadProduct);
-      navigation.navigate("HomeScreenOwner", {sellerId: sellerId, sellerName: "UploadProductScreenNoTieneRouteParamsSellerName"}); // Ver que se le pasa
+
+      //navigation.navigate("HomeScreenOwner", {sellerId: sellerId, sellerName: "UploadProductScreenNoTieneRouteParamsSellerName"}); // Ver que se le pasa
+      let updatedProducts = products
+      updatedProducts.push(product)
+      navigation.navigate({name : "ShopProductsScreen", params:{sellerId: sellerId, shop: shop, products: updatedProducts}, merge:true})
     } catch (err: any) {
       console.error(
         "Request failed, response:",

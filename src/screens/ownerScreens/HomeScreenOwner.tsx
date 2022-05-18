@@ -51,6 +51,7 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
     navigation.navigate("ShopProductsScreen", {
       sellerId: sellerId,
       shop: shop,
+      products: [],
     });
   };
 
