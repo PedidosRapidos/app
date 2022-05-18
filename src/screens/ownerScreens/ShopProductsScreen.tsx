@@ -87,17 +87,14 @@ export const ShopProductsScreen = ({ navigation, route }: Props) => {
             {productsToShow.map((item: any, index: any) => (
                 <View key={item.id}>
                 <ProductPreview2 
-                    // TODO: ProductPreview con render condicional dependiendo de si le paso o no un OnCart? de manera de reutilizar el componente
-                    product={item} 
-                    onDetails={navigateToProductsDetailScreen} 
-                    />
+                  product={item} 
+                  onDetails={navigateToProductsDetailScreen} 
+                  />
                 </View>
             ))}
         </SectionContainer>
         <SectionContainer>
           <MainButton
-            // TODO: como hago para que el agregar producto me navegue de vuelta al shop desde donde viene y no vaya de nuevo al HomeSCreen?
-            // es decir, si el shop 1 sube un producto, vuelvo al screen del shop 1 (parametrizar la navegacion)
             text="Add product"
             onPress={navigateToUploadProductScreen}
             backgroundColor={colors.orange}
