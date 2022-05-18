@@ -13,15 +13,16 @@ import { spacing } from "../../res/spacing";
 interface Props {
   text: string;
   onPress: () => void;
-  backgroundColor?: ColorValue;
   disable?: boolean;
+  left: boolean;
 }
 
-export const MainButton = ({
+export const SecondaryButton = ({
   text,
   onPress,
-  backgroundColor = colors.orange,
   disable = false,
+  left = true
+
 }: Props) => {
   return (
     <View
@@ -30,31 +31,29 @@ export const MainButton = ({
       }}
     >
       <TouchableOpacity
-        style={{
-          ...styles.buttonContainer,
-          backgroundColor,
-        }}
+        style={styles.buttonContainer}
         onPress={disable ? () => {} : onPress}
-      >
-        <Text style={styles.buttonText}>{text}</Text>
+        >
+        <Text style={[styles.buttonText, left ? styles.leftJustified : styles.centered]}>{text}</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  leftJustified:{
+    textAlign: "left",
+  },
+  centered:{
+    textAlign: "center",
+  },
   buttonContainer: {
-    borderWidth: 5,
-    borderColor: colorWithOpacity(colors.orange, 0.08),
+    height: 60,
     alignContent: "center",
     justifyContent: "center",
-    borderRadius: 15,
-    height: 60,
-    //marginHorizontal: spacing.paddingHorizontal / 2,
   },
   buttonText: {
-    color: colors.white,
+    color: colorWithOpacity(colors.blue, 0.9),
     fontSize: normalizeSize(17),
-    textAlign: "center",
   },
 });

@@ -40,7 +40,7 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
         await client.post(`/shopping_cart/${cartId}/products/`, {
           product_id: item.id,
         });
-      } catch (e) {
+      } catch (e:any) {
         console.log(e.response?.data || e.message || e);
       }
     },
@@ -66,6 +66,11 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
     <SafeAreaView
       style={{ ...globalStyles.generalContainer, paddingBottom: 150 }}
     >
+      <KeyboardAwareScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+        style={globalStyles.innerContainer}
+      >
       <SectionContainer>
         <SectionTitle text="Search" />
         <SearchBar
@@ -93,6 +98,7 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
           fetchMore={fetchMore.fetch}
         ></ScrollList>
       </SectionContainer>
+      </KeyboardAwareScrollView>
       <Loader visible={isLoading} />
     </SafeAreaView>
   );

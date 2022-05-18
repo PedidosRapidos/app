@@ -13,6 +13,9 @@ import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import { MainButton } from "../../ui/components/MainButton";
 import client from "../../services/config";
+import { SecondaryButton } from "../../ui/components/SecondaryButton";
+import { SectionContainer } from "../../ui/components/SectionContainer";
+import { SectionTitle } from "../../ui/components/SectionTitle";
 
 interface Props
   extends StackScreenProps<RootStackParams, "UploadProductScreen"> { }
@@ -37,8 +40,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   thumbnail: {
-    width: 100,
-    height: 100
+    width: 150,
+    height: 150,
   },
 });
 
@@ -92,18 +95,21 @@ export const UploadProductScreen = ({ navigation, route }: Props) => {
       //data: selectedImage.data
     });
 
-    const { sellerId, shopId } = route.params;
+    const { sellerId, shop, products } = route.params;
 
     try {
-      const respUploadProduct = await client.post(
-        `/sellers/${sellerId}/shops/${shopId}/products`,
+      const { data: product } = await client.post(
+        `/sellers/${sellerId}/shops/${shop.id}/products`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-      console.log(respUploadProduct);
-      navigation.navigate("HomeScreenOwner", {sellerId: sellerId, sellerName: "UploadProductScreenNoTieneRouteParamsSellerName"}); // Ver que se le pasa
+
+      //navigation.navigate("HomeScreenOwner", {sellerId: sellerId, sellerName: "UploadProductScreenNoTieneRouteParamsSellerName"}); // Ver que se le pasa
+      let updatedProducts = products
+      updatedProducts.push(product)
+      navigation.navigate({name : "ShopProductsScreen", params:{sellerId: sellerId, shop: shop, products: updatedProducts}, merge:true})
     } catch (err: any) {
       console.error(
         "Request failed, response:",
@@ -119,57 +125,55 @@ export const UploadProductScreen = ({ navigation, route }: Props) => {
         showsVerticalScrollIndicator={false}
         style={globalStyles.innerContainer}
       >
-        <View style={{ marginTop: 50 }}>
-          <Typography style={[styles.section, styles.sectionMarginBotton]}>
-            Enter product data
-          </Typography>
-        </View>
-        <Input
-          onChangeText={(nextProductName) =>
-            onChange("productName", nextProductName)
-          }
-          value={productName}
-          placeholder="Product Name"
-        />
-        <Input
-          onChangeText={(nextDescription) =>
-            onChange("description", nextDescription)
-          }
-          value={description}
-          placeholder="Description"
-        />
-        <Input
-          onChangeText={(nextPrice) => onChange("price", nextPrice)}
-          value={price}
-          placeholder="Price"
-        />
-
-        <View style={{
-          flexDirection: "row",
-          alignItems: "center"
-        }}>
-          <View style={{width:200, marginRight:30}}>
-            <MainButton
-              text="Pick image"
-              onPress={openImagePickerAsync}
-              backgroundColor={colors.darkBlue}
-            />
+        <SectionContainer>
+          <SectionTitle text="Enter product data"></SectionTitle>
+          <Input
+            onChangeText={(nextProductName) =>
+              onChange("productName", nextProductName)
+            }
+            value={productName}
+            placeholder="Product Name"
+          />
+          <Input
+            onChangeText={(nextDescription) =>
+              onChange("description", nextDescription)
+            }
+            value={description}
+            placeholder="Description"
+          />
+          <Input
+            onChangeText={(nextPrice) => onChange("price", nextPrice)}
+            value={price}
+            placeholder="Price"
+          />
+        </SectionContainer>
+        <SectionContainer>
+          <View style={{
+            flexDirection: "row",
+            alignItems: "center",
+            }}>
+            <View style={{flex: 1}}>
+              <SecondaryButton
+                text="Pick an image"
+                onPress={openImagePickerAsync}
+                left={false}
+              />
+            </View>
+            <View style={{flex: 1}}>
+              {selectedImage && (
+                <Image
+                  source={{ uri: selectedImage.uri }}
+                  style={styles.thumbnail}
+                />
+              )}
+            </View>
           </View>
-          {selectedImage && (
-            <Image
-              source={{ uri: selectedImage.uri }}
-              style={styles.thumbnail}
-            />
-          )}
-        </View>
-
-        <View style={{ marginTop: 60 }}>
+        </SectionContainer>
           <MainButton
-            text="Upload"
+            text="Confirm"
             onPress={() => sendForm()}
             backgroundColor={colors.orange}
           />
-        </View>
       </KeyboardAwareScrollView>
     </SafeAreaView>
   );
