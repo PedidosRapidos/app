@@ -34,15 +34,27 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
 
   const searchProducts = useCallback(() => {
     const fetchPage = async (page: number) => {
-      const opts = {
-        params: {
-          q: searchValue.split(" ").join(",") || undefined,
-          page,
-          page_size: 10,
-        },
-      };
-      const { data: products } = await client.get(`/products`, opts);
-      return products;
+      if (page == 0) {
+        setIsLoading(true);
+      }
+      try {
+        const opts = {
+          params: {
+            q: searchValue.split(" ").join(",") || undefined,
+            page,
+            page_size: 10,
+          },
+        };
+        const { data: products } = await client.get(`/products`, opts);
+
+        return products;
+      } catch (e) {
+        console.log("fetch failed", e);
+      } finally {
+        if (page == 0) {
+          setIsLoading(false);
+        }
+      }
     };
     setFetchMore({ fetch: fetchPage });
   }, [searchValue]);
