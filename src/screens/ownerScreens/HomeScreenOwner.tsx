@@ -13,7 +13,7 @@ import { Loader } from "../../ui/components/Loader";
 import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 import { ShopPreview } from "../../ui/components/ShopPreview";
-import { useSession } from "../../contexts/SessionContext";
+import { useUser } from "../../contexts/SessionContext";
 import ScrollList from "../../ui/components/ScrollList";
 import { SecondaryButton } from "../../ui/components/SecondaryButton";
 
@@ -29,9 +29,7 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
     shops = route.params.shops
   }
 
-  const {
-    user: { id: sellerId },
-  } = useSession();
+  const { id: sellerId } = useUser();
 
   const getShops = useCallback(
     async (page: number) => {
