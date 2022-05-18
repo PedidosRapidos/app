@@ -24,20 +24,23 @@ export const ShopProductsScreen = ({ navigation, route }: Props) => {
   
   const getShopProducts = async () => {
     setIsLoading(true);
+    
     try {
       const { data: fetchProducts } = await client.get(
         `/shops/${shop.id}/products`
       );
-      console.log(fetchProducts.products);
       setProductsToShow(fetchProducts.products);
+    
     } catch (err: any) {
       console.error(
         "Request failed, response:",
         err.response?.data || err.message || err
       );
+
     } finally {
       setIsLoading(false);
     }
+    
   };
 
   const navigateToProductsDetailScreen = (product:any) => {
@@ -57,6 +60,10 @@ export const ShopProductsScreen = ({ navigation, route }: Props) => {
   useEffect(() => {
     getShopProducts()
   }, []);
+
+  useEffect(() => {
+    getShopProducts()
+  }, [shop.id]);
 
   useEffect(() => {
     if(products.length > productsToShow.length){
