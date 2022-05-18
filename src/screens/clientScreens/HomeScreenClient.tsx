@@ -1,14 +1,11 @@
-import { StyleSheet, View, Image, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../../res/globalStyles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SearchBar } from "../../ui/components/SearchBar";
-import React, { useCallback, useEffect, useState } from "react";
-import { Typography } from "../../res/typography";
+import React, { useCallback, useState } from "react";
 import { colors } from "../../res/colors";
 import { SectionTitle } from "../../ui/components/SectionTitle";
 import { SectionContainer } from "../../ui/components/SectionContainer";
-import { imageStyles } from "../../res/imageStyles";
 import { MainButton } from "../../ui/components/MainButton";
 import client from "../../services/config";
 import { Loader } from "../../ui/components/Loader";
@@ -16,7 +13,10 @@ import { ProductPreview } from "../../ui/components/ProductPreview";
 import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 import ScrollList from "../../ui/components/ScrollList";
-import { useCart, useUser } from "../../contexts/SessionContext";
+import { useCart } from "../../contexts/SessionContext";
+import { View } from 'react-native';
+import { ProductPreview2 } from '../../ui/components/ProductPreview2';
+
 
 interface Props extends StackScreenProps<RootStackParams, "HomeScreenClient"> {}
 
@@ -56,16 +56,14 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
         }
       }
     };
-    setFetchMore({ fetch: fetchPage });
+    setFetchMore({fetch: fetchPage});
   }, [searchValue]);
-
+ 
   return (
     <SafeAreaView
       style={{ ...globalStyles.generalContainer, paddingBottom: 150 }}
     >
-      <KeyboardAwareScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}
+      <View
         style={globalStyles.innerContainer}
       >
         <SectionContainer>
@@ -86,7 +84,7 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
         <SectionContainer>
           <ScrollList
             renderItem={(item: any) => (
-              <ProductPreview
+              <ProductPreview2
                 product={item}
                 onDetails={displayProductDetails}
                 onCart={cart.add}
@@ -95,7 +93,7 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
             fetchMore={fetchMore.fetch}
           />
         </SectionContainer>
-      </KeyboardAwareScrollView>
+      </View>
       <Loader visible={isLoading} />
     </SafeAreaView>
   );

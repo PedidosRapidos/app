@@ -92,7 +92,6 @@ export const UploadProductScreen = ({ navigation, route }: Props) => {
       uri: selectedImage.uri,
       name: filename,
       type: type,
-      //data: selectedImage.data
     });
 
     const { sellerId, shop, products } = route.params;
@@ -106,10 +105,15 @@ export const UploadProductScreen = ({ navigation, route }: Props) => {
         }
       );
 
-      //navigation.navigate("HomeScreenOwner", {sellerId: sellerId, sellerName: "UploadProductScreenNoTieneRouteParamsSellerName"}); // Ver que se le pasa
-      let updatedProducts = products
+      let updatedProducts = products.slice()
       updatedProducts.push(product)
-      navigation.navigate({name : "ShopProductsScreen", params:{sellerId: sellerId, shop: shop, products: updatedProducts}, merge:true})
+      navigation.navigate(
+        {
+          name : "ShopProductsScreen", 
+          params:{sellerId: sellerId, shop: shop, products: updatedProducts}, 
+          merge:true
+        }
+      )
     } catch (err: any) {
       console.error(
         "Request failed, response:",

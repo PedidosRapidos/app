@@ -6,22 +6,21 @@ import { API_URL } from "../../services/config";
 import Icon from "react-native-vector-icons/Ionicons";
 import { colors, colorWithOpacity } from "../../res/colors";
 import { spacing } from "../../res/spacing";
-import { height, heightPercentageToDP } from "../../res/responsive";
 
 interface Props<T> {
   product: T;
-  onDetails: (product: T) => void;
+  onDetails?: (product: T) => void;
   onCart?: (product: T) => void;
 }
 
-export const ProductPreviewOwner = ({ product, onDetails, onCart }: Props<any>) => {
+export const ProductPreview2 = ({ product, onDetails, onCart }: Props<any>) => {
   return (
-    <TouchableOpacity key={product.id} onPress={() => onDetails(product)}>
-      <View style={styles.productPreviewContainer}>
+    <View style={styles.productPreviewContainer}>
+      <TouchableOpacity key={product.id} onPress={() => onDetails ? onDetails(product) : null} style={styles.productContainer}>
         <View style={styles.productImageContainer}>
           <Image
             source={{
-              uri: `${API_URL}/products/${product.id}/image?q=${new Date()}`,
+              uri: `${API_URL}/products/${product.id}/image`,
             }}
             style={
               imageStyles.preview
@@ -40,43 +39,44 @@ export const ProductPreviewOwner = ({ product, onDetails, onCart }: Props<any>) 
               $ {product.price}
             </Typography>
           </View>
-          {onCart ? (
-          <View style={styles.buttonContainer}>
-            <Icon
-              name="cart"
-              size={25}
-              style={styles.buttonText}
-              onPress={() => onCart(product)}
-            ></Icon>
-          </View>
-            ):(null)
-          }
         </View>
+      </TouchableOpacity>
+      <View style={styles.shopCartContainer}>
+      {onCart && (
+        <TouchableOpacity style={styles.buttonContainer}>
+          <Icon
+            name="cart"
+            size={25}
+            style={styles.buttonText}
+            onPress={() => onCart(product)}
+          ></Icon>
+        </TouchableOpacity>
+      )}
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  productPreviewContainer: {  
+  productPreviewContainer: {
     flexDirection: "row",
-    marginVertical: spacing.paddingVertical,
-    //borderWidth: 1,
-    //borderColor: "white", 
+    paddingVertical: spacing.paddingVertical,
+    alignItems:"center"
+  },
+  productContainer: {  
+    flexDirection: "row",
+    flex:2,
+  },
+  shopCartContainer:{
+    width: 100,
+  
   },
   productImageContainer:{
     flex:1,
   },
   productInfoContainer: { 
     marginHorizontal: spacing.paddingHorizontal,
-    flex: 2, 
-  },
-  margin: {
-    marginHorizontal: 10,
-    marginVertical: 10,
-  },
-  padding: {
-    paddingVertical: 10,
+    flex: 1, 
   },
   productInfoRowContainer: {
     paddingVertical: spacing.textSpacing,
@@ -100,8 +100,6 @@ const styles = StyleSheet.create({
     height: 40,
     width: 100,
     backgroundColor: colors.orange,
-    marginVertical: spacing.paddingVertical / 3,
-    marginHorizontal: spacing.paddingHorizontal / 2,
   },
   buttonText: {
     color: colors.white,
