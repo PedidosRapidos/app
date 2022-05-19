@@ -42,7 +42,7 @@ export const ShopProductsScreen = ({ navigation, route }: Props) => {
   };
 
   const navigateToProductsDetailScreen = (product: any) => {
-    navigation.navigate("ProductDetailScreen", {
+    navigation.navigate("ProductDetailScreenOwner", {
       product: product,
     });
   };
