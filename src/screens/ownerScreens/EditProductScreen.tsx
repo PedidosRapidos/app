@@ -10,15 +10,16 @@ import { spacing } from "../../res/spacing";
 import { Input } from "../../ui/components/Input";
 import { useForm } from "../../ui/hooks/useForm";
 import * as ImagePicker from "expo-image-picker";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MainButton } from "../../ui/components/MainButton";
 import client from "../../services/config";
 import { SecondaryButton } from "../../ui/components/SecondaryButton";
 import { SectionContainer } from "../../ui/components/SectionContainer";
 import { SectionTitle } from "../../ui/components/SectionTitle";
+import { API_URL } from "../../services/config";
 
 interface Props
-  extends StackScreenProps<RootStackParams, "UploadProductScreen"> {}
+  extends StackScreenProps<RootStackParams, "EditProductScreen"> {}
 
 const styles = StyleSheet.create({
   section: {
@@ -45,14 +46,15 @@ const styles = StyleSheet.create({
   },
 });
 
-export const UploadProductScreen = ({ navigation, route }: Props) => {
-  const { productName, description, price, onChange } = useForm({
-    productName: "",
-    description: "",
-    price: "",
+export const EditProductScreen = ({ navigation, route }: Props) => {
+  const { product, image } = route.params;
+  const { productName, description, price, form, onChange } = useForm({
+    productName: product.name,
+    description: product.description,
+    price: product.price.toString(),
   });
 
-  const [selectedImage, setSelectedImage] = useState<any>(null);
+  const [selectedImage, setSelectedImage] = useState<any>(image);
 
   let openImagePickerAsync = async () => {
     let permissionResult =
@@ -71,7 +73,7 @@ export const UploadProductScreen = ({ navigation, route }: Props) => {
       return;
     }
 
-    setSelectedImage(pickerResult);
+    setSelectedImage(pickerResult.uri);
   };
 
   const sendForm = async () => {
@@ -94,22 +96,22 @@ export const UploadProductScreen = ({ navigation, route }: Props) => {
       type: type,
     });
 
-    const { sellerId, shop, products } = route.params;
+    const { product } = route.params;
 
     try {
-      const { data: product } = await client.post(
-        `/sellers/${sellerId}/shops/${shop.id}/products`,
+      const { data: UpProduct } = await client.put(
+        `/products/${product.id}`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
 
-      let updatedProducts = products.slice();
-      updatedProducts.push(product);
+      let updatedProducts = product.slice();
+      updatedProducts.push(UpProduct);
       navigation.navigate({
         name: "ShopProductsScreen",
-        params: { sellerId: sellerId, shop: shop, products: updatedProducts },
+        params: { sellerId: 1, shop: 2, products: updatedProducts },
         merge: true,
       });
     } catch (err: any) {
@@ -128,13 +130,13 @@ export const UploadProductScreen = ({ navigation, route }: Props) => {
         style={globalStyles.innerContainer}
       >
         <SectionContainer>
-          <SectionTitle text="Enter product data"></SectionTitle>
+          <SectionTitle text="Update your product data"></SectionTitle>
           <Input
             onChangeText={(nextProductName) =>
               onChange("productName", nextProductName)
             }
             value={productName}
-            placeholder="Product Name"
+            placeholder="Name"
           />
           <Input
             onChangeText={(nextDescription) =>
@@ -166,7 +168,7 @@ export const UploadProductScreen = ({ navigation, route }: Props) => {
             <View style={{ flex: 1 }}>
               {selectedImage && (
                 <Image
-                  source={{ uri: selectedImage.uri }}
+                  source={{ uri: selectedImage }}
                   style={styles.thumbnail}
                 />
               )}

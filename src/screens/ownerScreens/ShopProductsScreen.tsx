@@ -1,4 +1,4 @@
-import { StyleSheet, View, Image } from "react-native";
+import { StyleSheet, View, Image, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../../res/globalStyles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -71,7 +71,11 @@ export const ShopProductsScreen = ({ navigation, route }: Props) => {
 
   return (
     <SafeAreaView style={globalStyles.generalContainer}>
-      <View style={globalStyles.innerContainer}>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+        style={globalStyles.innerContainer}
+      >
         <SectionContainer>
           <MainButton
             text="Add product"
@@ -99,7 +103,7 @@ export const ShopProductsScreen = ({ navigation, route }: Props) => {
             </View>
           ))}
         </SectionContainer>
-      </View>
+      </ScrollView>
       <Loader visible={isLoading} />
     </SafeAreaView>
   );

@@ -94,7 +94,7 @@ export const ProductDetailScreen = ({ navigation, route }: Props) => {
               width: "100%",
               height: 300,
               borderWidth: 2,
-              borderRadius: 10,
+              borderRadius: 15,
               borderColor: colors.popupBackground,
               marginBottom: (spacing.inputSpacing * 2) / 6,
               marginTop: (spacing.inputSpacing * 2) / 6,
