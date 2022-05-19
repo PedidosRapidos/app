@@ -85,19 +85,18 @@ export const EditProductScreen = ({ navigation, route }: Props) => {
 
     // Infer the type of the image
 
-    let filename = selectedImage.uri.split("/").pop();
+    let filename = selectedImage.split("/").pop();
 
     let match = /\.(\w+)$/.exec(filename);
     let type = match ? `image/${match[1]}` : `image`;
 
     formData.append("image", {
-      uri: selectedImage.uri,
+      uri: selectedImage,
       name: filename,
       type: type,
     });
 
     const { product } = route.params;
-
     try {
       const { data: UpProduct } = await client.put(
         `/products/${product.id}`,
@@ -109,10 +108,8 @@ export const EditProductScreen = ({ navigation, route }: Props) => {
 
       let updatedProducts = product.slice();
       updatedProducts.push(UpProduct);
-      navigation.navigate({
-        name: "ShopProductsScreen",
-        params: { sellerId: 1, shop: 2, products: updatedProducts },
-        merge: true,
+      navigation.navigate("ProductDetailScreenOwner", {
+        product: updatedProducts,
       });
     } catch (err: any) {
       console.error(
