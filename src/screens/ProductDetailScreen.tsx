@@ -12,7 +12,7 @@ import { spacing } from "../res/spacing";
 import { imageStyles } from "../res/imageStyles";
 import { API_URL } from "../services/config";
 import { useCart } from "../contexts/SessionContext";
-import Icon from "react-native-vector-icons/Ionicons";
+import Icon from "react-native-vector-icons/FontAwesome5";
 
 interface Props
   extends StackScreenProps<RootStackParams, "ProductDetailScreen"> {}
@@ -34,9 +34,9 @@ const styles = StyleSheet.create({
     borderColor: colorWithOpacity(colors.orange, 0.08),
     alignContent: "center",
     justifyContent: "center",
-    borderRadius: 15,
-    height: 40,
-    width: 100,
+    borderRadius: 100,
+    height: "90%",
+    width: "25%",
     backgroundColor: colors.orange,
     marginVertical: spacing.paddingVertical / 3,
     marginHorizontal: spacing.paddingHorizontal / 2,
@@ -58,7 +58,24 @@ export const ProductDetailScreen = ({ navigation, route }: Props) => {
         showsVerticalScrollIndicator={false}
         style={globalStyles.innerContainer}
       >
-        <View style={{ marginTop: 50 }}>
+        <View style={{ marginTop: "2%" }}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row-reverse",
+            }}
+          >
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity onPress={addProductToCart}>
+                <Icon
+                  name="cart-plus"
+                  size={25}
+                  style={styles.buttonText}
+                ></Icon>
+              </TouchableOpacity>
+            </View>
+          </View>
+
           <Image
             source={{
               uri: `${API_URL}/products/${product.id}/image?q=${new Date()}`,
@@ -70,6 +87,7 @@ export const ProductDetailScreen = ({ navigation, route }: Props) => {
               borderWidth: 2,
               borderColor: colors.popupBackground,
               marginBottom: (spacing.inputSpacing * 2) / 6,
+              marginTop: (spacing.inputSpacing * 2) / 6,
               alignSelf: "center",
             }}
           ></Image>
@@ -85,11 +103,6 @@ export const ProductDetailScreen = ({ navigation, route }: Props) => {
           <Typography style={[styles.textSection, styles.sectionMarginBotton]}>
             {product.description}
           </Typography>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={addProductToCart}>
-              <Icon name="cart" size={25} style={styles.buttonText}></Icon>
-            </TouchableOpacity>
-          </View>
         </View>
       </KeyboardAwareScrollView>
     </SafeAreaView>

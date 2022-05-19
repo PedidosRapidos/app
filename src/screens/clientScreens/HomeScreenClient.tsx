@@ -14,9 +14,8 @@ import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 import ScrollList from "../../ui/components/ScrollList";
 import { useCart } from "../../contexts/SessionContext";
-import { View } from 'react-native';
-import { ProductPreview2 } from '../../ui/components/ProductPreview2';
-
+import { View } from "react-native";
+import { ProductPreview2 } from "../../ui/components/ProductPreview2";
 
 interface Props extends StackScreenProps<RootStackParams, "HomeScreenClient"> {}
 
@@ -56,16 +55,14 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
         }
       }
     };
-    setFetchMore({fetch: fetchPage});
+    setFetchMore({ fetch: fetchPage });
   }, [searchValue]);
- 
+
   return (
     <SafeAreaView
       style={{ ...globalStyles.generalContainer, paddingBottom: 150 }}
     >
-      <View
-        style={globalStyles.innerContainer}
-      >
+      <View style={globalStyles.innerContainer}>
         <SectionContainer>
           <SectionTitle text="Search" />
           <SearchBar

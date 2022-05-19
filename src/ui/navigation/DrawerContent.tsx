@@ -14,10 +14,13 @@ export const DrawerContent = ({ navigation }: PropsWithChildren<any>) => {
   const [cart] = useCart();
   const cartCount = cart?.products?.length ? `(${cart?.products?.length})` : "";
   return (
-    <DrawerContentScrollView style={globalStyles.generalContainer}>
+    <DrawerContentScrollView style={globalStyles.drawerContainer}>
       <View style={{ flex: 2 }}></View>
       <View style={{ flex: 2 }}>
-        <Typography> Welcome {user?.username}! </Typography>
+        <Typography style={{ flex: 2, marginBottom: 10, margin: 5 }}>
+          {" "}
+          Welcome {user?.username}!{" "}
+        </Typography>
         {user?.isClient && (
           <MainButton
             text={`My Cart ${cartCount}`}

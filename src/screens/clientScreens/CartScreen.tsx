@@ -31,7 +31,11 @@ export const CartScreen = ({ navigation }: Props) => {
 
   return (
     <SafeAreaView
-      style={{ ...globalStyles.generalContainer, paddingBottom: 150 }}
+      style={{
+        ...globalStyles.generalContainer,
+        paddingBottom: 150,
+        padding: 15,
+      }}
     >
       <SectionContainer>
         <SectionTitle text="My Shopping Cart" />
@@ -42,7 +46,6 @@ export const CartScreen = ({ navigation }: Props) => {
         data={products}
         keyExtractor={(product, index) => `${index}-${product.id}`}
       />
-    
     </SafeAreaView>
   );
 };
