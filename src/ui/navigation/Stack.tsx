@@ -14,9 +14,9 @@ import {
   WithSession,
 } from "../../contexts/SessionContext";
 import { ShopProductsScreen } from "../../screens/ownerScreens/ShopProductsScreen";
-import { createDrawerNavigator } from "@react-navigation/drawer";
 import { DrawerContent } from "./DrawerContent";
 import { CartScreen } from "../../screens/clientScreens/CartScreen";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 
 export type RootStackParams = {
   WelcomeScreen: undefined;
@@ -25,7 +25,7 @@ export type RootStackParams = {
   SignupScreen: undefined;
   HomeScreenOwner: { shops: Array<any> };
   HomeScreenClient: { clientId: number; clientName: string };
-  AddShopScreen: { sellerId: number, shops: Array<any> };
+  AddShopScreen: { sellerId: number; shops: Array<any> };
   UploadProductScreen: { sellerId: number; shop: any; products: Array<any> };
   ProductDetailScreen: { product: any };
   ShopProductsScreen: { sellerId: number; shop: any; products: Array<any> };
@@ -33,7 +33,7 @@ export type RootStackParams = {
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
-export const MyStack = () => {
+const MyStack = () => {
   const user = useUser();
   return (
     <>
@@ -108,3 +108,5 @@ export const MyStack = () => {
     </>
   );
 };
+
+export default MyStack;

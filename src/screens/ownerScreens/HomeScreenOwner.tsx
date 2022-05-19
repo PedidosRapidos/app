@@ -23,10 +23,10 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [screenShops, setScreenShops] = useState<any>([]);
 
-  let shops: any[] = []
-  if(route.params){
-    console.log("routeparams")
-    shops = route.params.shops
+  let shops: any[] = [];
+  if (route.params) {
+    console.log("routeparams");
+    shops = route.params.shops;
   }
 
   const { id: sellerId } = useUser();
@@ -38,8 +38,8 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
         const { data: fetchedShops } = await client.get(
           `/sellers/${sellerId}/shops/`
         );
-        console.log("Fetching")
-        setScreenShops(fetchedShops)
+        console.log("Fetching");
+        setScreenShops(fetchedShops);
         return fetchedShops;
       } catch (err: any) {
         console.error(
@@ -66,61 +66,50 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
   const navigateToAddShopScreen = () => {
     navigation.navigate("AddShopScreen", {
       sellerId: sellerId,
-      shops: screenShops
+      shops: screenShops,
     });
-  }
+  };
 
   useEffect(() => {
-    console.log("UseEffect")
+    console.log("UseEffect");
     getShops(0);
   }, []);
 
   useEffect(() => {
-    if(shops.length > screenShops.length){
-      console.log("UpdateOnChange")
+    if (shops.length > screenShops.length) {
+      console.log("UpdateOnChange");
       setScreenShops(shops);
     }
   }, [route.params?.shops]);
 
-
-    return (
-      <SafeAreaView style={globalStyles.generalContainer}>
-              <KeyboardAwareScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}
-        style={globalStyles.innerContainer}
-      >
-          <SectionContainer>
-            <SectionTitle text="My shops" />
-            {screenShops.length != 0 ? (
-              null
-              ) 
-              : (
-              <Typography>You do not have any shops yet</Typography>
-              )
-            }
-            </SectionContainer>
-            <SectionContainer>
-            {screenShops.map((item: any, index: any) => (
-              <View key={item.id}>
-              <ShopPreview 
-                  shop={item} 
-                  onPressMyProducts={navigateToShopProductsScreen} 
-                  />
-              </View>
-            ))
-            }
-            </SectionContainer>
-          <SectionContainer>
-            <MainButton
-              text="Add shop"
-              onPress={navigateToAddShopScreen}
-              backgroundColor={colors.orange}/>
-          </SectionContainer>
-        </KeyboardAwareScrollView>
-        <Loader visible={isLoading} />
-      </SafeAreaView>
-    );
-
-
+  return (
+    <SafeAreaView style={globalStyles.generalContainer}>
+      <View style={globalStyles.innerContainer}>
+        <SectionContainer>
+          <MainButton
+            text="Add shop"
+            onPress={navigateToAddShopScreen}
+            backgroundColor={colors.orange}
+          />
+        </SectionContainer>
+        <SectionContainer>
+          <SectionTitle text="My shops" />
+          {screenShops.length != 0 ? null : (
+            <Typography>You do not have any shops yet</Typography>
+          )}
+        </SectionContainer>
+        <SectionContainer>
+          {screenShops.map((item: any, index: any) => (
+            <View key={item.id}>
+              <ShopPreview
+                shop={item}
+                onPressMyProducts={navigateToShopProductsScreen}
+              />
+            </View>
+          ))}
+        </SectionContainer>
+      </View>
+      <Loader visible={isLoading} />
+    </SafeAreaView>
+  );
 };

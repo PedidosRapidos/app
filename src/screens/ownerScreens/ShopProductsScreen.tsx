@@ -13,93 +13,65 @@ import { Loader } from "../../ui/components/Loader";
 import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 import { ShopPreview } from "../../ui/components/ShopPreview";
-import { ProductPreview2 } from '../../ui/components/ProductPreview2';
+import { ProductPreview2 } from "../../ui/components/ProductPreview2";
 
-interface Props extends StackScreenProps<RootStackParams, "ShopProductsScreen"> {}
+interface Props
+  extends StackScreenProps<RootStackParams, "ShopProductsScreen"> {}
 
 export const ShopProductsScreen = ({ navigation, route }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [productsToShow, setProductsToShow] = useState<any>([]);
-  let {sellerId, shop, products} = route.params;
-  
+  let { sellerId, shop, products } = route.params;
+
   const getShopProducts = async () => {
     setIsLoading(true);
-    
+
     try {
       const { data: fetchProducts } = await client.get(
         `/shops/${shop.id}/products`
       );
       setProductsToShow(fetchProducts.products);
-    
     } catch (err: any) {
       console.error(
         "Request failed, response:",
         err.response?.data || err.message || err
       );
-
     } finally {
       setIsLoading(false);
     }
-    
   };
 
-  const navigateToProductsDetailScreen = (product:any) => {
+  const navigateToProductsDetailScreen = (product: any) => {
     navigation.navigate("ProductDetailScreen", {
-        product: product,
-      });
-  }
+      product: product,
+    });
+  };
 
   const navigateToUploadProductScreen = () => {
     navigation.navigate("UploadProductScreen", {
-        sellerId: sellerId,
-        shop: shop,
-        products: productsToShow
-      })
-  }
+      sellerId: sellerId,
+      shop: shop,
+      products: productsToShow,
+    });
+  };
 
   useEffect(() => {
-    getShopProducts()
+    getShopProducts();
   }, []);
 
   useEffect(() => {
-    getShopProducts()
+    getShopProducts();
   }, [shop.id]);
 
   useEffect(() => {
-    if(products.length > productsToShow.length){
-      setProductsToShow(products)
+    if (products.length > productsToShow.length) {
+      setProductsToShow(products);
     }
   }, [products]);
 
   return (
     <SafeAreaView style={globalStyles.generalContainer}>
-      <KeyboardAwareScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}
-        style={globalStyles.innerContainer}
-      >
-        <SectionContainer>
-            <SectionTitle text="Shop" />
-            <View>
-              <ShopPreview shop={shop}/>
-            </View>
-        </SectionContainer>
-        <SectionContainer>
-            <SectionTitle text="My products" />
-            {productsToShow.length != 0 ? (
-                null
-            ) : (
-                <Typography>You do not have any product in this shop</Typography>
-            )}
-            {productsToShow.map((item: any, index: any) => (
-                <View key={item.id}>
-                <ProductPreview2 
-                  product={item} 
-                  onDetails={navigateToProductsDetailScreen} 
-                  />
-                </View>
-            ))}
-        </SectionContainer>
+      <View style={globalStyles.innerContainer}>
         <SectionContainer>
           <MainButton
             text="Add product"
@@ -107,7 +79,27 @@ export const ShopProductsScreen = ({ navigation, route }: Props) => {
             backgroundColor={colors.orange}
           />
         </SectionContainer>
-      </KeyboardAwareScrollView>
+        <SectionContainer>
+          <SectionTitle text="Shop" />
+          <View>
+            <ShopPreview shop={shop} />
+          </View>
+        </SectionContainer>
+        <SectionContainer>
+          <SectionTitle text="My products" />
+          {productsToShow.length != 0 ? null : (
+            <Typography>You do not have any product in this shop</Typography>
+          )}
+          {productsToShow.map((item: any, index: any) => (
+            <View key={item.id}>
+              <ProductPreview2
+                product={item}
+                onDetails={navigateToProductsDetailScreen}
+              />
+            </View>
+          ))}
+        </SectionContainer>
+      </View>
       <Loader visible={isLoading} />
     </SafeAreaView>
   );
