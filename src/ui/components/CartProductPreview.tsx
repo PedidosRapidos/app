@@ -39,7 +39,7 @@ export const CartProductPreview = ({
             <Typography style={styles.productName}>{product.name}</Typography>
           </View>
           <View style={styles.productInfoRowContainer}>
-            <Typography style={styles.productDescription}>
+            <Typography style={styles.productDescription} numberOfLines={2}>
               {product.description}
             </Typography>
           </View>
