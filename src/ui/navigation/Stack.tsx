@@ -8,16 +8,13 @@ import { AddShopScreen } from "../../screens/ownerScreens/AddShopScreen";
 import { UploadProductScreen } from "../../screens/ownerScreens/UploadProductScreen";
 import { HomeScreenOwner } from "../../screens/ownerScreens/HomeScreenOwner";
 import { ProductDetailScreen } from "../../screens/ProductDetailScreen";
-import {
-  useUser,
-  WithoutSession,
-  WithSession,
-} from "../../contexts/SessionContext";
+import { WithoutSession, WithSession } from "../../contexts/SessionContext";
 import { ShopProductsScreen } from "../../screens/ownerScreens/ShopProductsScreen";
 import { DrawerContent } from "./DrawerContent";
 import { CartScreen } from "../../screens/clientScreens/CartScreen";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { ProductDetailScreenOwner } from "../../screens/ownerScreens/ProductDetailScreenOwner";
+import { useUser } from "../../contexts/UserContext";
 
 export type RootStackParams = {
   WelcomeScreen: undefined;

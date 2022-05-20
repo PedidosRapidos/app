@@ -1,18 +1,25 @@
-import React from "react";
-import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet, Image, TouchableOpacity, Text } from "react-native";
 import { RootStackParams } from "../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../res/globalStyles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { normalizeSize, Typography } from "../res/typography";
+import {
+  BoldTypography,
+  normalizeSize,
+  SemiBoldTypography,
+  Typography,
+} from "../res/typography";
 import { colors, colorWithOpacity } from "../res/colors";
 import { spacing } from "../res/spacing";
 import { imageStyles } from "../res/imageStyles";
 import { API_URL } from "../services/config";
-import { useCart } from "../contexts/SessionContext";
+import { useCart } from "../contexts/CartContext";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { Counter } from "../ui/components/Counter";
+import { IconButton } from "../ui/components/IconButton";
 
 interface Props
   extends StackScreenProps<RootStackParams, "ProductDetailScreen"> {}
@@ -59,50 +66,50 @@ export const ProductDetailScreen = ({ navigation, route }: Props) => {
         style={globalStyles.innerContainer}
       >
         <View style={{ marginTop: "2%" }}>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row-reverse",
-            }}
+          <BoldTypography
+            style={[
+              styles.textSection,
+              styles.sectionMarginBotton,
+              { fontSize: 40 },
+            ]}
           >
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity onPress={addProductToCart}>
-                <Icon
-                  name="cart-plus"
-                  size={25}
-                  style={styles.buttonText}
-                ></Icon>
-              </TouchableOpacity>
-            </View>
-          </View>
-
+            {product.name}
+          </BoldTypography>
           <Image
             source={{
               uri: `${API_URL}/products/${product.id}/image?q=${new Date()}`,
             }}
             style={{
               ...imageStyles.categorieIcon,
-              width: 450,
-              height: 250,
+              width: "100%",
+              height: 300,
               borderWidth: 2,
+              borderRadius: 10,
               borderColor: colors.popupBackground,
               marginBottom: (spacing.inputSpacing * 2) / 6,
               marginTop: (spacing.inputSpacing * 2) / 6,
               alignSelf: "center",
             }}
           ></Image>
-          <Typography style={[styles.section]}>Name:</Typography>
-          <Typography style={[styles.textSection, styles.sectionMarginBotton]}>
-            {product.name}
-          </Typography>
-          <Typography style={[styles.section]}>Price:</Typography>
-          <Typography style={[styles.textSection, styles.sectionMarginBotton]}>
-            {product.price}
-          </Typography>
-          <Typography style={[styles.section]}>Description:</Typography>
-          <Typography style={[styles.textSection, styles.sectionMarginBotton]}>
+          <SemiBoldTypography
+            style={[styles.textSection, styles.sectionMarginBotton]}
+          >
             {product.description}
+          </SemiBoldTypography>
+
+          <Typography style={[styles.textSection, styles.sectionMarginBotton]}>
+            $ {product.price}
           </Typography>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+            }}
+          >
+            <Counter />
+            <IconButton name="cart-plus" size={25} />
+          </View>
         </View>
       </KeyboardAwareScrollView>
     </SafeAreaView>

@@ -13,7 +13,7 @@ import { ProductPreview } from "../../ui/components/ProductPreview";
 import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 import ScrollList from "../../ui/components/ScrollList";
-import { useCart } from "../../contexts/SessionContext";
+import { useCart } from "../../contexts/CartContext";
 import { View } from "react-native";
 import { ProductPreview2 } from "../../ui/components/ProductPreview2";
 

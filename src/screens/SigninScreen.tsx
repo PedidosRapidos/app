@@ -26,7 +26,7 @@ import { Loader } from "../ui/components/Loader";
 import client from "../services/config";
 import { useToggle } from "../ui/hooks/useToggle";
 import { ErrorPopUp } from "../ui/components/ErrorPopUp";
-import { useUser } from "../contexts/SessionContext";
+import { useUser } from "../contexts/UserContext";
 
 interface Props extends StackScreenProps<RootStackParams, "SigninScreen"> {}
 
