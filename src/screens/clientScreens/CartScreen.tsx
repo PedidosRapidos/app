@@ -1,10 +1,9 @@
 import React from "react";
-import { FlatList, View } from "react-native";
+import { FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../../res/globalStyles";
 import { SectionTitle } from "../../ui/components/SectionTitle";
 import { SectionContainer } from "../../ui/components/SectionContainer";
-import { ProductPreview } from "../../ui/components/ProductPreview";
 import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 import { useCart } from "../../contexts/SessionContext";
@@ -14,19 +13,12 @@ interface Props extends StackScreenProps<RootStackParams, "CartScreen"> {}
 
 export const CartScreen = ({ navigation }: Props) => {
   const [cart] = useCart();
-
   const products = cart?.products || [];
 
   const displayProductDetails = (item: any) => {
     navigation.navigate("ProductDetailScreen", {
       product: item,
     });
-  };
-
-  const renderItem = ({ item: product }: any) => {
-    return (
-      <ProductPreview2 product={product} onDetails={displayProductDetails} />
-    );
   };
 
   return (
@@ -42,7 +34,13 @@ export const CartScreen = ({ navigation }: Props) => {
       </SectionContainer>
       <FlatList
         style={{ flex: 1 }}
-        renderItem={renderItem}
+        renderItem={({ item: product }) => (
+          <ProductPreview2
+            product={product}
+            onDetails={displayProductDetails}
+            onDelete={cart.remove}
+          />
+        )}
         data={products}
         keyExtractor={(product, index) => `${index}-${product.id}`}
       />

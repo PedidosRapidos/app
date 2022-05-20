@@ -34,7 +34,8 @@ export interface Cart {
 }
 
 interface CartActions {
-  add: (productId: Product) => Promise<any>;
+  add: (productId: Product) => any;
+  remove: (productId: Product) => any;
 }
 
 const UserContext = React.createContext<User & UserActions>(
@@ -118,6 +119,20 @@ export const SessionProvider: FC = ({ children }: PropsWithChildren<any>) => {
             {
               product_id: productId,
             }
+          );
+          setCart(updatedCart);
+        } catch (e) {
+          console.log("add item", e);
+        }
+      } else {
+        console.log("trying to add item, but cart doesnt exits");
+      }
+    },
+    async remove({ id: productId }: { id: number }) {
+      if (cart.id) {
+        try {
+          const { data: updatedCart } = await client.delete(
+            `/shopping_cart/${cart.id}/products/${productId}`
           );
           setCart(updatedCart);
         } catch (e) {

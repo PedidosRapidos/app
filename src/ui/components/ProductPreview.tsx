@@ -3,9 +3,7 @@ import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { imageStyles } from "../../res/imageStyles";
 import { BoldTypography, Typography } from "../../res/typography";
 import { API_URL } from "../../services/config";
-import Icon from "react-native-vector-icons/Ionicons";
-import { colors, colorWithOpacity } from "../../res/colors";
-import { spacing } from "../../res/spacing";
+import { IconButton } from "./IconButton";
 
 interface Props<T> {
   product: T;
@@ -38,11 +36,7 @@ export const ProductPreview = ({ product, onDetails, onCart }: Props<any>) => {
             $ {product.price}
           </BoldTypography>
           {onCart && (
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity onPress={() => onCart(product)}>
-                <Icon name="cart" size={25} style={styles.buttonText}></Icon>
-              </TouchableOpacity>
-            </View>
+            <IconButton name="cart" size={25} onPress={() => onCart(product)} />
           )}
         </View>
       </View>
@@ -62,21 +56,5 @@ const styles = StyleSheet.create({
   },
   round: {
     borderRadius: 10,
-  },
-  buttonContainer: {
-    borderWidth: 5,
-    borderColor: colorWithOpacity(colors.orange, 0.08),
-    alignContent: "center",
-    justifyContent: "center",
-    borderRadius: 15,
-    height: 40,
-    width: 100,
-    backgroundColor: colors.orange,
-    marginVertical: spacing.paddingVertical / 3,
-    marginHorizontal: spacing.paddingHorizontal / 2,
-  },
-  buttonText: {
-    color: colors.white,
-    textAlign: "center",
   },
 });
