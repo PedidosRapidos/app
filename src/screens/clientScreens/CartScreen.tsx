@@ -6,8 +6,8 @@ import { SectionTitle } from "../../ui/components/SectionTitle";
 import { SectionContainer } from "../../ui/components/SectionContainer";
 import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
-import { useCart } from "../../contexts/SessionContext";
-import { ProductPreview2 } from "../../ui/components/ProductPreview2";
+import { useCart } from "../../contexts/CartContext";
+import { CartProductPreview } from "../../ui/components/CartProductPreview";
 
 interface Props extends StackScreenProps<RootStackParams, "CartScreen"> {}
 
@@ -35,7 +35,7 @@ export const CartScreen = ({ navigation }: Props) => {
       <FlatList
         style={{ flex: 1 }}
         renderItem={({ item: product }) => (
-          <ProductPreview2
+          <CartProductPreview
             product={product}
             onDetails={displayProductDetails}
             onDelete={cart.remove}

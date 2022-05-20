@@ -1,18 +1,25 @@
-import { TouchableOpacity, StyleSheet, Animated, View } from "react-native";
+import {
+  TouchableOpacity,
+  StyleSheet,
+  View,
+  StyleProp,
+  ViewStyle,
+} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { colors, colorWithOpacity } from "../../res/colors";
 
 interface Props {
-  onPress: () => any;
+  onPress?: () => any;
   name: string;
-  size: number;
+  size?: number;
+  style?: StyleProp<ViewStyle>;
 }
 
-export const IconButton = ({ size, name, onPress }: Props) => {
+export const IconButton = ({ size, name, onPress, style }: Props) => {
   return (
     <TouchableOpacity onPress={onPress}>
-      <View style={{ ...styles.buttonContainer }}>
-        <Icon name={name} size={size} style={styles.buttonText} />
+      <View style={[styles.buttonContainer, style]}>
+        <Icon name={name} size={size || 25} style={styles.buttonText} />
       </View>
     </TouchableOpacity>
   );
@@ -20,7 +27,7 @@ export const IconButton = ({ size, name, onPress }: Props) => {
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    borderWidth: 5,
+    // borderWidth: 5,
     borderColor: colorWithOpacity(colors.orange, 0.08),
     alignContent: "center",
     justifyContent: "center",

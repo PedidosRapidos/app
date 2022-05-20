@@ -4,7 +4,8 @@ import {
 } from "@react-navigation/drawer";
 import { PropsWithChildren } from "react";
 import { View } from "react-native";
-import { useCart, useUser } from "../../contexts/SessionContext";
+import { useCart } from "../../contexts/CartContext";
+import { useUser } from "../../contexts/UserContext";
 import { globalStyles } from "../../res/globalStyles";
 import { Typography } from "../../res/typography";
 import { MainButton } from "../components/MainButton";

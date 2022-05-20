@@ -1,7 +1,6 @@
-import { StyleSheet, View, Image } from "react-native";
+import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../../res/globalStyles";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import React, { useCallback, useEffect, useState } from "react";
 import { Typography } from "../../res/typography";
 import { colors } from "../../res/colors";
@@ -13,9 +12,8 @@ import { Loader } from "../../ui/components/Loader";
 import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 import { ShopPreview } from "../../ui/components/ShopPreview";
-import { useUser } from "../../contexts/SessionContext";
 import ScrollList from "../../ui/components/ScrollList";
-import { SecondaryButton } from "../../ui/components/SecondaryButton";
+import { useUser } from "../../contexts/UserContext";
 
 interface Props extends StackScreenProps<RootStackParams, "HomeScreenOwner"> {}
 
