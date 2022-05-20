@@ -16,7 +16,7 @@ import client from "../../services/config";
 import { SecondaryButton } from "../../ui/components/SecondaryButton";
 import { SectionContainer } from "../../ui/components/SectionContainer";
 import { SectionTitle } from "../../ui/components/SectionTitle";
-import { API_URL } from "../../services/config";
+import { createIconSetFromFontello } from "react-native-vector-icons";
 
 interface Props
   extends StackScreenProps<RootStackParams, "EditProductScreen"> {}
@@ -53,8 +53,13 @@ export const EditProductScreen = ({ navigation, route }: Props) => {
     description: product.description,
     price: product.price.toString(),
   });
-
-  const [selectedImage, setSelectedImage] = useState<any>(image);
+  const [isNewImage, setIsNewImage] = useState<any>(false);
+  const [selectedImage, setSelectedImage] = useState<any>(null);
+  useEffect(() => {
+    setSelectedImage(image);
+  }, []);
+  console.log("selected:", image);
+  console.log(selectedImage);
 
   let openImagePickerAsync = async () => {
     let permissionResult =
@@ -72,7 +77,7 @@ export const EditProductScreen = ({ navigation, route }: Props) => {
     if (pickerResult.cancelled === true) {
       return;
     }
-
+    setIsNewImage(true);
     setSelectedImage(pickerResult.uri);
   };
 
@@ -84,18 +89,23 @@ export const EditProductScreen = ({ navigation, route }: Props) => {
     formData.append("price", price);
 
     // Infer the type of the image
+    if (isNewImage) {
+      let filename = selectedImage.split("/").pop();
 
-    let filename = selectedImage.split("/").pop();
+      let match = /\.(\w+)$/.exec(filename);
+      let type = match ? `image/${match[1]}` : `image`;
 
-    let match = /\.(\w+)$/.exec(filename);
-    let type = match ? `image/${match[1]}` : `image`;
+      formData.append("image", {
+        uri: selectedImage,
+        name: filename,
+        type: type,
+      });
+    }
 
-    formData.append("image", {
-      uri: selectedImage,
-      name: filename,
-      type: type,
-    });
+    console.log("--------------------");
+    console.log(selectedImage);
 
+    console.log("--------------------");
     const { product } = route.params;
     try {
       const { data: UpProduct } = await client.put(
@@ -106,16 +116,18 @@ export const EditProductScreen = ({ navigation, route }: Props) => {
         }
       );
 
-      let updatedProducts = product.slice();
-      updatedProducts.push(UpProduct);
       navigation.navigate("ProductDetailScreenOwner", {
-        product: updatedProducts,
+        product: UpProduct,
       });
     } catch (err: any) {
-      console.error(
-        "Request failed, response:",
-        err.response?.data || err.message || err
-      );
+      if (err.request) {
+        console.error(
+          "Request failed, response:",
+          err.response?.data || err.message || err
+        );
+      } else {
+        console.error("Error:", err.response?.data || err.message || err);
+      }
     }
   };
 
