@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import { colors, colorWithOpacity } from "../../res/colors";
 import { normalizeSize } from "../../res/typography";
-import { spacing } from "../../res/spacing";
 
 interface Props {
   text: string;

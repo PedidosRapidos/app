@@ -1,25 +1,25 @@
 import React from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { imageStyles } from "../../res/imageStyles";
-import {
-  BoldTypography,
-  MediumTypography,
-  SemiBoldTypography,
-  ThinTypography,
-  Typography,
-} from "../../res/typography";
+import { Typography } from "../../res/typography";
 import { API_URL } from "../../services/config";
-import Icon from "react-native-vector-icons/FontAwesome5";
 import { colors, colorWithOpacity } from "../../res/colors";
 import { spacing } from "../../res/spacing";
+import { IconButton } from "./IconButton";
 
 interface Props<T> {
   product: T;
   onDetails?: (product: T) => void;
   onCart?: (product: T) => void;
+  onDelete?: (product: T) => void;
 }
 
-export const ProductPreview2 = ({ product, onDetails, onCart }: Props<any>) => {
+export const ProductPreview2 = ({
+  product,
+  onDetails,
+  onCart,
+  onDelete,
+}: Props<any>) => {
   return (
     <View style={styles.productPreviewContainer}>
       <TouchableOpacity
@@ -51,14 +51,18 @@ export const ProductPreview2 = ({ product, onDetails, onCart }: Props<any>) => {
       </TouchableOpacity>
       <View style={styles.shopCartContainer}>
         {onCart && (
-          <TouchableOpacity style={styles.buttonContainer}>
-            <Icon
-              name="cart-plus"
-              size={25}
-              style={styles.buttonText}
-              onPress={() => onCart(product)}
-            ></Icon>
-          </TouchableOpacity>
+          <IconButton
+            name="cart-plus"
+            size={25}
+            onPress={() => onCart(product)}
+          />
+        )}
+        {onDelete && (
+          <IconButton
+            name="backspace"
+            size={25}
+            onPress={() => onDelete(product)}
+          />
         )}
       </View>
     </View>
@@ -98,19 +102,5 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: 16,
-  },
-  buttonContainer: {
-    borderWidth: 5,
-    borderColor: colorWithOpacity(colors.orange, 0.08),
-    alignContent: "center",
-    justifyContent: "center",
-    borderRadius: 15,
-    height: 40,
-    width: 100,
-    backgroundColor: colors.orange,
-  },
-  buttonText: {
-    color: colors.white,
-    textAlign: "center",
   },
 });
