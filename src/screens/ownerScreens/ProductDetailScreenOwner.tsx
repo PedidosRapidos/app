@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
@@ -12,9 +12,10 @@ import { spacing } from "../../res/spacing";
 import { imageStyles } from "../../res/imageStyles";
 import { API_URL } from "../../services/config";
 import Icon from "react-native-vector-icons/AntDesign";
+import { useShopDetail } from "../../contexts/ShopContext";
 
 interface Props
-  extends StackScreenProps<RootStackParams, "ProductDetailScreen"> {}
+  extends StackScreenProps<RootStackParams, "ProductDetailScreenOwner"> {}
 
 const styles = StyleSheet.create({
   section: {
@@ -47,11 +48,13 @@ const styles = StyleSheet.create({
 });
 
 export const ProductDetailScreenOwner = ({ navigation, route }: Props) => {
-  const { product } = route.params;
-  const uri = `${API_URL}/products/${product.id}/image?q=${new Date()}`;
+  const { id: productId } = route.params.product;
+  const [shop] = useShopDetail();
+  const product = shop.products.filter((item) => item.id === productId)[0];
   const editProduct = () => {
-    navigation.navigate("EditProductScreen", { product: product, image: uri });
+    navigation.navigate("EditProductScreen", { product });
   };
+
   return (
     <SafeAreaView style={globalStyles.generalContainer}>
       <KeyboardAwareScrollView
@@ -74,7 +77,7 @@ export const ProductDetailScreenOwner = ({ navigation, route }: Props) => {
           </View>
           <Image
             source={{
-              uri: uri,
+              uri: `${API_URL}/products/${product.id}/image?q=${new Date()}`,
             }}
             style={{
               ...imageStyles.categorieIcon,

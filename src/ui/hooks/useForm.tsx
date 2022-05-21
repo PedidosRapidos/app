@@ -12,6 +12,7 @@ export const useForm = <T extends Record<any, any>>(initState: T) => {
 
   return {
     ...state,
+    setForm: setState,
     form: state,
     onChange,
   };

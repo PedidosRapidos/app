@@ -3,9 +3,9 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../../res/globalStyles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import { colors, colorWithOpacity } from "../../res/colors";
-import { Typography, normalizeSize } from "../../res/typography";
+import { normalizeSize } from "../../res/typography";
 import { spacing } from "../../res/spacing";
 import { Input } from "../../ui/components/Input";
 import { useForm } from "../../ui/hooks/useForm";
@@ -16,6 +16,7 @@ import client from "../../services/config";
 import { SecondaryButton } from "../../ui/components/SecondaryButton";
 import { SectionContainer } from "../../ui/components/SectionContainer";
 import { SectionTitle } from "../../ui/components/SectionTitle";
+import { useShopDetail } from "../../contexts/ShopContext";
 
 interface Props
   extends StackScreenProps<RootStackParams, "UploadProductScreen"> {}
@@ -46,6 +47,9 @@ const styles = StyleSheet.create({
 });
 
 export const UploadProductScreen = ({ navigation, route }: Props) => {
+  const { sellerId, shopId } = route.params;
+  const [_, setShop] = useShopDetail();
+
   const { productName, description, price, onChange } = useForm({
     productName: "",
     description: "",
@@ -94,24 +98,16 @@ export const UploadProductScreen = ({ navigation, route }: Props) => {
       type: type,
     });
 
-    const { sellerId, shop, products } = route.params;
-
     try {
       const { data: product } = await client.post(
-        `/sellers/${sellerId}/shops/${shop.id}/products`,
+        `/sellers/${sellerId}/shops/${shopId}/products`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-
-      let updatedProducts = products.slice();
-      updatedProducts.push(product);
-      navigation.navigate({
-        name: "ShopProductsScreen",
-        params: { sellerId: sellerId, shop: shop, products: updatedProducts },
-        merge: true,
-      });
+      setShop((shop) => ({ ...shop, products: [product, ...shop.products] }));
+      navigation.goBack();
     } catch (err: any) {
       console.error(
         "Request failed, response:",

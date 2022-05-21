@@ -3,20 +3,20 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../../res/globalStyles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import { colors, colorWithOpacity } from "../../res/colors";
-import { Typography, normalizeSize } from "../../res/typography";
+import { normalizeSize } from "../../res/typography";
 import { spacing } from "../../res/spacing";
 import { Input } from "../../ui/components/Input";
 import { useForm } from "../../ui/hooks/useForm";
 import * as ImagePicker from "expo-image-picker";
 import { useEffect, useState } from "react";
 import { MainButton } from "../../ui/components/MainButton";
-import client from "../../services/config";
+import client, { API_URL } from "../../services/config";
 import { SecondaryButton } from "../../ui/components/SecondaryButton";
 import { SectionContainer } from "../../ui/components/SectionContainer";
 import { SectionTitle } from "../../ui/components/SectionTitle";
-import { createIconSetFromFontello } from "react-native-vector-icons";
+import { useShopDetail } from "../../contexts/ShopContext";
 
 interface Props
   extends StackScreenProps<RootStackParams, "EditProductScreen"> {}
@@ -47,19 +47,29 @@ const styles = StyleSheet.create({
 });
 
 export const EditProductScreen = ({ navigation, route }: Props) => {
-  const { product, image } = route.params;
-  const { productName, description, price, form, onChange } = useForm({
+  const { product } = route.params;
+  const { productName, description, price, onChange, setForm } = useForm({
     productName: product.name,
     description: product.description,
     price: product.price.toString(),
   });
+
+  const [_, setShop] = useShopDetail();
   const [isNewImage, setIsNewImage] = useState<any>(false);
   const [selectedImage, setSelectedImage] = useState<any>(null);
+
   useEffect(() => {
-    setSelectedImage(image);
-  }, []);
-  console.log("selected:", image);
-  console.log(selectedImage);
+    if (product) {
+      setSelectedImage(
+        `${API_URL}/products/${product.id}/image?q=${new Date()}`
+      );
+      setForm({
+        productName: product.name,
+        description: product.description,
+        price: product.price.toString(),
+      });
+    }
+  }, [product.id]);
 
   let openImagePickerAsync = async () => {
     let permissionResult =
@@ -104,21 +114,19 @@ export const EditProductScreen = ({ navigation, route }: Props) => {
 
     console.log("--------------------");
     console.log(selectedImage);
-
     console.log("--------------------");
     const { product } = route.params;
     try {
-      const { data: UpProduct } = await client.put(
-        `/products/${product.id}`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
-
-      navigation.navigate("ProductDetailScreenOwner", {
-        product: UpProduct,
+      const { data } = await client.put(`/products/${product.id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
+      setShop((shop) => ({
+        ...shop,
+        products: shop.products.map((item) =>
+          item.id === product.id ? data : item
+        ),
+      }));
+      navigation.goBack();
     } catch (err: any) {
       if (err.request) {
         console.error(
@@ -177,7 +185,9 @@ export const EditProductScreen = ({ navigation, route }: Props) => {
             <View style={{ flex: 1 }}>
               {selectedImage && (
                 <Image
-                  source={{ uri: selectedImage }}
+                  source={{
+                    uri: selectedImage,
+                  }}
                   style={styles.thumbnail}
                 />
               )}

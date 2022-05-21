@@ -1,11 +1,14 @@
 import React, { FC, PropsWithChildren } from "react";
 import { CartProvider } from "./CartContext";
+import { ShopDetailProvider } from "./ShopContext";
 import { UserProvider, useUser } from "./UserContext";
 
 export const SessionProvider: FC = ({ children }: PropsWithChildren<any>) => {
   return (
     <UserProvider>
-      <CartProvider>{children}</CartProvider>
+      <ShopDetailProvider>
+        <CartProvider>{children}</CartProvider>
+      </ShopDetailProvider>
     </UserProvider>
   );
 };

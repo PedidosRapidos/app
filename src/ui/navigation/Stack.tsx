@@ -25,11 +25,11 @@ export type RootStackParams = {
   HomeScreenOwner: { shops: Array<any> };
   HomeScreenClient: { clientId: number; clientName: string };
   AddShopScreen: { sellerId: number; shops: Array<any> };
-  UploadProductScreen: { sellerId: number; shop: any; products: Array<any> };
-  EditProductScreen: { product: any; image: string };
+  UploadProductScreen: { sellerId: number; shopId: number };
+  EditProductScreen: { product: any };
   ProductDetailScreen: { product: any };
   ProductDetailScreenOwner: { product: any };
-  ShopProductsScreen: { sellerId: number; shop: any; products: Array<any> };
+  ShopProductsScreen: { sellerId: number; shopId: number };
 };
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();

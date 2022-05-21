@@ -55,9 +55,7 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
   const navigateToShopProductsScreen = (shop: any) => {
     navigation.navigate("ShopProductsScreen", {
       sellerId: sellerId,
-      shop: shop,
-      products: [],
-      //Array vacio pq si no rompe el ShopProductsScreen. ¿Como pongo un array vacio por defecto?
+      shopId: shop.id,
     });
   };
 

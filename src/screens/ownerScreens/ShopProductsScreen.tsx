@@ -1,7 +1,6 @@
-import { StyleSheet, View, Image, ScrollView } from "react-native";
+import { View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../../res/globalStyles";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import React, { useEffect, useState } from "react";
 import { Typography } from "../../res/typography";
 import { colors } from "../../res/colors";
@@ -14,23 +13,22 @@ import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 import { ShopPreview } from "../../ui/components/ShopPreview";
 import { ProductPreview2 } from "../../ui/components/ProductPreview2";
+import { useShopDetail } from "../../contexts/ShopContext";
 
 interface Props
   extends StackScreenProps<RootStackParams, "ShopProductsScreen"> {}
 
 export const ShopProductsScreen = ({ navigation, route }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [productsToShow, setProductsToShow] = useState<any>([]);
-  let { sellerId, shop, products } = route.params;
+  const [shop, setShop] = useShopDetail();
+  const products = shop.products || [];
+  const { sellerId, shopId } = route.params;
 
   const getShopProducts = async () => {
     setIsLoading(true);
-
     try {
-      const { data: fetchProducts } = await client.get(
-        `/shops/${shop.id}/products`
-      );
-      setProductsToShow(fetchProducts.products);
+      const { data } = await client.get(`/shops/${shopId}/products`);
+      setShop(data);
     } catch (err: any) {
       console.error(
         "Request failed, response:",
@@ -42,6 +40,7 @@ export const ShopProductsScreen = ({ navigation, route }: Props) => {
   };
 
   const navigateToProductsDetailScreen = (product: any) => {
+    console.log(product);
     navigation.navigate("ProductDetailScreenOwner", {
       product: product,
     });
@@ -50,24 +49,13 @@ export const ShopProductsScreen = ({ navigation, route }: Props) => {
   const navigateToUploadProductScreen = () => {
     navigation.navigate("UploadProductScreen", {
       sellerId: sellerId,
-      shop: shop,
-      products: productsToShow,
+      shopId: shopId,
     });
   };
 
   useEffect(() => {
     getShopProducts();
-  }, []);
-
-  useEffect(() => {
-    getShopProducts();
-  }, [shop.id]);
-
-  useEffect(() => {
-    if (products.length > productsToShow.length) {
-      setProductsToShow(products);
-    }
-  }, [products]);
+  }, [shopId]);
 
   return (
     <SafeAreaView style={globalStyles.generalContainer}>
@@ -91,10 +79,10 @@ export const ShopProductsScreen = ({ navigation, route }: Props) => {
         </SectionContainer>
         <SectionContainer>
           <SectionTitle text="My products" />
-          {productsToShow.length != 0 ? null : (
+          {products.length != 0 ? null : (
             <Typography>You do not have any product in this shop</Typography>
           )}
-          {productsToShow.map((item: any, index: any) => (
+          {products.map((item: any) => (
             <View key={item.id}>
               <ProductPreview2
                 product={item}
@@ -108,9 +96,3 @@ export const ShopProductsScreen = ({ navigation, route }: Props) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: "row",
-  },
-});
