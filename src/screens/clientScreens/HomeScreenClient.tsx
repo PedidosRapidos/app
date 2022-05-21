@@ -14,16 +14,15 @@ import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 import ScrollList from "../../ui/components/ScrollList";
 import { useCart } from "../../contexts/CartContext";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { ProductPreview2 } from "../../ui/components/ProductPreview2";
-import { Picker } from '@react-native-picker/picker';
-import { normalizeSize, Typography } from "../../res/typography";
-import { RadioButton } from 'react-native-paper';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { spacing } from '../../res/spacing';
+import { Picker } from "@react-native-picker/picker";
+import { normalizeSize } from "../../res/typography";
+import { RadioButton } from "react-native-paper";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { SecondaryButton } from "../../ui/components/SecondaryButton";
 
-interface Props extends StackScreenProps<RootStackParams, "HomeScreenClient"> { }
+interface Props extends StackScreenProps<RootStackParams, "HomeScreenClient"> {}
 
 export const HomeScreenClient = ({ navigation, route }: Props) => {
   const [searchValue, setSearchValue] = useState("");
@@ -34,13 +33,12 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
   const [selectedOrder, setSelectedOrder] = useState("asc");
   const [orderBy, setOrderBy] = React.useState();
 
-
   const styles = StyleSheet.create({
     section: {
       color: colors.black,
       fontSize: normalizeSize(17),
-      backgroundColor: orderBy == "checked" ? colors.white : colors.gray
-    }
+      backgroundColor: orderBy == "checked" ? colors.white : colors.gray,
+    },
   });
 
   const displayProductDetails = (item: any) => {
@@ -76,9 +74,8 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
     setFetchMore({ fetch: fetchPage });
   }, [searchValue]);
 
-
   const orderByProducts = () => {
-    console.log(selectedField, selectedOrder)
+    console.log(selectedField, selectedOrder);
     const fetchPage = async (page: number) => {
       if (page == 0) {
         setIsLoading(true);
@@ -90,7 +87,7 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
             page,
             page_size: 10,
             order: selectedOrder,
-            field: selectedField
+            field: selectedField,
           },
         };
         const { data: products } = await client.get(`/products`, opts);
@@ -128,11 +125,13 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
             backgroundColor={colors.orange}
           />
           <SectionContainer>
-            <View style={{
-              flexDirection: "row",
-              alignItems: "center",
-              paddingTop: 10
-            }}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                paddingTop: 10,
+              }}
+            >
               <View>
                 <SecondaryButton
                   text="ORDER BY"
@@ -141,36 +140,43 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
                   }}
                   left={false}
                   disable={orderBy == "checked" ? false : true}
-
                 />
               </View>
               <View>
                 <RadioButton
                   value="unchecked"
                   status={orderBy === "checked" ? "checked" : "unchecked"}
-                  onPress={() => setOrderBy((orderBy == "checked" ? "unchecked" : "checked"))}
+                  onPress={() =>
+                    setOrderBy(orderBy == "checked" ? "unchecked" : "checked")
+                  }
                   uncheckedColor="gray"
                   color={colors.orange}
                 />
               </View>
-              <View style={{ flex: 1}}>
-                <Picker style={[styles.section]}
+              <View style={{ flex: 1 }}>
+                <Picker
+                  style={[styles.section]}
                   enabled={orderBy == "checked" ? true : false}
                   selectedValue={selectedField}
                   onValueChange={(itemValue, itemIndex) =>
                     setSelectedField(itemValue)
-                  }>
+                  }
+                >
                   <Picker.Item label="Price" value="price" />
                 </Picker>
               </View>
-              <View style={{
-                flexDirection: "row",
-                alignItems: "center"
-              }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
                 <RadioButton
                   value="asc"
-                  status={selectedOrder === 'asc' ? 'checked' : 'unchecked'}
-                  onPress={() => { setSelectedOrder("asc"); }}
+                  status={selectedOrder === "asc" ? "checked" : "unchecked"}
+                  onPress={() => {
+                    setSelectedOrder("asc");
+                  }}
                   uncheckedColor={colors.gray}
                   color={colors.white}
                   disabled={orderBy != "checked" ? true : false}
@@ -178,11 +184,20 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
                 <Ionicons
                   name="arrow-up"
                   size={35}
-                  color={orderBy === "checked" ? (selectedOrder === "asc" ? colors.orange : "gray") : "gray"} />
+                  color={
+                    orderBy === "checked"
+                      ? selectedOrder === "asc"
+                        ? colors.orange
+                        : "gray"
+                      : "gray"
+                  }
+                />
                 <RadioButton
                   value="desc"
-                  status={selectedOrder === 'desc' ? 'checked' : 'unchecked'}
-                  onPress={() => { setSelectedOrder("desc"); }}
+                  status={selectedOrder === "desc" ? "checked" : "unchecked"}
+                  onPress={() => {
+                    setSelectedOrder("desc");
+                  }}
                   uncheckedColor={colors.gray}
                   color={colors.white}
                   disabled={orderBy != "checked" ? true : false}
@@ -190,12 +205,17 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
                 <Ionicons
                   name="arrow-down"
                   size={35}
-                  color={orderBy === "checked" ? (selectedOrder === "desc" ? colors.orange : "gray") : "gray"}
+                  color={
+                    orderBy === "checked"
+                      ? selectedOrder === "desc"
+                        ? colors.orange
+                        : "gray"
+                      : "gray"
+                  }
                 />
               </View>
             </View>
           </SectionContainer>
-
         </SectionContainer>
         <SectionContainer>
           <ScrollList

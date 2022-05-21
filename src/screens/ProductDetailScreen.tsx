@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Image, TouchableOpacity, Text } from "react-native";
 import { RootStackParams } from "../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
@@ -57,7 +57,17 @@ const styles = StyleSheet.create({
 export const ProductDetailScreen = ({ navigation, route }: Props) => {
   const { product } = route.params;
   const [cart] = useCart();
-  const addProductToCart = () => cart.add(product);
+  const [quantity, setQuantity] = useState(1);
+  const addProductToCart = () => {
+    cart.add(product, quantity);
+  };
+
+  useEffect(() => {
+    if (cart.has(product)) {
+      cart.add(product, quantity);
+    }
+  }, [quantity]);
+
   return (
     <SafeAreaView style={globalStyles.generalContainer}>
       <KeyboardAwareScrollView
@@ -77,7 +87,7 @@ export const ProductDetailScreen = ({ navigation, route }: Props) => {
           </BoldTypography>
           <Image
             source={{
-              uri: `${API_URL}/products/${product.id}/image?q=${new Date()}`,
+              uri: `${API_URL}/products/${product.id}/image`,
             }}
             style={{
               ...imageStyles.categorieIcon,
@@ -107,8 +117,18 @@ export const ProductDetailScreen = ({ navigation, route }: Props) => {
               justifyContent: "space-evenly",
             }}
           >
-            <Counter />
-            <IconButton name="cart-plus" size={25} />
+            <Counter counter={quantity} setCounter={setQuantity} />
+            {!cart.has(product) ? (
+              <IconButton
+                name="cart-plus"
+                size={25}
+                onPress={addProductToCart}
+              />
+            ) : (
+              <Typography style={{ flexDirection: "row" }}>
+                Change Quantity
+              </Typography>
+            )}
           </View>
         </View>
       </KeyboardAwareScrollView>

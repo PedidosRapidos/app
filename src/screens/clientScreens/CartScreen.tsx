@@ -1,13 +1,14 @@
 import React from "react";
-import { FlatList } from "react-native";
+import { FlatList, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../../res/globalStyles";
 import { SectionTitle } from "../../ui/components/SectionTitle";
 import { SectionContainer } from "../../ui/components/SectionContainer";
 import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
-import { useCart } from "../../contexts/CartContext";
+import { Product, useCart } from "../../contexts/CartContext";
 import { CartProductPreview } from "../../ui/components/CartProductPreview";
+import { BoldTypography } from "../../res/typography";
 
 interface Props extends StackScreenProps<RootStackParams, "CartScreen"> {}
 
@@ -15,6 +16,9 @@ export const CartScreen = ({ navigation }: Props) => {
   const [cart] = useCart();
   const products = cart?.products || [];
 
+  const total = products
+    .map(({ price }: Product) => price)
+    .reduce((acc, v) => acc + v, 0);
   const displayProductDetails = (item: any) => {
     navigation.navigate("ProductDetailScreen", {
       product: item,
@@ -25,7 +29,6 @@ export const CartScreen = ({ navigation }: Props) => {
     <SafeAreaView
       style={{
         ...globalStyles.generalContainer,
-        paddingBottom: 150,
         padding: 15,
       }}
     >
@@ -44,6 +47,21 @@ export const CartScreen = ({ navigation }: Props) => {
         data={products}
         keyExtractor={(product, index) => `${index}-${product.id}`}
       />
+      <SectionContainer>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            borderTopColor: "white",
+            borderTopWidth: 2,
+          }}
+        >
+          <BoldTypography style={{ fontSize: 30 }}>{`Total `}</BoldTypography>
+          <BoldTypography
+            style={{ fontSize: 30 }}
+          >{`$ ${total} `}</BoldTypography>
+        </View>
+      </SectionContainer>
     </SafeAreaView>
   );
 };

@@ -3,21 +3,19 @@ import { StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
 import { IconButton } from "./IconButton";
 
 interface Props {
-  onChange?: (_: number) => any;
+  counter: number;
+  setCounter: (_: number) => any;
   style?: StyleProp<ViewStyle>;
 }
 
-export const Counter = ({ style, onChange }: Props) => {
-  const [counter, setCounter] = useState(1);
+export const Counter = ({ style, counter, setCounter }: Props) => {
   const inc = () => {
     const value = counter + 1;
-    onChange?.(value);
     setCounter(value);
   };
   const dec = () => {
     if (counter > 1) {
       const value = counter - 1;
-      onChange?.(value);
       setCounter(value);
     }
   };

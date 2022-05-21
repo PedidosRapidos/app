@@ -3,12 +3,12 @@ import {
   DrawerItemList,
 } from "@react-navigation/drawer";
 import { PropsWithChildren } from "react";
-import { View } from "react-native";
+import { TouchableOpacity, View, StyleSheet } from "react-native";
 import { useCart } from "../../contexts/CartContext";
 import { useUser } from "../../contexts/UserContext";
 import { globalStyles } from "../../res/globalStyles";
 import { Typography } from "../../res/typography";
-import { MainButton } from "../components/MainButton";
+import Icon from "react-native-vector-icons/FontAwesome5";
 
 export const DrawerContent = ({ navigation }: PropsWithChildren<any>) => {
   const user = useUser();
@@ -17,19 +17,57 @@ export const DrawerContent = ({ navigation }: PropsWithChildren<any>) => {
   return (
     <DrawerContentScrollView style={globalStyles.drawerContainer}>
       <View style={{ flex: 2 }}></View>
-      <View style={{ flex: 2 }}>
-        <Typography style={{ flex: 2, marginBottom: 10, margin: 5 }}>
+      <View style={styles.container}>
+        <Typography style={styles.welcome}>
           {" "}
           Welcome {user?.username}!{" "}
         </Typography>
         {user?.isClient && (
-          <MainButton
-            text={`My Cart ${cartCount}`}
-            onPress={() => navigation.navigate("CartScreen")}
-          />
+          <TouchableOpacity onPress={() => navigation.navigate("CartScreen")}>
+            <View style={styles.divider}>
+              <Icon name="shopping-cart" size={20} style={styles.icon} />
+              <Typography style={styles.option}>
+                {`My Cart ${cartCount}`}
+              </Typography>
+            </View>
+          </TouchableOpacity>
         )}
-        <MainButton text="Logout" onPress={user!.logout} />
+        <TouchableOpacity onPress={user!.logout}>
+          <View style={styles.divider}>
+            <Icon name="power-off" size={20} style={styles.icon} />
+            <Typography style={styles.option}>Logout</Typography>
+          </View>
+        </TouchableOpacity>
       </View>
     </DrawerContentScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  welcome: {
+    flex: 2,
+    marginBottom: 10,
+    margin: 5,
+    fontSize: 26,
+    paddingVertical: 10,
+  },
+  option: {
+    fontSize: 24,
+    textAlign: "left",
+    paddingHorizontal: 10,
+  },
+  divider: {
+    borderTopWidth: 1,
+    borderTopColor: "gray",
+    flexDirection: "row",
+    paddingVertical: 10,
+    display: "flex",
+    alignItems: "center",
+  },
+  icon: {
+    color: "white",
+    textAlign: "center",
+    paddingHorizontal: 10,
+  },
+  container: { flex: 2 },
+});
