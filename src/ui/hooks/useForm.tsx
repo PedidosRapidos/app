@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import { useState } from "react";
 
 export const useForm = <T extends Record<any, any>>(initState: T) => {
   const [state, setState] = useState(initState);
@@ -12,6 +12,7 @@ export const useForm = <T extends Record<any, any>>(initState: T) => {
 
   return {
     ...state,
+    setForm: setState,
     form: state,
     onChange,
   };

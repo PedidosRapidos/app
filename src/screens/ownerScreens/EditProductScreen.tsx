@@ -10,16 +10,16 @@ import { spacing } from "../../res/spacing";
 import { Input } from "../../ui/components/Input";
 import { useForm } from "../../ui/hooks/useForm";
 import * as ImagePicker from "expo-image-picker";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MainButton } from "../../ui/components/MainButton";
-import client from "../../services/config";
+import client, { API_URL } from "../../services/config";
 import { SecondaryButton } from "../../ui/components/SecondaryButton";
 import { SectionContainer } from "../../ui/components/SectionContainer";
 import { SectionTitle } from "../../ui/components/SectionTitle";
 import { useShopDetail } from "../../contexts/ShopContext";
 
 interface Props
-  extends StackScreenProps<RootStackParams, "UploadProductScreen"> {}
+  extends StackScreenProps<RootStackParams, "EditProductScreen"> {}
 
 const styles = StyleSheet.create({
   section: {
@@ -46,17 +46,30 @@ const styles = StyleSheet.create({
   },
 });
 
-export const UploadProductScreen = ({ navigation, route }: Props) => {
-  const { sellerId, shopId } = route.params;
-  const [_, setShop] = useShopDetail();
-
-  const { productName, description, price, onChange } = useForm({
-    productName: "",
-    description: "",
-    price: "",
+export const EditProductScreen = ({ navigation, route }: Props) => {
+  const { product } = route.params;
+  const { productName, description, price, onChange, setForm } = useForm({
+    productName: product.name,
+    description: product.description,
+    price: product.price.toString(),
   });
 
+  const [_, setShop] = useShopDetail();
+  const [isNewImage, setIsNewImage] = useState<any>(false);
   const [selectedImage, setSelectedImage] = useState<any>(null);
+
+  useEffect(() => {
+    if (product) {
+      setSelectedImage(
+        `${API_URL}/products/${product.id}/image?q=${new Date()}`
+      );
+      setForm({
+        productName: product.name,
+        description: product.description,
+        price: product.price.toString(),
+      });
+    }
+  }, [product.id]);
 
   let openImagePickerAsync = async () => {
     let permissionResult =
@@ -74,8 +87,8 @@ export const UploadProductScreen = ({ navigation, route }: Props) => {
     if (pickerResult.cancelled === true) {
       return;
     }
-
-    setSelectedImage(pickerResult);
+    setIsNewImage(true);
+    setSelectedImage(pickerResult.uri);
   };
 
   const sendForm = async () => {
@@ -86,33 +99,43 @@ export const UploadProductScreen = ({ navigation, route }: Props) => {
     formData.append("price", price);
 
     // Infer the type of the image
+    if (isNewImage) {
+      let filename = selectedImage.split("/").pop();
 
-    let filename = selectedImage.uri.split("/").pop();
+      let match = /\.(\w+)$/.exec(filename);
+      let type = match ? `image/${match[1]}` : `image`;
 
-    let match = /\.(\w+)$/.exec(filename);
-    let type = match ? `image/${match[1]}` : `image`;
+      formData.append("image", {
+        uri: selectedImage,
+        name: filename,
+        type: type,
+      });
+    }
 
-    formData.append("image", {
-      uri: selectedImage.uri,
-      name: filename,
-      type: type,
-    });
-
+    console.log("--------------------");
+    console.log(selectedImage);
+    console.log("--------------------");
+    const { product } = route.params;
     try {
-      const { data: product } = await client.post(
-        `/sellers/${sellerId}/shops/${shopId}/products`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
-      setShop((shop) => ({ ...shop, products: [product, ...shop.products] }));
+      const { data } = await client.put(`/products/${product.id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      setShop((shop) => ({
+        ...shop,
+        products: shop.products.map((item) =>
+          item.id === product.id ? data : item
+        ),
+      }));
       navigation.goBack();
     } catch (err: any) {
-      console.error(
-        "Request failed, response:",
-        err.response?.data || err.message || err
-      );
+      if (err.request) {
+        console.error(
+          "Request failed, response:",
+          err.response?.data || err.message || err
+        );
+      } else {
+        console.error("Error:", err.response?.data || err.message || err);
+      }
     }
   };
 
@@ -124,13 +147,13 @@ export const UploadProductScreen = ({ navigation, route }: Props) => {
         style={globalStyles.innerContainer}
       >
         <SectionContainer>
-          <SectionTitle text="Enter product data"></SectionTitle>
+          <SectionTitle text="Update your product data"></SectionTitle>
           <Input
             onChangeText={(nextProductName) =>
               onChange("productName", nextProductName)
             }
             value={productName}
-            placeholder="Product Name"
+            placeholder="Name"
           />
           <Input
             onChangeText={(nextDescription) =>
@@ -162,7 +185,9 @@ export const UploadProductScreen = ({ navigation, route }: Props) => {
             <View style={{ flex: 1 }}>
               {selectedImage && (
                 <Image
-                  source={{ uri: selectedImage.uri }}
+                  source={{
+                    uri: selectedImage,
+                  }}
                   style={styles.thumbnail}
                 />
               )}

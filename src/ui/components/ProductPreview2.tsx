@@ -30,7 +30,7 @@ export const ProductPreview2 = ({
         <View style={styles.productImageContainer}>
           <Image
             source={{
-              uri: `${API_URL}/products/${product.id}/image`,
+              uri: `${API_URL}/products/${product.id}/image?q=${new Date()}`,
             }}
             style={imageStyles.preview}
           ></Image>
