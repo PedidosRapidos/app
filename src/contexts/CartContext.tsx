@@ -58,14 +58,15 @@ export const CartProvider: FC = ({ children }: PropsWithChildren<any>) => {
   const ids = new Set(products.map(({ id }) => id));
   const cartActions = {
     ...cart,
-    async add({ id: productId }: Product, units: number = 1) {
+    async add({ id: productId }: Product, quantity: number = 1) {
+     console.log(cart)
       if (cart.id) {
         try {
           const { data: updatedCart } = await client.post(
             `/shopping_cart/${cart.id}/products/`,
             {
               product_id: productId,
-              units,
+              quantity,
             }
           );
           setCart(updatedCart);
