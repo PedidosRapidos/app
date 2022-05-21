@@ -68,6 +68,10 @@ export const ProductDetailScreen = ({ navigation, route }: Props) => {
     }
   }, [quantity]);
 
+  useEffect(() => {
+     setQuantity(product.quantity || 1)
+  }, [product]);
+
   return (
     <SafeAreaView style={globalStyles.generalContainer}>
       <KeyboardAwareScrollView

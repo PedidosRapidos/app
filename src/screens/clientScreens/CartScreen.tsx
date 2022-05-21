@@ -17,7 +17,7 @@ export const CartScreen = ({ navigation }: Props) => {
   const products = cart?.products || [];
 
   const total = products
-    .map(({ price }: Product) => price)
+    .map(({ price, quantity }: Product) => price * quantity)
     .reduce((acc, v) => acc + v, 0);
   const displayProductDetails = (item: any) => {
     navigation.navigate("ProductDetailScreen", {

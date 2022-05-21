@@ -45,7 +45,7 @@ export const CartProductPreview = ({
           </View>
           <View style={styles.productInfoRowContainer}>
             <Typography style={styles.price}>
-              $ {product.price} x {product.quantity || 1} = {product.price * 1}
+              $ {product.price} x {product.quantity || 1} = {product.price * product.quantity}
             </Typography>
           </View>
         </View>
