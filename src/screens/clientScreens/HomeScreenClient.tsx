@@ -2,7 +2,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../../res/globalStyles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SearchBar } from "../../ui/components/SearchBar";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { colors, colorWithOpacity } from "../../res/colors";
 import { SectionTitle } from "../../ui/components/SectionTitle";
 import { SectionContainer } from "../../ui/components/SectionContainer";
@@ -31,15 +31,7 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
   const [cart] = useCart();
   const [selectedField, setSelectedField] = useState("price");
   const [selectedOrder, setSelectedOrder] = useState("asc");
-  const [orderBy, setOrderBy] = React.useState();
-
-  const styles = StyleSheet.create({
-    section: {
-      color: colors.black,
-      fontSize: normalizeSize(17),
-      backgroundColor: orderBy == "checked" ? colors.white : colors.gray,
-    },
-  });
+  const [orderBy, setOrderBy] = useState(false);
 
   const displayProductDetails = (item: any) => {
     navigation.navigate("ProductDetailScreen", {
@@ -58,8 +50,11 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
             q: searchValue.split(" ").join(",") || undefined,
             page,
             page_size: 10,
+            order: orderBy ? selectedOrder : undefined,
+            field: orderBy ? selectedField : undefined,
           },
         };
+        console.log("search opts", opts);
         const { data: products } = await client.get(`/products`, opts);
 
         return products;
@@ -72,37 +67,14 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
       }
     };
     setFetchMore({ fetch: fetchPage });
-  }, [searchValue]);
+  }, [searchValue, orderBy, selectedField, selectedOrder]);
 
-  const orderByProducts = () => {
-    console.log(selectedField, selectedOrder);
-    const fetchPage = async (page: number) => {
-      if (page == 0) {
-        setIsLoading(true);
-      }
-      try {
-        const opts = {
-          params: {
-            q: searchValue.split(" ").join(",") || undefined,
-            page,
-            page_size: 10,
-            order: selectedOrder,
-            field: selectedField,
-          },
-        };
-        const { data: products } = await client.get(`/products`, opts);
-
-        return products;
-      } catch (e) {
-        console.log("fetch failed", e);
-      } finally {
-        if (page == 0) {
-          setIsLoading(false);
-        }
-      }
-    };
-    setFetchMore({ fetch: fetchPage });
-  };
+  useEffect(() => {
+    if (orderBy) {
+      console.log("orderBy", orderBy);
+      searchProducts();
+    }
+  }, [orderBy, selectedField, selectedOrder]);
 
   return (
     <SafeAreaView
@@ -135,28 +107,27 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
               <View>
                 <SecondaryButton
                   text="ORDER BY"
-                  onPress={() => {
-                    orderByProducts();
-                  }}
+                  onPress={() => setOrderBy(!orderBy)}
                   left={false}
-                  disable={orderBy == "checked" ? false : true}
+                  disable={orderBy}
                 />
               </View>
               <View>
                 <RadioButton
                   value="unchecked"
-                  status={orderBy === "checked" ? "checked" : "unchecked"}
-                  onPress={() =>
-                    setOrderBy(orderBy == "checked" ? "unchecked" : "checked")
-                  }
+                  status={orderBy ? "checked" : "unchecked"}
+                  onPress={() => setOrderBy(!orderBy)}
                   uncheckedColor="gray"
                   color={colors.orange}
                 />
               </View>
               <View style={{ flex: 1 }}>
                 <Picker
-                  style={[styles.section]}
-                  enabled={orderBy == "checked" ? true : false}
+                  style={[
+                    styles.section,
+                    { backgroundColor: orderBy ? colors.white : colors.gray },
+                  ]}
+                  enabled={orderBy}
                   selectedValue={selectedField}
                   onValueChange={(itemValue, itemIndex) =>
                     setSelectedField(itemValue)
@@ -179,13 +150,13 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
                   }}
                   uncheckedColor={colors.gray}
                   color={colors.white}
-                  disabled={orderBy != "checked" ? true : false}
+                  disabled={!orderBy}
                 />
                 <Ionicons
                   name="arrow-up"
                   size={35}
                   color={
-                    orderBy === "checked"
+                    orderBy
                       ? selectedOrder === "asc"
                         ? colors.orange
                         : "gray"
@@ -200,13 +171,13 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
                   }}
                   uncheckedColor={colors.gray}
                   color={colors.white}
-                  disabled={orderBy != "checked" ? true : false}
+                  disabled={!orderBy}
                 />
                 <Ionicons
                   name="arrow-down"
                   size={35}
                   color={
-                    orderBy === "checked"
+                    orderBy
                       ? selectedOrder === "desc"
                         ? colors.orange
                         : "gray"
@@ -234,3 +205,10 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  section: {
+    color: colors.black,
+    fontSize: normalizeSize(17),
+  },
+});
