@@ -182,14 +182,12 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
                   flex: 1,
                 }}
                 data={data}
-                renderItem={({ item, index }) => (
-                  <View key={`${item.id}-${index}`}>
-                    <ProductPreview2
-                      product={item}
-                      onDetails={displayProductDetails}
-                      onCart={cart.add}
-                    />
-                  </View>
+                renderItem={({ item }) => (
+                  <ProductPreview2
+                    product={item}
+                    onDetails={displayProductDetails}
+                    onCart={cart.add}
+                  />
                 )}
                 onEndReachedThreshold={0.1}
                 onEndReached={nextPage}
