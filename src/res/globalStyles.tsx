@@ -27,4 +27,7 @@ export const globalStyles = StyleSheet.create({
     paddingHorizontal: spacing.paddingHorizontal,
     paddingVertical: spacing.paddingVertical,
   },
+  horizontalPadding: {
+    paddingHorizontal: spacing.paddingHorizontal,
+  },
 });

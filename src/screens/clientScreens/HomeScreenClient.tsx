@@ -61,9 +61,7 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
   }, [orderBy, selectedField, selectedOrder]);
 
   return (
-    <SafeAreaView
-      style={{ ...globalStyles.generalContainer, paddingBottom: 150 }}
-    >
+    <SafeAreaView style={{ ...globalStyles.generalContainer, height: "100%" }}>
       <View style={globalStyles.innerContainer}>
         <SectionContainer>
           <SectionTitle text="Search" />
@@ -172,32 +170,28 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
             </View>
           </SectionContainer>
         </SectionContainer>
-        <SectionContainer>
-          {data.length === 0 ? (
-            <Typography>No search results</Typography>
-          ) : (
-            <>
-              <FlatList
-                contentContainerStyle={{
-                  flex: 1,
-                }}
-                data={data}
-                renderItem={({ item }) => (
-                  <ProductPreview2
-                    product={item}
-                    onDetails={displayProductDetails}
-                    onCart={cart.add}
-                  />
-                )}
-                onEndReachedThreshold={0.1}
-                onEndReached={nextPage}
-                onRefresh={() => null}
-                refreshing={false}
-              />
-            </>
-          )}
-        </SectionContainer>
       </View>
+      {data.length === 0 ? (
+        <View style={globalStyles.horizontalPadding}>
+          <Typography>No search results</Typography>
+        </View>
+      ) : (
+        <FlatList
+          contentContainerStyle={globalStyles.horizontalPadding}
+          data={data}
+          renderItem={({ item }) => (
+            <ProductPreview2
+              product={item}
+              onDetails={displayProductDetails}
+              onCart={cart.add}
+            />
+          )}
+          onEndReachedThreshold={0.1}
+          onEndReached={nextPage}
+          onRefresh={() => null}
+          refreshing={false}
+        />
+      )}
       <Loader visible={fetching} />
     </SafeAreaView>
   );
