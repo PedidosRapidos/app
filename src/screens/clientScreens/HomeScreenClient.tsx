@@ -1,33 +1,29 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../../res/globalStyles";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SearchBar } from "../../ui/components/SearchBar";
-import React, { useCallback, useEffect, useState } from "react";
-import { colors, colorWithOpacity } from "../../res/colors";
+import React, { useEffect, useState } from "react";
+import { colors } from "../../res/colors";
 import { SectionTitle } from "../../ui/components/SectionTitle";
 import { SectionContainer } from "../../ui/components/SectionContainer";
 import { MainButton } from "../../ui/components/MainButton";
 import client from "../../services/config";
 import { Loader } from "../../ui/components/Loader";
-import { ProductPreview } from "../../ui/components/ProductPreview";
 import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
-import ScrollList from "../../ui/components/ScrollList";
 import { useCart } from "../../contexts/CartContext";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, FlatList } from "react-native";
 import { ProductPreview2 } from "../../ui/components/ProductPreview2";
 import { Picker } from "@react-native-picker/picker";
-import { normalizeSize } from "../../res/typography";
+import { normalizeSize, Typography } from "../../res/typography";
 import { RadioButton } from "react-native-paper";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { SecondaryButton } from "../../ui/components/SecondaryButton";
+import { useIncrementalSearch } from "../../ui/hooks/useIncrementalSearch";
 
 interface Props extends StackScreenProps<RootStackParams, "HomeScreenClient"> {}
 
 export const HomeScreenClient = ({ navigation, route }: Props) => {
   const [searchValue, setSearchValue] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [fetchMore, setFetchMore] = useState<any>({});
   const [cart] = useCart();
   const [selectedField, setSelectedField] = useState("price");
   const [selectedOrder, setSelectedOrder] = useState("asc");
@@ -39,11 +35,8 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
     });
   };
 
-  const searchProducts = useCallback(() => {
-    const fetchPage = async (page: number) => {
-      if (page == 0) {
-        setIsLoading(true);
-      }
+  const { data, search, nextPage, fetching } = useIncrementalSearch(
+    async (page: number) => {
       try {
         const opts = {
           params: {
@@ -54,26 +47,17 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
             field: orderBy ? selectedField : undefined,
           },
         };
-        console.log("search opts", opts);
         const { data: products } = await client.get(`/products`, opts);
 
         return products;
       } catch (e) {
         console.log("fetch failed", e);
-      } finally {
-        if (page == 0) {
-          setIsLoading(false);
-        }
       }
-    };
-    setFetchMore({ fetch: fetchPage });
-  }, [searchValue, orderBy, selectedField, selectedOrder]);
+    }
+  );
 
   useEffect(() => {
-    if (orderBy) {
-      console.log("orderBy", orderBy);
-      searchProducts();
-    }
+    if (orderBy && data.length !== 0) search();
   }, [orderBy, selectedField, selectedOrder]);
 
   return (
@@ -92,7 +76,7 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
           <MainButton
             text="Search"
             onPress={() => {
-              searchProducts();
+              search();
             }}
             backgroundColor={colors.orange}
           />
@@ -189,19 +173,34 @@ export const HomeScreenClient = ({ navigation, route }: Props) => {
           </SectionContainer>
         </SectionContainer>
         <SectionContainer>
-          <ScrollList
-            renderItem={(item: any) => (
-              <ProductPreview2
-                product={item}
-                onDetails={displayProductDetails}
-                onCart={cart.add}
+          {data.length === 0 ? (
+            <Typography>No search results</Typography>
+          ) : (
+            <>
+              <FlatList
+                contentContainerStyle={{
+                  flex: 1,
+                }}
+                data={data}
+                renderItem={({ item, index }) => (
+                  <View key={`${item.id}-${index}`}>
+                    <ProductPreview2
+                      product={item}
+                      onDetails={displayProductDetails}
+                      onCart={cart.add}
+                    />
+                  </View>
+                )}
+                onEndReachedThreshold={0.1}
+                onEndReached={nextPage}
+                onRefresh={() => null}
+                refreshing={false}
               />
-            )}
-            fetchMore={fetchMore.fetch}
-          />
+            </>
+          )}
         </SectionContainer>
       </View>
-      <Loader visible={isLoading} />
+      <Loader visible={fetching} />
     </SafeAreaView>
   );
 };
