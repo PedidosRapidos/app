@@ -12,7 +12,6 @@ import { Loader } from "../../ui/components/Loader";
 import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 import { ShopPreview } from "../../ui/components/ShopPreview";
-import ScrollList from "../../ui/components/ScrollList";
 import { useUser } from "../../contexts/UserContext";
 
 interface Props extends StackScreenProps<RootStackParams, "HomeScreenOwner"> {}

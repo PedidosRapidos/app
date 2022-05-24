@@ -26,10 +26,7 @@ export const useIncrementalSearch = (
     const loadMore = async () => {
       try {
         if (page === 0) setState((state) => ({ ...state, fetching: true }));
-
-        console.log("fetching", page);
         const more = await doFetchMore(page);
-        console.log("done fetching", page);
         if (mounted) {
           if (more.length === 0) {
             setState((state) => ({ ...state, end: true, fetching: false }));
