@@ -59,7 +59,7 @@ export const CartProvider: FC = ({ children }: PropsWithChildren<any>) => {
   const cartActions = {
     ...cart,
     async add({ id: productId }: Product, quantity: number = 1) {
-     console.log(cart)
+      // console.log(cart)
       if (cart.id) {
         try {
           const { data: updatedCart } = await client.post(
