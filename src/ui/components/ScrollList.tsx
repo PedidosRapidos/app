@@ -1,16 +1,6 @@
-import { useState, FC, useEffect, memo } from "react";
-import {
-  ListRenderItem,
-  View,
-  VirtualizedList,
-  Text,
-  Dimensions,
-  FlatList,
-  ScrollView,
-  SafeAreaView,
-} from "react-native";
+import { useState, useEffect, memo } from "react";
+import { ListRenderItem, Text, FlatList } from "react-native";
 import { Typography } from "../../res/typography";
-import { SectionTitle } from "./SectionTitle";
 
 interface ScrollState {
   end: boolean;
@@ -23,7 +13,10 @@ interface Props {
   renderItem: ListRenderItem<any>;
 }
 
-const ScrollList = ({ fetchMore, renderItem }: Props) => {
+const useIncrementalSearch = (
+  fetchMore: (page: number) => Promise<Array<any>>,
+  deps: Array<any>
+) => {
   const [{ page, data, end }, setState] = useState<ScrollState>({
     data: [],
     page: 0,
@@ -54,21 +47,25 @@ const ScrollList = ({ fetchMore, renderItem }: Props) => {
     return () => {
       mounted = false;
     };
-  }, [end, page, fetchMore]);
+  }, [end, page, ...deps]);
 
   useEffect(() => {
     setState({ data: [], end: false, page: 0 });
-  }, [fetchMore]);
+  }, deps);
 
-  const incPage = () =>
+  const nextPage = () =>
     setState(({ page, ...state }) => ({ ...state, page: page + 1 }));
 
   const refresh = () =>
     setState((state) => ({ ...state, end: false, page: 1 }));
 
-  const doRenderItem = ({ item }: { item: any }) => {
-    return renderItem(item);
-  };
+  return { data, page, refresh, nextPage };
+};
+
+const ScrollList = ({ fetchMore, renderItem }: Props) => {
+  const { data, refresh, nextPage } = useIncrementalSearch(fetchMore, [
+    fetchMore,
+  ]);
 
   if (data.length === 0) return <Typography>No search results</Typography>;
   // <SectionTitle text="Results" />
@@ -79,9 +76,11 @@ const ScrollList = ({ fetchMore, renderItem }: Props) => {
           flex: 1,
         }}
         data={data}
-        renderItem={doRenderItem}
+        renderItem={({ item }: { item: any }) => {
+          return renderItem(item);
+        }}
         onEndReachedThreshold={0.1}
-        onEndReached={incPage}
+        onEndReached={nextPage}
         onRefresh={refresh}
         refreshing={false}
         ListFooterComponent={() => <Text>End of result </Text>}
