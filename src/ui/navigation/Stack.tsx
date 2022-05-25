@@ -22,7 +22,7 @@ import { OrderDetailScreenOwner } from "../../screens/ownerScreens/OrderDetailSc
 export type RootStackParams = {
   WelcomeScreen: undefined;
   CartScreen: undefined;
-  OrdersScreenOwner: { sellerId: number; shopId: number };
+  OrdersScreenOwner: { shopId: number };
   SigninScreen: { email: string; password: string };
   SignupScreen: undefined;
   HomeScreenOwner: { shops: Array<any> };

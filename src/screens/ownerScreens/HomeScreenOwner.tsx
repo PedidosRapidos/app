@@ -60,7 +60,6 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
 
   const navigateToOrdersProductsScreen = (shop: any) => {
     navigation.navigate("OrdersScreenOwner", {
-      sellerId: sellerId,
       shopId: shop.id,
     });
   };
