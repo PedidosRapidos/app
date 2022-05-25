@@ -88,7 +88,7 @@ export const SigninScreen = ({ route }: Props) => {
       if (err.request) {
         if (err.message.endsWith("500")) {
           setRespError({
-            title: "Oh no! the server is dead",
+            title: "Oh no! What's wrong with the server?",
             message: "There was a server error try again later",
           });
         } else if (err.message.endsWith("400")) {

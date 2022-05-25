@@ -58,6 +58,13 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
     });
   };
 
+  const navigateToOrdersProductsScreen = (shop: any) => {
+    navigation.navigate("OrdersScreenOwner", {
+      sellerId: sellerId,
+      shopId: shop.id,
+    });
+  };
+
   const navigateToAddShopScreen = () => {
     navigation.navigate("AddShopScreen", {
       sellerId: sellerId,
@@ -99,6 +106,7 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
               <ShopPreview
                 shop={item}
                 onPressMyProducts={navigateToShopProductsScreen}
+                onPressSeeOrders={navigateToOrdersProductsScreen}
               />
             </View>
           ))}

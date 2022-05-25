@@ -16,10 +16,13 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { ProductDetailScreenOwner } from "../../screens/ownerScreens/ProductDetailScreenOwner";
 import { useUser } from "../../contexts/UserContext";
 import { EditProductScreen } from "../../screens/ownerScreens/EditProductScreen";
+import { OrdersScreenOwner } from "../../screens/ownerScreens/OrdersScreenOwner";
+import { OrderDetailScreenOwner } from "../../screens/ownerScreens/OrderDetailScreenOwner";
 
 export type RootStackParams = {
   WelcomeScreen: undefined;
   CartScreen: undefined;
+  OrdersScreenOwner: { sellerId: number; shopId: number };
   SigninScreen: { email: string; password: string };
   SignupScreen: undefined;
   HomeScreenOwner: { shops: Array<any> };
@@ -28,6 +31,7 @@ export type RootStackParams = {
   UploadProductScreen: { sellerId: number; shopId: number };
   EditProductScreen: { product: any };
   ProductDetailScreen: { product: any };
+  OrderDetailScreenOwner: { order: any };
   ProductDetailScreenOwner: { product: any };
   ShopProductsScreen: { sellerId: number; shopId: number };
 };
@@ -112,6 +116,17 @@ const MyStack = () => {
           <Drawer.Screen
             name={"ShopProductsScreen"}
             component={ShopProductsScreen}
+            options={{ headerShown: false }}
+          />
+
+          <Drawer.Screen
+            name={"OrdersScreenOwner"}
+            component={OrdersScreenOwner}
+            options={{ headerShown: false }}
+          />
+          <Drawer.Screen
+            name={"OrderDetailScreenOwner"}
+            component={OrderDetailScreenOwner}
             options={{ headerShown: false }}
           />
         </Drawer.Navigator>

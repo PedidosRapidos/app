@@ -19,8 +19,7 @@ export const DrawerContent = ({ navigation }: PropsWithChildren<any>) => {
       <View style={{ flex: 2 }}></View>
       <View style={styles.container}>
         <Typography style={styles.welcome}>
-          {" "}
-          Welcome {user?.username}!{" "}
+          Welcome {user?.username}!
         </Typography>
         {user?.isClient && (
           <TouchableOpacity onPress={() => navigation.navigate("CartScreen")}>
