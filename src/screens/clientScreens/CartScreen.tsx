@@ -1,5 +1,5 @@
 import React from "react";
-import { FlatList, View } from "react-native";
+import { FlatList, View, StyleSheet } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../../res/globalStyles";
 import { SectionTitle } from "../../ui/components/SectionTitle";
@@ -9,6 +9,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { Product, useCart } from "../../contexts/CartContext";
 import { CartProductPreview } from "../../ui/components/CartProductPreview";
 import { BoldTypography } from "../../res/typography";
+import { MainButton } from "../../ui/components/MainButton";
 
 interface Props extends StackScreenProps<RootStackParams, "CartScreen"> {}
 
@@ -19,11 +20,16 @@ export const CartScreen = ({ navigation }: Props) => {
   const total = products
     .map(({ price, quantity }: Product) => price * quantity)
     .reduce((acc, v) => acc + v, 0);
+  
   const displayProductDetails = (item: any) => {
     navigation.navigate("ProductDetailScreen", {
       product: item,
     });
   };
+
+  const navigateToPaymentMethodsScreen = () => {
+    navigation.navigate("CheckOutScreen")
+  }
 
   return (
     <SafeAreaView
@@ -62,6 +68,14 @@ export const CartScreen = ({ navigation }: Props) => {
           >{`$ ${total} `}</BoldTypography>
         </View>
       </SectionContainer>
+      <SectionContainer>
+          <MainButton text="Confirm" onPress={navigateToPaymentMethodsScreen}></MainButton>
+      </SectionContainer>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+
+
+})

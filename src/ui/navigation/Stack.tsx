@@ -16,6 +16,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { ProductDetailScreenOwner } from "../../screens/ownerScreens/ProductDetailScreenOwner";
 import { useUser } from "../../contexts/UserContext";
 import { EditProductScreen } from "../../screens/ownerScreens/EditProductScreen";
+import { CheckOutScreen } from "../../screens/clientScreens/CheckOutScreen";
 
 export type RootStackParams = {
   WelcomeScreen: undefined;
@@ -30,6 +31,7 @@ export type RootStackParams = {
   ProductDetailScreen: { product: any };
   ProductDetailScreenOwner: { product: any };
   ShopProductsScreen: { sellerId: number; shopId: number };
+  CheckOutScreen: undefined;
 };
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -82,6 +84,11 @@ const MyStack = () => {
           <Drawer.Screen
             name={"CartScreen"}
             component={CartScreen}
+            options={{ headerShown: false }}
+          />
+          <Drawer.Screen
+            name={"CheckOutScreen"}
+            component={CheckOutScreen}
             options={{ headerShown: false }}
           />
           <Drawer.Screen
