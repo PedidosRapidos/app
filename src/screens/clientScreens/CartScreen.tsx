@@ -69,7 +69,7 @@ export const CartScreen = ({ navigation }: Props) => {
         </View>
       </SectionContainer>
       <SectionContainer>
-          <MainButton text="Confirm" onPress={navigateToPaymentMethodsScreen}></MainButton>
+          <MainButton text="Check out" onPress={navigateToPaymentMethodsScreen}></MainButton>
       </SectionContainer>
     </SafeAreaView>
   );

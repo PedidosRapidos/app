@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FlatList, View, StyleSheet } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../../res/globalStyles";
@@ -8,15 +8,18 @@ import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Product, useCart } from "../../contexts/CartContext";
 import { CartProductPreview } from "../../ui/components/CartProductPreview";
-import { BoldTypography, Typography, ThinTypography, LightTypography } from '../../res/typography';
+import { BoldTypography, Typography, ThinTypography, LightTypography, normalizeSize } from '../../res/typography';
 import { MainButton } from "../../ui/components/MainButton";
 import { SecondaryButton } from "../../ui/components/SecondaryButton";
+import { Picker } from "@react-native-picker/picker";
+import { colors, colorWithOpacity } from '../../res/colors';
 
 interface Props extends StackScreenProps<RootStackParams, "CheckOutScreen"> {}
 
 export const CheckOutScreen = ({ navigation }: Props) => {
   const [cart] = useCart();
   const products = cart?.products || [];
+  const [selectedField, setSelectedField] = useState("cash");
 
   const total = products
     .map(({ price, quantity }: Product) => price * quantity)
@@ -59,10 +62,17 @@ export const CheckOutScreen = ({ navigation }: Props) => {
             <SectionContainer>
               <View style={{...styles.paymentMethodContainer, ...globalStyles.thinSeparator}}>
                 <LightTypography style={styles.paymentText}>Payment method</LightTypography>
-                <SecondaryButton text="Add" onPress={DoNothing} left={false}></SecondaryButton>
+                <Picker
+                 style={styles.section}
+                  selectedValue={selectedField}
+                  onValueChange={(itemValue, itemIndex) =>
+                    setSelectedField(itemValue)
+                  }
+                >
+                  <Picker.Item label="Cash" value="cash" />
+                </Picker>
               </View>
-            </SectionContainer>
-            <SectionContainer>
+
                 <MainButton text="Order" onPress={DoNothing}></MainButton>
             </SectionContainer>
         </View>
@@ -81,6 +91,12 @@ const styles = StyleSheet.create({
   paymentMethodContainer:{
     flexDirection: "row",
     justifyContent: "space-between",
-  }
+  },
+  section: {
+    flex:0.5,
+    color: colors.blue,
+    fontSize: normalizeSize(17),
+    backgroundColor: colorWithOpacity(colors.black, 0.8)
+  },
 
 })
