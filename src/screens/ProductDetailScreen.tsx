@@ -2,57 +2,22 @@ import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Image, TouchableOpacity, Text } from "react-native";
 import { RootStackParams } from "../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
-
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../res/globalStyles";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
-  BoldTypography,
   normalizeSize,
-  SemiBoldTypography,
   Typography,
 } from "../res/typography";
 import { colors, colorWithOpacity } from "../res/colors";
 import { spacing } from "../res/spacing";
-import { imageStyles } from "../res/imageStyles";
 import { API_URL } from "../services/config";
 import { useCart } from "../contexts/CartContext";
-import Icon from "react-native-vector-icons/FontAwesome5";
 import { Counter } from "../ui/components/Counter";
 import { IconButton } from "../ui/components/IconButton";
+import { sizes } from "../res/typography";
 
 interface Props
   extends StackScreenProps<RootStackParams, "ProductDetailScreen"> {}
-
-const styles = StyleSheet.create({
-  section: {
-    color: colorWithOpacity(colors.white, 0.6),
-    fontSize: normalizeSize(17),
-    textDecorationLine: "underline",
-  },
-  sectionMarginBotton: {
-    marginBottom: (spacing.inputSpacing * 2) / 6,
-  },
-  textSection: {
-    fontSize: normalizeSize(17),
-  },
-  buttonContainer: {
-    borderWidth: 5,
-    borderColor: colorWithOpacity(colors.orange, 0.08),
-    alignContent: "center",
-    justifyContent: "center",
-    borderRadius: 100,
-    height: "90%",
-    width: "25%",
-    backgroundColor: colors.orange,
-    marginVertical: spacing.paddingVertical / 3,
-    marginHorizontal: spacing.paddingHorizontal / 2,
-  },
-  buttonText: {
-    color: colors.white,
-    textAlign: "center",
-  },
-});
 
 export const ProductDetailScreen = ({ navigation, route }: Props) => {
   const { product } = route.params;
@@ -69,73 +34,86 @@ export const ProductDetailScreen = ({ navigation, route }: Props) => {
   }, [quantity]);
 
   useEffect(() => {
-     setQuantity(product.quantity || 1)
+    setQuantity(product.quantity || 1);
   }, [product]);
 
   return (
-    <SafeAreaView style={globalStyles.generalContainer}>
-      <KeyboardAwareScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}
-        style={globalStyles.innerContainer}
-      >
-        <View style={{ marginTop: "2%" }}>
-          <BoldTypography
-            style={[
-              styles.textSection,
-              styles.sectionMarginBotton,
-              { fontSize: 40 },
-            ]}
-          >
-            {product.name}
-          </BoldTypography>
-          <Image
-            source={{
-              uri: `${API_URL}/products/${product.id}/image`,
-            }}
-            style={{
-              ...imageStyles.categorieIcon,
-              width: "100%",
-              height: 300,
-              borderWidth: 2,
-              borderRadius: 15,
-              borderColor: colors.popupBackground,
-              marginBottom: (spacing.inputSpacing * 2) / 6,
-              marginTop: (spacing.inputSpacing * 2) / 6,
-              alignSelf: "center",
-            }}
-          ></Image>
-          <SemiBoldTypography
-            style={[styles.textSection, styles.sectionMarginBotton]}
-          >
-            {product.description}
-          </SemiBoldTypography>
+    <SafeAreaView
+      style={{
+        ...globalStyles.generalContainer,
+        ...globalStyles.innerContainer,
+      }}
+    >
+      <Image
+        source={{
+          uri: `${API_URL}/products/${product.id}/image`,
+        }}
+        style={{
+          width: "100%",
+          height: 300,
+          borderColor: colors.popupBackground,
+          marginBottom: (spacing.inputSpacing * 2) / 6,
+          marginTop: (spacing.inputSpacing * 2) / 6,
+          alignSelf: "center",
+        }}
+      ></Image>
 
-          <Typography style={[styles.textSection, styles.sectionMarginBotton]}>
-            $ {product.price}
-          </Typography>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-            }}
-          >
-            <Counter counter={quantity} setCounter={setQuantity} />
-            {!cart.has(product) ? (
-              <IconButton
-                name="cart-plus"
-                size={25}
-                onPress={addProductToCart}
-              />
-            ) : (
-              <Typography style={{ flexDirection: "row" }}>
-                Change Quantity
-              </Typography>
-            )}
-          </View>
+      <View
+        style={{
+          ...styles.productInfoContainer,
+          ...globalStyles.bottomThinSeparator,
+        }}
+      >
+        <View style={styles.productInfoFirstRowContainer}>
+          <Typography style={styles.productName}>{product.name}</Typography>
+          <Typography style={styles.productPrice}>$ {product.price}</Typography>
         </View>
-      </KeyboardAwareScrollView>
+        <Typography style={styles.productDescription}>
+          {product.description}
+        </Typography>
+      </View>
+
+      <View style={styles.addProductContainer}>
+        <Counter style={styles.counterContainer} counter={quantity} setCounter={setQuantity} />
+        <IconButton style={[styles.cartContainer , cart.has(product) ? styles.disabled : {}  ]}name="cart-plus" size={25} onPress={!cart.has(product) ? addProductToCart : () => {}} />
+      </View>
+
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  productInfoContainer: {
+    marginBottom: spacing.sectionSpacing,
+  },
+  productInfoFirstRowContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  productName: {
+    fontSize: normalizeSize(sizes.productName),
+    marginBottom: spacing.textSpacing,
+  },
+  productPrice: {
+    fontSize: normalizeSize(sizes.productDescription),
+  },
+  productDescription: {
+    fontSize: normalizeSize(sizes.productDescription),
+    color: colorWithOpacity(colors.grayLight, 1.0),
+  },
+  addProductContainer: {
+    flexDirection: "row",
+    backgroundColor: colors.orange
+  },
+  counterContainer:{
+    flex:1,
+  },
+  cartContainer:{
+    flex:1,
+  },
+  disabled:{
+    opacity: 0.2,
+  },
+
+});
