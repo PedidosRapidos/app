@@ -7,10 +7,11 @@ import {
   Text,
 } from "react-native";
 import { colors, colorWithOpacity } from "../../res/colors";
-import { normalizeSize } from "../../res/typography";
+import { normalizeSize, ThinTypography, Typography, LightTypography } from '../../res/typography';
 import { spacing } from "../../res/spacing";
 
 interface Props {
+  symbol?: string
   text: string;
   onPress: () => void;
   disable?: boolean;
@@ -18,6 +19,7 @@ interface Props {
 }
 
 export const SecondaryButton = ({
+  symbol = "",
   text,
   onPress,
   disable = false,
@@ -34,7 +36,8 @@ export const SecondaryButton = ({
         style={styles.buttonContainer}
         onPress={disable ? () => {} : onPress}
         >
-        <Text style={[styles.buttonText, left ? styles.leftJustified : styles.centered]}>{text}</Text>
+        <LightTypography style={[styles.symbolText, left ? styles.leftJustified : styles.centered]}>{symbol}</LightTypography>
+        <Typography style={[styles.buttonText, left ? styles.leftJustified : styles.centered]}>{text}</Typography>
       </TouchableOpacity>
     </View>
   );
@@ -48,12 +51,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   buttonContainer: {
-    height: 60,
-    alignContent: "center",
-    justifyContent: "center",
+    alignItems:"center",
+    flexDirection:"row",
   },
   buttonText: {
-    color: colorWithOpacity(colors.blue, 0.9),
+    color: colorWithOpacity(colors.blue, 1.0),
     fontSize: normalizeSize(17),
   },
+  symbolText:{
+    color: colorWithOpacity(colors.blue, 1.0),
+    fontSize: normalizeSize(40),
+  }
 });

@@ -4,6 +4,7 @@ export const colors = {
   gray: "#B2B3BB",
   yellow: "#FFBE66",
   orange: "#F55349",
+  darkOrange: "#d13324",
   red: "#FF5150",
   blue: "#0076FF",
   darkBlue: "#4743FF",
@@ -18,6 +19,10 @@ export const colors = {
   popupBackground: "#2F3141",
   cream: "#FFEEEE",
 };
+
+export const opacities = {
+  description: 0.8,
+}
 
 export const colorWithOpacity = (
   color: string,

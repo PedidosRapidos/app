@@ -48,6 +48,12 @@ export const fonts = {
   FiraSans_900Black,
   FiraSans_900Black_Italic,
 };
+
+export const sizes = {
+  productName: 26,
+  productDescription: 17,
+}
+
 const { width, height } = Dimensions.get("window");
 const scale = width / 411;
 const scaleHeight = height / 822;

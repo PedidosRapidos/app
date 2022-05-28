@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { FlatList, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../../res/globalStyles";
 import React, { useCallback, useEffect, useState } from "react";
@@ -78,32 +78,33 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
   }, [route.params?.shops]);
 
   return (
-    <SafeAreaView style={globalStyles.generalContainer}>
-      <View style={globalStyles.innerContainer}>
-        <SectionContainer>
-          <MainButton
-            text="Add shop"
-            onPress={navigateToAddShopScreen}
-            backgroundColor={colors.orange}
-          />
-        </SectionContainer>
-        <SectionContainer>
-          <SectionTitle text="My shops" />
-          {screenShops.length != 0 ? null : (
-            <Typography>You do not have any shops yet</Typography>
-          )}
-        </SectionContainer>
-        <SectionContainer>
-          {screenShops.map((item: any, index: any) => (
-            <View key={item.id}>
-              <ShopPreview
-                shop={item}
-                onPressMyProducts={navigateToShopProductsScreen}
-              />
-            </View>
-          ))}
-        </SectionContainer>
+    <SafeAreaView
+      style={{
+        ...globalStyles.generalContainer,
+        ...globalStyles.innerContainer,
+      }}
+    >
+      <View style={globalStyles.sectionSpacing}>
+        <SectionTitle text="My shops" />
+        {screenShops.length != 0 ? null : (
+          <Typography>You do not have any shops yet</Typography>
+        )}
       </View>
+      <FlatList
+      style={globalStyles.sectionSpacing}
+        renderItem={({ item: shop }) => (
+          <ShopPreview
+            shop={shop}
+            onPressMyProducts={navigateToShopProductsScreen}
+          />
+        )}
+        data={screenShops}
+      />
+      <MainButton
+        text="Add shop"
+        onPress={navigateToAddShopScreen}
+        backgroundColor={colors.orange}
+      />
       <Loader visible={isLoading} />
     </SafeAreaView>
   );

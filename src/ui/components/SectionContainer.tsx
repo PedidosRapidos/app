@@ -16,11 +16,6 @@ export const SectionContainer = ({children}:Props) => {
   const styles = StyleSheet.create({
     container: {
       marginBottom: spacing.sectionSpacing,
-      borderColor: "white",
-      //borderWidth: 1,
-      //alignItems: "center",
-      //flexDirection: "row",
-      //justifyContent: "space-between",
     },
   });
   

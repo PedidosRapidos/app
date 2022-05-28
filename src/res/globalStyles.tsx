@@ -34,4 +34,12 @@ export const globalStyles = StyleSheet.create({
     borderTopColor: colorWithOpacity(colors.grayLight, 0.5),
     borderTopWidth: 1,
   },
+  bottomThinSeparator: {
+    paddingBottom: 5,
+    borderBottomColor: colorWithOpacity(colors.grayLight, 0.5),
+    borderBottomWidth: 1,
+  },
+  sectionSpacing: {
+    marginBottom: spacing.sectionSpacing,
+  },
 });
