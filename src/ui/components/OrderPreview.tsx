@@ -4,35 +4,23 @@ import { colors, colorWithOpacity } from "../../res/colors";
 import { imageStyles } from "../../res/imageStyles";
 import { spacing } from "../../res/spacing";
 import { BoldTypography, Typography } from "../../res/typography";
-import { API_URL } from "../../services/config";
+import { orderDescription, orderImage } from "../../services/order";
 
 interface Props<T> {
   order: T;
+  onDetails?: (_: T) => any;
 }
-const noImage = require("../../../assets/noimage.png");
 
-const orderImage = (order: any) => {
-  const products = order.cart?.products;
-  const productId = products && products.length > 0 ? products[0].id : null;
-  return productId
-    ? { uri: `${API_URL}/products/${productId}/image` }
-    : noImage;
-};
-
-const orderDescription = (order: any): string => {
-  const products = order.cart?.products || [];
-  const description = products
-    .map(({ name }: any) => name as string)
-    .reduce((acc: string, name: string) => `${acc}, ${name}`);
-  return description || "...";
-};
-
-export const OrderPreview = ({ order }: Props<any>) => {
+export const OrderPreview = ({ order, onDetails }: Props<any>) => {
   const image = orderImage(order);
   const description = orderDescription(order);
   return (
     <View style={styles.orderPreviewContainer}>
-      <TouchableOpacity key={order.id} style={styles.orderContainer}>
+      <TouchableOpacity
+        key={order.id}
+        style={styles.orderContainer}
+        onPress={() => onDetails?.(order)}
+      >
         <View style={styles.orderImageContainer}>
           <Image source={image} style={imageStyles.preview}></Image>
         </View>

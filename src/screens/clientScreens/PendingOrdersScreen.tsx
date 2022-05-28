@@ -41,6 +41,10 @@ export const PendingOrdersScreen = ({ navigation, route }: Props) => {
     }
   });
 
+  const openOrdeDetail = (order: any) => {
+    navigation.navigate("OrderDetailScreen", { order });
+  };
+
   useEffect(() => {
     if (user) {
       search();
@@ -59,7 +63,9 @@ export const PendingOrdersScreen = ({ navigation, route }: Props) => {
       </SectionContainer>
       <FlatList
         style={{ flex: 1 }}
-        renderItem={({ item: order }) => <OrderPreview order={order} />}
+        renderItem={({ item: order }) => (
+          <OrderPreview order={order} onDetails={openOrdeDetail} />
+        )}
         data={orders}
         onEndReachedThreshold={0.1}
         onEndReached={nextPage}

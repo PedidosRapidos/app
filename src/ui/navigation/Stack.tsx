@@ -18,6 +18,7 @@ import { useUser } from "../../contexts/UserContext";
 import { EditProductScreen } from "../../screens/ownerScreens/EditProductScreen";
 import { PendingOrdersScreen } from "../../screens/clientScreens/PendingOrdersScreen";
 import { OrderHistoryScreen } from "../../screens/clientScreens/OrderHistoryScreen";
+import { OrderDetailScreen } from "../../screens/clientScreens/OrderDetailScreen";
 
 export type RootStackParams = {
   WelcomeScreen: undefined;
@@ -34,6 +35,7 @@ export type RootStackParams = {
   ShopProductsScreen: { sellerId: number; shopId: number };
   PendingOrdersScreen: undefined;
   OrderHistoryScreen: undefined;
+  OrderDetailScreen: { order: any };
 };
 
 const Drawer = createDrawerNavigator();
@@ -127,6 +129,11 @@ const MyStack = () => {
           <Drawer.Screen
             name={"OrderHistoryScreen"}
             component={OrderHistoryScreen}
+            options={{ headerShown: false }}
+          />
+          <Drawer.Screen
+            name={"OrderDetailScreen"}
+            component={OrderDetailScreen}
             options={{ headerShown: false }}
           />
         </Drawer.Navigator>
