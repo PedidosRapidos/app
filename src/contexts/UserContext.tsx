@@ -19,6 +19,7 @@ export interface User {
 interface UserActions {
   login: (user: User) => Promise<any>;
   logout: () => Promise<any> | void;
+  updateCartId: (CartId: number) => any 
 }
 
 const UserContext = React.createContext<User & UserActions>(
@@ -60,6 +61,14 @@ export const UserProvider: FC = ({ children }: PropsWithChildren<any>) => {
       } catch (e) {
         console.log("restore user:", e);
       }
+    },
+    async updateCartId(cartId: number) {
+      setUser({...user, cartId});
+      try {
+        await SecureStore.setItemAsync("user", JSON.stringify(user));
+      } catch (e) {
+        console.log("login user", e);
+      }    
     },
   };
 
