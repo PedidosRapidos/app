@@ -48,13 +48,12 @@ export const CheckOutScreen = ({ navigation }: Props) => {
       );
 
       //fetcheo la nueva data del user que tiene un nuevo cartid
-      /*const { data: userResponse } = await client.get(
+      const { data: userResponse } = await client.get(
         `/users/${user.id}`
-      );
+      )
 
-      user.login(userResponse)*/
-      navigation.goBack();
-      
+      user.updateCartId(userResponse.cartId)
+      navigation.goBack(); 
 
     } catch (err: any) {
 
