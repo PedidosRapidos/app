@@ -30,4 +30,8 @@ export const globalStyles = StyleSheet.create({
   horizontalPadding: {
     paddingHorizontal: spacing.paddingHorizontal,
   },
+  thinSeparator: {
+    borderTopColor: colorWithOpacity(colors.grayLight, 0.5),
+    borderTopWidth: 1,
+  },
 });

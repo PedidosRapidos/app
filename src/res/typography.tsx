@@ -61,6 +61,15 @@ export const ThinTypography = (props: WithAnimatedObject<TextProps>) => {
   );
 };
 
+export const LightTypography = (props: WithAnimatedObject<TextProps>) => {
+  return (
+    <Animated.Text
+      {...props}
+      style={[styles.text, props.style, { fontFamily: "FiraSansLight" }]}
+    />
+  );
+};
+
 export const Typography = (props: WithAnimatedObject<TextProps>) => {
   return (
     <Animated.Text

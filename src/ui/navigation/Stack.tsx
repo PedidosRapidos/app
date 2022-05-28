@@ -16,6 +16,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { ProductDetailScreenOwner } from "../../screens/ownerScreens/ProductDetailScreenOwner";
 import { useUser } from "../../contexts/UserContext";
 import { EditProductScreen } from "../../screens/ownerScreens/EditProductScreen";
+import { CheckOutScreen } from "../../screens/clientScreens/CheckOutScreen";
 import { PendingOrdersScreen } from "../../screens/clientScreens/PendingOrdersScreen";
 import { OrderHistoryScreen } from "../../screens/clientScreens/OrderHistoryScreen";
 import { OrderDetailScreen } from "../../screens/clientScreens/OrderDetailScreen";
@@ -33,6 +34,7 @@ export type RootStackParams = {
   ProductDetailScreen: { product: any };
   ProductDetailScreenOwner: { product: any };
   ShopProductsScreen: { sellerId: number; shopId: number };
+  CheckOutScreen: undefined;
   PendingOrdersScreen: undefined;
   OrderHistoryScreen: undefined;
   OrderDetailScreen: { order: any };
@@ -89,6 +91,11 @@ const MyStack = () => {
           <Drawer.Screen
             name={"CartScreen"}
             component={CartScreen}
+            options={{ headerShown: false }}
+          />
+          <Drawer.Screen
+            name={"CheckOutScreen"}
+            component={CheckOutScreen}
             options={{ headerShown: false }}
           />
           <Drawer.Screen
