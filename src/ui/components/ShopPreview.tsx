@@ -22,7 +22,6 @@ const styles = StyleSheet.create({
   shopPreview: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
     marginBottom: "3%",
   },
   shopImage: {

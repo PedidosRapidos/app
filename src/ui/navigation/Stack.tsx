@@ -33,7 +33,7 @@ export type RootStackParams = {
   EditProductScreen: { product: any };
   ProductDetailScreen: { product: any };
   ProductDetailScreenOwner: { product: any };
-  ShopProductsScreen: { sellerId: number; shopId: number };
+  ShopProductsScreen: { sellerId: number; shopData: any };
   CheckOutScreen: undefined;
   PendingOrdersScreen: undefined;
   OrderHistoryScreen: undefined;
