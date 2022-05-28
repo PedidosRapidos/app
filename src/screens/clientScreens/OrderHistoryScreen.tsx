@@ -15,6 +15,7 @@ import { SearchBar } from "../../ui/components/SearchBar";
 import { Picker } from "@react-native-picker/picker";
 import { colors } from "../../res/colors";
 import { Typography } from "../../res/typography";
+import { stateStr } from "../../services/order";
 
 interface Props
   extends StackScreenProps<RootStackParams, "OrderHistoryScreen"> {}
@@ -53,6 +54,10 @@ export const OrderHistoryScreen = ({ navigation, route }: Props) => {
     }
   }, [user, cart, orderState]);
 
+  const openOrdeDetail = (order: any) => {
+    navigation.navigate("OrderDetailScreen", { order });
+  };
+
   return (
     <SafeAreaView
       style={{
@@ -88,19 +93,24 @@ export const OrderHistoryScreen = ({ navigation, route }: Props) => {
               selectedValue={orderState}
               onValueChange={(itemValue) => setOrderState(itemValue)}
             >
-              <Picker.Item label="To Comfirm" value="TO_CONFIRM" />
-              <Picker.Item label="Comfirmed" value="CONFIRMED" />
-              <Picker.Item label="In Preparation" value="IN_PREPARATION" />
-              <Picker.Item label="Under Way" value="UNDER_WAY" />
-              <Picker.Item label="Delivered" value="DELIVERED" />
-              <Picker.Item label="Cancelled" value="CANCELLED" />
+              <Picker.Item label={stateStr["TO_CONFIRM"]} value="TO_CONFIRM" />
+              <Picker.Item label={stateStr["CONFIRMED"]} value="CONFIRMED" />
+              <Picker.Item
+                label={stateStr["IN_PREPARATION"]}
+                value="IN_PREPARATION"
+              />
+              <Picker.Item label={stateStr["UNDER_WAY"]} value="UNDER_WAY" />
+              <Picker.Item label={stateStr["DELIVERED"]} value="DELIVERED" />
+              <Picker.Item label={stateStr["CANCELLED"]} value="CANCELLED" />
             </Picker>
           </View>
         </View>
       </SectionContainer>
       <FlatList
         style={{ flex: 1 }}
-        renderItem={({ item: order }) => <OrderPreview order={order} />}
+        renderItem={({ item: order }) => (
+          <OrderPreview order={order} onDetails={openOrdeDetail} />
+        )}
         data={orders}
         onEndReachedThreshold={0.1}
         onEndReached={nextPage}
