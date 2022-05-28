@@ -1,11 +1,12 @@
 import React from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { imageStyles } from "../../res/imageStyles";
-import { Typography } from "../../res/typography";
+import { Typography, sizes } from '../../res/typography';
 import { API_URL } from "../../services/config";
 import { colors, colorWithOpacity } from "../../res/colors";
 import { spacing } from "../../res/spacing";
 import { IconButton } from "./IconButton";
+import { size } from "fp-ts/lib/ReadonlyRecord";
 
 interface Props<T> {
   product: T;
@@ -93,14 +94,13 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.textSpacing,
   },
   productName: {
-    fontSize: 20,
+    fontSize: sizes.productPreviewName,
   },
   productDescription: {
     color: colorWithOpacity(colors.grayLight, 1.0),
-    fontSize: 16,
-    fontWeight: "100",
+    fontSize: sizes.productDescription,
   },
   price: {
-    fontSize: 16,
+    fontSize: sizes.productDescription,
   },
 });
