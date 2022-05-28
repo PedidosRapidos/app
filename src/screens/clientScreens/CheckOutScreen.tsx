@@ -49,7 +49,7 @@ export const CheckOutScreen = ({ navigation }: Props) => {
         `/users/${user.id}`
       )
       user.updateCartId(userResponse.cartId)
-      navigation.navigate("HomeScreenClient"); 
+      navigation.reset({index:0, routes:[{name:'HomeScreenClient'}]})
 
     } catch (err: any) {
 
