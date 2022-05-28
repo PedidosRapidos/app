@@ -19,8 +19,8 @@ export const orderDescription = (order: any): string => {
 };
 
 export const stateStr: Record<string, string | undefined> = {
-  TO_CONFIRM: "To Comfirm",
-  CONFIRMED: "Comfirmed",
+  TO_CONFIRM: "To Confirm",
+  CONFIRMED: "Confirmed",
   IN_PREPARATION: "In Preparation",
   UNDER_WAY: "Under Way",
   DELIVERED: "Delivered",
