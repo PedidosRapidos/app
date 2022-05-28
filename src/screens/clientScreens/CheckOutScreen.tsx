@@ -37,23 +37,19 @@ export const CheckOutScreen = ({ navigation }: Props) => {
   const order = async () => {
 
     let form = {"payment_method": selectedField};
-
-    console.log("ID: " + user.id)
-
+    
     try {
 
       const { data: response } = await client.post(
         `/orders/${user.id}`,
         form
       );
-
       //fetcheo la nueva data del user que tiene un nuevo cartid
       const { data: userResponse } = await client.get(
         `/users/${user.id}`
       )
-
       user.updateCartId(userResponse.cartId)
-      navigation.goBack(); 
+      navigation.navigate("HomeScreenClient"); 
 
     } catch (err: any) {
 

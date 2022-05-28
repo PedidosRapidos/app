@@ -22,7 +22,7 @@ import { useIncrementalSearch } from "../../ui/hooks/useIncrementalSearch";
 
 interface Props extends StackScreenProps<RootStackParams, "HomeScreenClient"> {}
 
-export const HomeScreenClient = ({ navigation, route }: Props) => {
+export const HomeScreenClient = ({ navigation }: Props) => {
   const [searchValue, setSearchValue] = useState("");
   const [cart] = useCart();
   const [selectedField, setSelectedField] = useState("price");
