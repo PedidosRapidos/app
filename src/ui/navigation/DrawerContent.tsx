@@ -21,6 +21,14 @@ export const DrawerContent = ({ navigation }: PropsWithChildren<any>) => {
         </Typography>
         {user?.isClient && (
           <>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("HomeScreenClient")}
+            >
+              <View style={styles.divider}>
+                <Icon name="home" size={20} style={styles.icon} />
+                <Typography style={styles.option}>Home</Typography>
+              </View>
+            </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate("CartScreen")}>
               <View style={styles.divider}>
                 <Icon name="shopping-cart" size={20} style={styles.icon} />
