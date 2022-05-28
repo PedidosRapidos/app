@@ -93,6 +93,7 @@ export const OrderHistoryScreen = ({ navigation, route }: Props) => {
               <Picker.Item label="In Preparation" value="IN_PREPARATION" />
               <Picker.Item label="Under Way" value="UNDER_WAY" />
               <Picker.Item label="Delivered" value="DELIVERED" />
+              <Picker.Item label="Cancelled" value="CANCELLED" />
             </Picker>
           </View>
         </View>
