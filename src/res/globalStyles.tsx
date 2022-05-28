@@ -34,4 +34,7 @@ export const globalStyles = StyleSheet.create({
     borderTopColor: colorWithOpacity(colors.grayLight, 0.5),
     borderTopWidth: 1,
   },
+  sectionSpacing: {
+    marginBottom: spacing.sectionSpacing,
+  },
 });

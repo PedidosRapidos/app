@@ -1,4 +1,4 @@
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../../res/globalStyles";
 import React, { useEffect, useState } from "react";
@@ -14,6 +14,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { ShopPreview } from "../../ui/components/ShopPreview";
 import { ProductPreview2 } from "../../ui/components/ProductPreview2";
 import { useShopDetail } from "../../contexts/ShopContext";
+import { SecondaryButton } from '../../ui/components/SecondaryButton';
 
 interface Props
   extends StackScreenProps<RootStackParams, "ShopProductsScreen"> {}
@@ -54,44 +55,46 @@ export const ShopProductsScreen = ({ navigation, route }: Props) => {
   };
 
   useEffect(() => {
+    console.log(shop)
     getShopProducts();
   }, [shopId]);
 
   return (
-    <SafeAreaView style={globalStyles.generalContainer}>
-      <ScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
-        showsVerticalScrollIndicator={false}
-        style={globalStyles.innerContainer}
-      >
-        <SectionContainer>
-          <MainButton
-            text="Add product"
-            onPress={navigateToUploadProductScreen}
-            backgroundColor={colors.orange}
+    <SafeAreaView
+      style={{
+        ...globalStyles.generalContainer,
+        ...globalStyles.innerContainer,
+      }}
+    >
+      <View style={globalStyles.sectionSpacing}>
+        <SectionTitle text="Shop" />
+        <ShopPreview shop={shop} />
+      </View>
+      <View style={globalStyles.sectionSpacing}>
+        <SectionTitle text="My products" />
+        {products.length != 0 ? null : (
+          <Typography>You do not have any product in this shop</Typography>
+        )}
+      </View>
+      <FlatList
+        style={globalStyles.sectionSpacing}
+        renderItem={({ item: product }) => (
+          <ProductPreview2
+            product={product}
+            onDetails={navigateToProductsDetailScreen}
           />
-        </SectionContainer>
-        <SectionContainer>
-          <SectionTitle text="Shop" />
-          <View>
-            <ShopPreview shop={shop} />
-          </View>
-        </SectionContainer>
-        <SectionContainer>
-          <SectionTitle text="My products" />
-          {products.length != 0 ? null : (
-            <Typography>You do not have any product in this shop</Typography>
-          )}
-          {products.map((item: any) => (
-            <View key={item.id}>
-              <ProductPreview2
-                product={item}
-                onDetails={navigateToProductsDetailScreen}
-              />
-            </View>
-          ))}
-        </SectionContainer>
-      </ScrollView>
+        )}
+        data={products}
+      />
+      {products.length == 0 ?
+    <MainButton
+    text="Add product"
+    onPress={navigateToUploadProductScreen}
+    backgroundColor={colors.orange}
+  /> : 
+    <SecondaryButton symbol ="+" text="  Add other product" onPress={navigateToUploadProductScreen} left={true}/>
+    }
+      
       <Loader visible={isLoading} />
     </SafeAreaView>
   );
