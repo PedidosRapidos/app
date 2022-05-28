@@ -47,7 +47,7 @@ export const OrderPreview = ({ order }: Props<any>) => {
           </View>
         </View>
       </TouchableOpacity>
-      <View style={styles.shopCartContainer}></View>
+      <View style={styles.actionsContainer}></View>
     </View>
   );
 };
@@ -62,8 +62,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flex: 2,
   },
-  shopCartContainer: {
+  actionsContainer: {
     width: 100,
+    justifyContent: "space-between",
+    alignContent: "space-between",
   },
   orderImageContainer: {
     flex: 1,
