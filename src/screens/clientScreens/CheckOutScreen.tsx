@@ -32,7 +32,7 @@ export const CheckOutScreen = ({ navigation }: Props) => {
   };
 
   const DoNothing = () => {
-
+    console.log("TO BE IMPLEMENTED");
   }
 
   return (

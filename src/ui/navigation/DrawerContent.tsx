@@ -1,7 +1,4 @@
-import {
-  DrawerContentScrollView,
-  DrawerItemList,
-} from "@react-navigation/drawer";
+import { DrawerContentScrollView } from "@react-navigation/drawer";
 import { PropsWithChildren } from "react";
 import { TouchableOpacity, View, StyleSheet } from "react-native";
 import { useCart } from "../../contexts/CartContext";
@@ -23,14 +20,42 @@ export const DrawerContent = ({ navigation }: PropsWithChildren<any>) => {
           Welcome {user?.username}!{" "}
         </Typography>
         {user?.isClient && (
-          <TouchableOpacity onPress={() => navigation.navigate("CartScreen")}>
-            <View style={styles.divider}>
-              <Icon name="shopping-cart" size={20} style={styles.icon} />
-              <Typography style={styles.option}>
-                {`My Cart ${cartCount}`}
-              </Typography>
-            </View>
-          </TouchableOpacity>
+          <>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("HomeScreenClient")}
+            >
+              <View style={styles.divider}>
+                <Icon name="home" size={20} style={styles.icon} />
+                <Typography style={styles.option}>Home</Typography>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("CartScreen")}>
+              <View style={styles.divider}>
+                <Icon name="shopping-cart" size={20} style={styles.icon} />
+                <Typography style={styles.option}>
+                  {`My Cart ${cartCount}`}
+                </Typography>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("PendingOrdersScreen")}
+            >
+              <View style={styles.divider}>
+                <Icon name="box" size={20} style={styles.icon} />
+                <Typography style={styles.option}>
+                  {`Pending Orders`}
+                </Typography>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("OrderHistoryScreen")}
+            >
+              <View style={styles.divider}>
+                <Icon name="truck-loading" size={20} style={styles.icon} />
+                <Typography style={styles.option}>{`Order History`}</Typography>
+              </View>
+            </TouchableOpacity>
+          </>
         )}
         <TouchableOpacity onPress={user!.logout}>
           <View style={styles.divider}>
