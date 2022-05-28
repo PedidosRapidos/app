@@ -8,16 +8,19 @@ import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 import { Product, useCart } from "../../contexts/CartContext";
 import { CartProductPreview } from "../../ui/components/CartProductPreview";
-import { BoldTypography, Typography, ThinTypography, LightTypography, normalizeSize } from '../../res/typography';
+import { BoldTypography, LightTypography, normalizeSize } from '../../res/typography';
 import { MainButton } from "../../ui/components/MainButton";
-import { SecondaryButton } from "../../ui/components/SecondaryButton";
 import { Picker } from "@react-native-picker/picker";
 import { colors, colorWithOpacity } from '../../res/colors';
+import client from "../../services/config";
+import { useUser } from '../../contexts/UserContext';
 
 interface Props extends StackScreenProps<RootStackParams, "CheckOutScreen"> {}
 
 export const CheckOutScreen = ({ navigation }: Props) => {
   const [cart] = useCart();
+  const user = useUser();
+  
   const products = cart?.products || [];
   const [selectedField, setSelectedField] = useState("cash");
 
@@ -31,9 +34,37 @@ export const CheckOutScreen = ({ navigation }: Props) => {
     });
   };
 
-  const DoNothing = () => {
-    console.log("TO BE IMPLEMENTED");
-  }
+  const order = async () => {
+
+    let form = {"payment_method": selectedField};
+
+    console.log("ID: " + user.id)
+
+    try {
+
+      const { data: response } = await client.post(
+        `/orders/${user.id}`,
+        form
+      );
+
+      //fetcheo la nueva data del user que tiene un nuevo cartid
+      /*const { data: userResponse } = await client.get(
+        `/users/${user.id}`
+      );
+
+      user.login(userResponse)*/
+      navigation.goBack();
+      
+
+    } catch (err: any) {
+
+      console.error(
+        "Request failed, response:",
+        err.response?.data || err.message || err
+      );
+
+    }
+  };
 
   return (
     <SafeAreaView style={{...globalStyles.generalContainer, ...globalStyles.innerContainer}}>
@@ -71,8 +102,7 @@ export const CheckOutScreen = ({ navigation }: Props) => {
             <Picker.Item label="Cash" value="cash" />
           </Picker>
         </View>
-
-          <MainButton text="Order" onPress={DoNothing}></MainButton>
+          <MainButton text="Order" onPress={order}></MainButton>
       </SectionContainer>
     </SafeAreaView>
   );
