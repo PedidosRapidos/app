@@ -13,6 +13,7 @@ import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 import { ShopPreview } from "../../ui/components/ShopPreview";
 import { useUser } from "../../contexts/UserContext";
+import { SecondaryButton } from "../../ui/components/SecondaryButton";
 
 interface Props extends StackScreenProps<RootStackParams, "HomeScreenOwner"> {}
 
@@ -54,7 +55,7 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
   const navigateToShopProductsScreen = (shop: any) => {
     navigation.navigate("ShopProductsScreen", {
       sellerId: sellerId,
-      shopId: shop.id,
+      shopData: shop,
     });
   };
 
@@ -91,7 +92,7 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
         )}
       </View>
       <FlatList
-      style={globalStyles.sectionSpacing}
+        style={globalStyles.sectionSpacing}
         renderItem={({ item: shop }) => (
           <ShopPreview
             shop={shop}
@@ -100,11 +101,16 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
         )}
         data={screenShops}
       />
-      <MainButton
-        text="Add shop"
-        onPress={navigateToAddShopScreen}
-        backgroundColor={colors.orange}
-      />
+      {screenShops.length == 0 ? (
+        <MainButton text="Add shop" onPress={navigateToAddShopScreen} />
+      ) : (
+        <SecondaryButton
+          symbol="+"
+          text="  Add other shop"
+          onPress={navigateToAddShopScreen}
+          left={true}
+        />
+      )}
       <Loader visible={isLoading} />
     </SafeAreaView>
   );

@@ -1,6 +1,6 @@
 import React from "react";
-import { Image, View } from "react-native";
-import { colors } from "../../res/colors";
+import { Image, View, StyleSheet } from "react-native";
+import { colors, colorWithOpacity } from "../../res/colors";
 import { imageStyles } from "../../res/imageStyles";
 import { widthPercentageToDP } from "../../res/responsive";
 import {
@@ -9,80 +9,71 @@ import {
   normalizeSize,
 } from "../../res/typography";
 import { SmallButton } from "./SmallButton";
+import { sizes } from "../../res/typography";
+import { spacing } from '../../res/spacing';
 
-interface Props<T>{
+interface Props<T> {
   shop: any;
   onPressMyProducts?: (shop: T) => void;
   onPressEdit?: (shop: T) => void;
 }
 
-export const ShopPreview = ({ shop, onPressMyProducts, onPressEdit }: Props<any>) => {
+const styles = StyleSheet.create({
+  shopPreview: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: "3%",
+  },
+  shopImage: {
+    width: "30%",
+    marginRight: "5%",
+    backgroundColor: colorWithOpacity(colors.orange, 0.2),
+  },
+  shopInfo: {
+    width: "30%",
+  },
+  shopName: {
+    fontSize: sizes.productPreviewName,
+    paddingVertical: spacing.textSpacing
+  },
+  productDescription: {
+    fontSize: sizes.productDescription,
+    color: colorWithOpacity(colors.grayLight, 1.0),
+    paddingVertical: spacing.textSpacing
+  },
+});
+
+export const ShopPreview = ({
+  shop,
+  onPressMyProducts,
+  onPressEdit,
+}: Props<any>) => {
   return (
-    <View
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        marginBottom: "3%",
-      }}
-    >
-      <View
+    <View style={styles.shopPreview}>
+      <Image
+        source={require("../../res/img/store.png")}
         style={{
-          flexDirection: "row",
-          alignItems: "center",
+          ...imageStyles.preview,
+          ...styles.shopImage,
         }}
-      >
-        <Image
-          source={require("../../res/img/store.png")}
-          style={{
-            ...imageStyles.categorieIcon,
-            width: "30%",
-            marginRight: "5%",
+      ></Image>
+
+      <View style={styles.shopInfo}>
+        <Typography style={styles.shopName}>{shop.name}</Typography>
+        <Typography style={styles.productDescription}>
+          {shop.address}
+        </Typography>
+      </View>
+
+      {onPressMyProducts ? (
+        <SmallButton
+          text="My products"
+          onPress={() => {
+            onPressMyProducts(shop);
           }}
-        ></Image>
-
-        <View style={{ flexDirection: "column" }}>
-          <SemiBoldTypography
-            style={{
-              fontSize: normalizeSize(15),
-              width: widthPercentageToDP("30"),
-            }}
-          >
-            {shop.name}
-          </SemiBoldTypography>
-          <Typography style={{ width: widthPercentageToDP("30") }}>
-            {shop.address}
-          </Typography>
-        </View>
-      </View>
-
-      <View
-        style={{
-          flexDirection: "column",
-          alignContent: "space-between",
-        }}
-      >
-        {onPressEdit ? (
-          <SmallButton
-            text="Edit"
-            onPress={() => {
-              /*navigation.navigate("EditShopScreen", {
-                sellerId: params.sellerId,
-              });*/
-            }}
-            backgroundColor={colors.orange}
-          />
-          ) : (null)
-        }
-        {onPressMyProducts ? (
-          <SmallButton
-            text="My products"
-            onPress={() => {onPressMyProducts(shop)}}
-            backgroundColor={colors.orange}
-          />
-          ) : (null)
-        }
-      </View>
+          backgroundColor={colors.orange}
+        />
+      ) : null}
     </View>
   );
 };
