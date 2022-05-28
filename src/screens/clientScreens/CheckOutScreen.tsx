@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FlatList, View, StyleSheet } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
-import { globalStyles } from "../../res/globalStyles";
+import { globalStyles } from '../../res/globalStyles';
 import { SectionTitle } from "../../ui/components/SectionTitle";
 import { SectionContainer } from "../../ui/components/SectionContainer";
 import { RootStackParams } from "../../ui/navigation/Stack";
@@ -36,46 +36,44 @@ export const CheckOutScreen = ({ navigation }: Props) => {
   }
 
   return (
-    <SafeAreaView style={globalStyles.generalContainer}>
-        <View style={globalStyles.innerContainer}>
-            <SectionContainer>
-                <SectionTitle text="Check out" />
-            </SectionContainer>
-            <FlatList
-                style={{ flex: 1 }}
-                renderItem={({ item: product }) => (
-                <CartProductPreview
-                    product={product}
-                    onDetails={displayProductDetails}
-                    onDelete={cart.remove}
-                />
-                )}
-                data={products}
-                keyExtractor={(product, index) => `${index}-${product.id}`}
-            />
-            <SectionContainer>
-                <View style={{...styles.totalPriceContainer, ...globalStyles.thinSeparator}}>
-                    <BoldTypography style={{ fontSize: 30 }}>{`Total `}</BoldTypography>
-                    <BoldTypography style={{ fontSize: 30 }}>{`$ ${total} `}</BoldTypography>
-                </View>
-            </SectionContainer>
-            <SectionContainer>
-              <View style={{...styles.paymentMethodContainer, ...globalStyles.thinSeparator}}>
-                <LightTypography style={styles.paymentText}>Payment method</LightTypography>
-                <Picker
-                 style={styles.section}
-                  selectedValue={selectedField}
-                  onValueChange={(itemValue, itemIndex) =>
-                    setSelectedField(itemValue)
-                  }
-                >
-                  <Picker.Item label="Cash" value="cash" />
-                </Picker>
-              </View>
+    <SafeAreaView style={{...globalStyles.generalContainer, ...globalStyles.innerContainer}}>
+      <SectionContainer>
+          <SectionTitle text="Check out" />
+        </SectionContainer>
+      <FlatList
+          renderItem={({ item: product }) => (
+          <CartProductPreview
+              product={product}
+              onDetails={displayProductDetails}
+              onDelete={cart.remove}
+          />
+          )}
+          data={products}
+          keyExtractor={(product, index) => `${index}-${product.id}`}
+      />
+      
 
-                <MainButton text="Order" onPress={DoNothing}></MainButton>
-            </SectionContainer>
+        <View style={{...styles.totalPriceContainer, ...globalStyles.thinSeparator}}>
+            <BoldTypography style={{ fontSize: 24 }}>{`Total `}</BoldTypography>
+            <BoldTypography style={{ fontSize: 24 }}>{`$ ${total} `}</BoldTypography>
         </View>
+
+      <SectionContainer>
+        <View style={{...styles.paymentMethodContainer, ...globalStyles.thinSeparator}}>
+          <LightTypography style={styles.paymentText}>Payment method</LightTypography>
+          <Picker
+            style={styles.section}
+            selectedValue={selectedField}
+            onValueChange={(itemValue, itemIndex) =>
+              setSelectedField(itemValue)
+            }
+          >
+            <Picker.Item label="Cash" value="cash" />
+          </Picker>
+        </View>
+
+          <MainButton text="Order" onPress={DoNothing}></MainButton>
+      </SectionContainer>
     </SafeAreaView>
   );
 };
@@ -86,7 +84,7 @@ const styles = StyleSheet.create({
   },
   totalPriceContainer:{
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-between"
   },
   paymentMethodContainer:{
     flexDirection: "row",
