@@ -76,9 +76,7 @@ export const SigninScreen = ({ route }: Props) => {
     setErrors({});
 
     try {
-      const { data: respSignIn } = await client.post("users/login", form);
-      console.log(respSignIn);
-      user.login(respSignIn);
+      await user.login(form);
     } catch (err: any) {
       setIsLoading(false);
       console.error(
