@@ -66,24 +66,27 @@ export const ShopPreview = ({
           {shop.address}
         </Typography>
       </View>
-      {onPressSeeOrders ? (
-        <SmallButton
-          text="See orders"
-          onPress={() => {
-            onPressSeeOrders(shop);
-          }}
-          backgroundColor={colors.orange}
-        />
-      ) : null}
-      {onPressMyProducts ? (
-        <SmallButton
-          text="My products"
-          onPress={() => {
-            onPressMyProducts(shop);
-          }}
-          backgroundColor={colors.orange}
-        />
-      ) : null}
+      <View>
+        {onPressSeeOrders ? (
+          <SmallButton
+            text="See orders"
+            onPress={() => {
+              onPressSeeOrders(shop);
+            }}
+            backgroundColor={colors.orange}
+          />
+        ) : null}
+
+        {onPressMyProducts ? (
+          <SmallButton
+            text="My products"
+            onPress={() => {
+              onPressMyProducts(shop);
+            }}
+            backgroundColor={colors.orange}
+          />
+        ) : null}
+      </View>
     </View>
   );
 };

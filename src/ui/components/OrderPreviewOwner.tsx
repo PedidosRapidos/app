@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Image, View } from "react-native";
 import { colors } from "../../res/colors";
 import { imageStyles } from "../../res/imageStyles";
@@ -8,21 +8,69 @@ import {
   SemiBoldTypography,
   normalizeSize,
 } from "../../res/typography";
+import client from "../../services/config";
 import { SmallButton } from "./SmallButton";
 
 interface Props<T> {
   order: any;
-  buttonText: string;
-  onPressConfirm?: (shop: T) => void;
-  onPressCancel?: (shop: T) => void;
 }
 
-export const OrderPreviewOwner = ({
-  order,
-  buttonText,
-  onPressConfirm,
-  onPressCancel,
-}: Props<any>) => {
+export const OrderPreviewOwner = ({ order }: Props<any>) => {
+  const [index, setIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const states = [
+    "TO_CONFIRM",
+    "CONFIRMED",
+    "IN_PREPARATION",
+    "UNDER_WAY",
+    "DELIVERED",
+    "CANCELLED",
+  ];
+  const buttonText = [
+    "Confirm",
+    "Prepare",
+    "Deliver",
+    "End",
+    "Finished",
+    "Cancelled",
+  ];
+  useEffect(() => {
+    console.log("refreshing page");
+  }, [index]);
+
+  const confirmOrder = async (order: any) => {
+    setIsLoading(true);
+    try {
+      await client.patch(`/orders/${order.id}/`, {
+        new_state: states[index + 1],
+      });
+      setIndex(index + 1);
+    } catch (err: any) {
+      console.error(
+        "Request failed, response:",
+        err.response?.data || err.message || err
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const cancelOrder = async (order: any) => {
+    setIsLoading(true);
+    try {
+      await client.patch(`/orders/${order.id}/`, {
+        new_state: states[5],
+      });
+      setIndex(5);
+    } catch (err: any) {
+      console.error(
+        "Request failed, response:",
+        err.response?.data || err.message || err
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <View
       style={{
@@ -39,10 +87,10 @@ export const OrderPreviewOwner = ({
         }}
       >
         <Image
-          source={require("../../res/img/store.png")}
+          source={require("../../res/img/order.png")}
           style={{
             ...imageStyles.categorieIcon,
-            width: "30%",
+            width: "25%",
             marginRight: "5%",
           }}
         ></Image>
@@ -57,10 +105,7 @@ export const OrderPreviewOwner = ({
             {order.id}
           </SemiBoldTypography>
           <Typography style={{ width: widthPercentageToDP("30") }}>
-            Productos: + {order.id}
-          </Typography>
-          <Typography style={{ width: widthPercentageToDP("30") }}>
-            Total: + {order.id}
+            Payment: {order.payment_method}
           </Typography>
         </View>
       </View>
@@ -71,27 +116,25 @@ export const OrderPreviewOwner = ({
           alignContent: "space-between",
         }}
       >
-        {onPressConfirm ? (
+        {index < 4 ? (
           <SmallButton
-            text={buttonText}
+            text={buttonText[index]}
             onPress={() => {
-              onPressConfirm(order);
+              confirmOrder(order);
             }}
             backgroundColor={colors.orange}
           />
         ) : null}
-        {onPressCancel ? (
+        {index < 2 ? (
           <SmallButton
             text="Reject"
             onPress={() => {
-              onPressCancel(order);
+              cancelOrder(order);
             }}
             backgroundColor={colors.orange}
           />
         ) : null}
-        {onPressCancel === undefined && onPressConfirm === undefined ? (
-          <Typography>{buttonText}</Typography>
-        ) : null}
+        {index >= 4 ? <Typography>{buttonText[index]}</Typography> : null}
       </View>
     </View>
   );

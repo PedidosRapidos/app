@@ -35,47 +35,13 @@ export const OrdersScreenOwner = ({ navigation, route }: Props) => {
     "Finished",
     "Cancelled",
   ];
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState([0]);
   const shopId = route.params.shopId;
 
   const displayOrderDetails = (item: any) => {
     navigation.navigate("OrderDetailScreenOwner", {
       order: item,
     });
-  };
-
-  const confirmOrder = async (order: any) => {
-    setIsLoading(true);
-    try {
-      await client.patch(`/sellers/${sellerId}/shops/${shopId}/${order.id}`, {
-        new_state: states[index + 1],
-      });
-      setIndex(index + 1);
-    } catch (err: any) {
-      console.error(
-        "Request failed, response:",
-        err.response?.data || err.message || err
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const cancelOrder = async (order: any) => {
-    setIsLoading(true);
-    try {
-      await client.patch(`/sellers/${sellerId}/shops/${shopId}/${order.id}`, {
-        new_state: states[5],
-      });
-      setIndex(6);
-    } catch (err: any) {
-      console.error(
-        "Request failed, response:",
-        err.response?.data || err.message || err
-      );
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   const getOrders = useCallback(
@@ -85,6 +51,7 @@ export const OrdersScreenOwner = ({ navigation, route }: Props) => {
         const { data: fetchedOrders } = await client.get(
           `/sellers/${sellerId}/shops/${shopId}/orders/`
         );
+
         console.log("Fetching");
         setOrders(fetchedOrders);
         return fetchedOrders;
@@ -103,7 +70,7 @@ export const OrdersScreenOwner = ({ navigation, route }: Props) => {
   useEffect(() => {
     console.log("refreshing page");
     getOrders(0);
-  }, [index]);
+  }, []);
 
   return (
     <SafeAreaView style={globalStyles.generalContainer}>
@@ -119,12 +86,7 @@ export const OrdersScreenOwner = ({ navigation, route }: Props) => {
           )}
           {orders.map((item: any) => (
             <View key={item.id}>
-              <OrderPreviewOwner
-                order={item}
-                buttonText={buttonText[index]}
-                onPressCancel={index < 4 ? cancelOrder : undefined}
-                onPressConfirm={index < 4 ? confirmOrder : undefined}
-              />
+              <OrderPreviewOwner order={item} />
             </View>
           ))}
         </SectionContainer>
