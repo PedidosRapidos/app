@@ -7,7 +7,6 @@ import AppLoading from "expo-app-loading";
 import { useFonts } from "expo-font";
 import { fonts } from "./src/res/typography";
 import { SessionProvider } from "./src/contexts/SessionContext";
-
 LogBox.ignoreLogs(["[react-native-gesture-handler]"]);
 LogBox.ignoreLogs(["expo-app-loading"]);
 
