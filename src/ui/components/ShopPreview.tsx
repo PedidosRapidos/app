@@ -10,12 +10,13 @@ import {
 } from "../../res/typography";
 import { SmallButton } from "./SmallButton";
 import { sizes } from "../../res/typography";
-import { spacing } from '../../res/spacing';
+import { spacing } from "../../res/spacing";
 
 interface Props<T> {
   shop: any;
   onPressMyProducts?: (shop: T) => void;
   onPressEdit?: (shop: T) => void;
+  onPressSeeOrders?: (shop: T) => void;
 }
 
 const styles = StyleSheet.create({
@@ -34,12 +35,12 @@ const styles = StyleSheet.create({
   },
   shopName: {
     fontSize: sizes.productPreviewName,
-    paddingVertical: spacing.textSpacing
+    paddingVertical: spacing.textSpacing,
   },
   productDescription: {
     fontSize: sizes.productDescription,
     color: colorWithOpacity(colors.grayLight, 1.0),
-    paddingVertical: spacing.textSpacing
+    paddingVertical: spacing.textSpacing,
   },
 });
 
@@ -47,6 +48,7 @@ export const ShopPreview = ({
   shop,
   onPressMyProducts,
   onPressEdit,
+  onPressSeeOrders,
 }: Props<any>) => {
   return (
     <View style={styles.shopPreview}>
@@ -64,7 +66,15 @@ export const ShopPreview = ({
           {shop.address}
         </Typography>
       </View>
-
+      {onPressSeeOrders ? (
+        <SmallButton
+          text="See orders"
+          onPress={() => {
+            onPressSeeOrders(shop);
+          }}
+          backgroundColor={colors.orange}
+        />
+      ) : null}
       {onPressMyProducts ? (
         <SmallButton
           text="My products"

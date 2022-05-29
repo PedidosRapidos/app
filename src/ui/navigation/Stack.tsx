@@ -20,12 +20,16 @@ import { CheckOutScreen } from "../../screens/clientScreens/CheckOutScreen";
 import { PendingOrdersScreen } from "../../screens/clientScreens/PendingOrdersScreen";
 import { OrderHistoryScreen } from "../../screens/clientScreens/OrderHistoryScreen";
 import { OrderDetailScreen } from "../../screens/clientScreens/OrderDetailScreen";
+import { OrdersScreenOwner } from "../../screens/ownerScreens/OrdersScreenOwner";
+import { OrderDetailScreenOwner } from "../../screens/ownerScreens/OrderDetailScreenOwner";
 
 export type RootStackParams = {
   WelcomeScreen: undefined;
   CartScreen: undefined;
   SigninScreen: { email: string; password: string };
   SignupScreen: undefined;
+  OrdersScreenOwner: { shopId: number };
+  OrderDetailScreenOwner: { order: any };
   HomeScreenOwner: { shops: Array<any> };
   HomeScreenClient: undefined;
   AddShopScreen: { sellerId: number; shops: Array<any> };
@@ -141,6 +145,16 @@ const MyStack = () => {
           <Drawer.Screen
             name={"OrderDetailScreen"}
             component={OrderDetailScreen}
+            options={{ headerShown: false }}
+          />
+          <Drawer.Screen
+            name={"OrdersScreenOwner"}
+            component={OrdersScreenOwner}
+            options={{ headerShown: false }}
+          />
+          <Drawer.Screen
+            name={"OrderDetailScreenOwner"}
+            component={OrderDetailScreenOwner}
             options={{ headerShown: false }}
           />
         </Drawer.Navigator>
