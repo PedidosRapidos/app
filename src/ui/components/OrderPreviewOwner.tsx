@@ -12,6 +12,7 @@ import { SmallButton } from "./SmallButton";
 
 interface Props<T> {
   order: any;
+  text: string;
   onPressConfirm?: (shop: T) => void;
   onPressCancel?: (shop: T) => void;
 }
@@ -20,6 +21,7 @@ export const OrderPreviewOwner = ({
   order,
   onPressConfirm,
   onPressCancel,
+  text,
 }: Props<any>) => {
   return (
     <View
@@ -71,7 +73,7 @@ export const OrderPreviewOwner = ({
       >
         {onPressConfirm ? (
           <SmallButton
-            text="Confirm"
+            text={text}
             onPress={() => {
               onPressConfirm(order);
             }}

@@ -24,6 +24,8 @@ export const OrdersScreenOwner = ({ navigation, route }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [orders, setOrders] = useState<any>([]);
   const { id: sellerId } = useUser();
+  const states = ["Confirm", "Prepare", "Deliver", "End"];
+  const [index, setIndex] = useState(0);
   const shopId = route.params.shopId;
 
   const displayOrderDetails = (item: any) => {
@@ -35,7 +37,10 @@ export const OrdersScreenOwner = ({ navigation, route }: Props) => {
   const confirmOrder = async (order: any) => {
     setIsLoading(true);
     try {
-      await client.put(`/sellers/${sellerId}/${shopId}/${order.id}/confirm`);
+      await client.patch(`/sellers/${sellerId}/shops/${shopId}/${order.id}`, {
+        new_state: index + 1,
+      });
+      setIndex(index + 1);
     } catch (err: any) {
       console.error(
         "Request failed, response:",
@@ -49,7 +54,9 @@ export const OrdersScreenOwner = ({ navigation, route }: Props) => {
   const cancelOrder = async (order: any) => {
     setIsLoading(true);
     try {
-      await client.put(`/sellers/${sellerId}/${shopId}/${order.id}/cancel`);
+      await client.patch(`/sellers/${sellerId}/shops/${shopId}/${order.id}`, {
+        new_state: 6,
+      });
     } catch (err: any) {
       console.error(
         "Request failed, response:",
@@ -65,7 +72,7 @@ export const OrdersScreenOwner = ({ navigation, route }: Props) => {
       setIsLoading(true);
       try {
         const { data: fetchedOrders } = await client.get(
-          `/sellers/${sellerId}/${shopId}/orders/`
+          `/sellers/${sellerId}/shops/${shopId}/orders/`
         );
         console.log("Fetching");
         setOrders(fetchedOrders);
@@ -85,7 +92,7 @@ export const OrdersScreenOwner = ({ navigation, route }: Props) => {
 
   useEffect(() => {
     console.log("UseEffect");
-    //getOrders(0);
+    getOrders(0);
   }, []);
 
   return (
@@ -106,6 +113,7 @@ export const OrdersScreenOwner = ({ navigation, route }: Props) => {
                 order={item}
                 onPressCancel={cancelOrder}
                 onPressConfirm={confirmOrder}
+                text={states[index]}
               />
             </View>
           ))}
