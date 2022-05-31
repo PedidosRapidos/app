@@ -15,25 +15,25 @@ interface Props<T> {
   order: any;
 }
 
+const states = [
+  "TO_CONFIRM",
+  "CONFIRMED",
+  "IN_PREPARATION",
+  "UNDER_WAY",
+  "DELIVERED",
+  "CANCELLED",
+];
+const buttonText = [
+  "Confirm",
+  "Prepare",
+  "Deliver",
+  "End",
+  "Finished",
+  "Cancelled",
+];
 export const OrderPreviewOwner = ({ order }: Props<any>) => {
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(states.indexOf(order.state));
   const [isLoading, setIsLoading] = useState(false);
-  const states = [
-    "TO_CONFIRM",
-    "CONFIRMED",
-    "IN_PREPARATION",
-    "UNDER_WAY",
-    "DELIVERED",
-    "CANCELLED",
-  ];
-  const buttonText = [
-    "Confirm",
-    "Prepare",
-    "Deliver",
-    "End",
-    "Finished",
-    "Cancelled",
-  ];
   useEffect(() => {
     console.log("refreshing page");
   }, [index]);
@@ -59,7 +59,7 @@ export const OrderPreviewOwner = ({ order }: Props<any>) => {
     setIsLoading(true);
     try {
       await client.patch(`/orders/${order.id}/`, {
-        new_state: states[5],
+        new_state: "CANCELLED",
       });
       setIndex(5);
     } catch (err: any) {

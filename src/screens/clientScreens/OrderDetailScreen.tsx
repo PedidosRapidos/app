@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, Image } from "react-native";
+import { View, StyleSheet, Image, ScrollView } from "react-native";
 import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 
@@ -29,7 +29,7 @@ export const OrderDetailScreen = ({ navigation, route }: Props) => {
 
   return (
     <SafeAreaView style={globalStyles.generalContainer}>
-      <View style={globalStyles.innerContainer}>
+      <ScrollView style={globalStyles.innerContainer}>
         <SectionContainer>
           <SectionTitle text={"Order Details"} />
         </SectionContainer>
@@ -69,7 +69,7 @@ export const OrderDetailScreen = ({ navigation, route }: Props) => {
             backgroundColor={colors.orange}
           />
         </SectionContainer>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
