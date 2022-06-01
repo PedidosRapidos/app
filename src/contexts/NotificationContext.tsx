@@ -1,4 +1,7 @@
 import * as Notifications from "expo-notifications";
+import { NotificationContent } from "expo-notifications";
+import * as SecureStore from "expo-secure-store";
+
 import {
   useState,
   useEffect,
@@ -40,21 +43,27 @@ async function getNotificationToken() {
 
 interface Notification {
   token?: string;
-  notification?: any;
+  notification?: NotificationContent;
+  response?: NotificationContent;
 }
 
 interface NotificationAction {
   unplug: () => any;
   plugin: () => any;
+  validToken: () => Promise<boolean>;
 }
 
 const NotificationContext = createContext<Notification & NotificationAction>({
   plugin() {},
   unplug() {},
+  async validToken() {
+    return false;
+  },
 });
 
 export const useNotification = () => {
-  return useContext(NotificationContext);
+  const data = useContext(NotificationContext);
+  return data;
 };
 
 export const NotificationProvider = ({ children }: PropsWithChildren<any>) => {
@@ -62,26 +71,45 @@ export const NotificationProvider = ({ children }: PropsWithChildren<any>) => {
   const notificationListener = useRef<any>();
   const responseListener = useRef<any>();
 
-  const unplug = () => {
+  const unplug = async () => {
+    console.log("unplug notifications");
     Notifications.removeNotificationSubscription(notificationListener.current);
     Notifications.removeNotificationSubscription(responseListener.current);
+    await SecureStore.deleteItemAsync("notificationToken");
+    setState({});
+  };
+
+  const validToken = async () => {
+    const token = await SecureStore.getItemAsync("notificationToken");
+    return token === state.token;
   };
 
   const plugin = async () => {
     try {
       const notificationToken = await getNotificationToken();
+      console.log("plugin notification listener", notificationToken);
 
       notificationListener.current =
         Notifications.addNotificationReceivedListener((notification) => {
-          setState({ ...state, notification });
+          const content = notification.request.content;
+          setState({ ...state, notification: content });
         });
 
       responseListener.current =
         Notifications.addNotificationResponseReceivedListener((response) => {
-          console.log(response);
+          console.log("notification user response", response);
+          const content = response.notification.request.content;
+          setState({ ...state, response: content });
         });
 
-      setState({ ...state, token: notificationToken });
+      if (notificationToken) {
+        await SecureStore.setItemAsync(
+          "notificationToken",
+          notificationToken || ""
+        );
+
+        setState({ ...state, token: notificationToken });
+      }
       return notificationToken;
     } catch (e) {
       console.error(e);
@@ -91,11 +119,15 @@ export const NotificationProvider = ({ children }: PropsWithChildren<any>) => {
 
   useEffect(() => {
     plugin();
-    return unplug;
+    return () => {
+      unplug();
+    };
   }, []);
 
   return (
-    <NotificationContext.Provider value={{ ...state, unplug, plugin }}>
+    <NotificationContext.Provider
+      value={{ ...state, unplug, plugin, validToken }}
+    >
       {children}
     </NotificationContext.Provider>
   );

@@ -16,6 +16,7 @@ import { Picker } from "@react-native-picker/picker";
 import { colors } from "../../res/colors";
 import { Typography } from "../../res/typography";
 import { stateStr } from "../../services/order";
+import { useNotification } from "../../contexts/NotificationContext";
 
 interface Props
   extends StackScreenProps<RootStackParams, "OrderHistoryScreen"> {}
@@ -24,7 +25,8 @@ export const OrderHistoryScreen = ({ navigation, route }: Props) => {
   const user = useUser();
   const [cart] = useCart();
   const [query, setQuery] = useState("");
-  const [orderState, setOrderState] = useState("DELIVERED");
+  const [orderState, setOrderState] = useState();
+  const { notification } = useNotification();
   const {
     data: orders,
     search,
@@ -36,7 +38,7 @@ export const OrderHistoryScreen = ({ navigation, route }: Props) => {
         params: {
           client_id: user.id,
           q: query || undefined,
-          state: orderState,
+          state: orderState || undefined,
           page,
           page_size: 10,
         },
@@ -53,6 +55,12 @@ export const OrderHistoryScreen = ({ navigation, route }: Props) => {
       search();
     }
   }, [user, cart, orderState]);
+
+  useEffect(() => {
+    if (notification?.data?.action === "order_updated") {
+      search();
+    }
+  }, [notification]);
 
   const openOrdeDetail = (order: any) => {
     navigation.navigate("OrderDetailScreen", { order });
@@ -93,6 +101,7 @@ export const OrderHistoryScreen = ({ navigation, route }: Props) => {
               selectedValue={orderState}
               onValueChange={(itemValue) => setOrderState(itemValue)}
             >
+              <Picker.Item label="" value="" />
               <Picker.Item label={stateStr["TO_CONFIRM"]} value="TO_CONFIRM" />
               <Picker.Item label={stateStr["CONFIRMED"]} value="CONFIRMED" />
               <Picker.Item

@@ -11,6 +11,7 @@ import { OrderPreviewOwner } from "../../ui/components/OrderPreviewOwner";
 import { SectionContainer } from "../../ui/components/SectionContainer";
 import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
+import { useNotification } from "../../contexts/NotificationContext";
 
 interface Props
   extends StackScreenProps<RootStackParams, "OrdersScreenOwner"> {}
@@ -19,6 +20,8 @@ export const OrdersScreenOwner = ({ navigation, route }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [orders, setOrders] = useState<any>([]);
   const { id: sellerId } = useUser();
+  const { notification } = useNotification();
+
   const states = [
     "TO_CONFIRM",
     "CONFIRMED",
@@ -70,7 +73,14 @@ export const OrdersScreenOwner = ({ navigation, route }: Props) => {
   useEffect(() => {
     console.log("refreshing page");
     getOrders(0);
-  }, []);
+  }, [shopId]);
+
+  useEffect(() => {
+    console.log("shop", notification);
+    if (notification?.data.shop_id === shopId) {
+      getOrders(0);
+    }
+  }, [notification]);
 
   return (
     <SafeAreaView style={globalStyles.generalContainer}>

@@ -34,50 +34,38 @@ export const useUser = (): User & UserActions => {
 
 export const UserProvider: FC = ({ children }: PropsWithChildren<any>) => {
   const [user, setUser] = useState<User>({} as User);
-  const { token, unplug, plugin } = useNotification();
+  const { unplug, plugin, validToken } = useNotification();
   const userActions = {
     ...user,
     async logout() {
       try {
         await SecureStore.deleteItemAsync("user");
-        if (token) {
-          unplug();
-          // await client.post("users/logout", {
-          //   token,
-          // });
-        }
+        await unplug();
+        await client.post("/users/logout", {
+          email: user.email,
+        });
       } catch (e) {
         console.log("logout user", e);
       }
       setUser({} as User);
     },
     async login(form: { email: string; password: string }) {
-      const notificationToken = token ? token : await plugin();
-      console.log(form);
+      const notificationToken = await plugin();
       const { data: user } = await client.post("/users/login", {
         token: notificationToken,
         ...form,
       });
       await SecureStore.setItemAsync("user", JSON.stringify(user));
-      await SecureStore.setItemAsync(
-        "notificationToken",
-        notificationToken || ""
-      );
       setUser(user);
     },
     async restore() {
       try {
         const json = await SecureStore.getItemAsync("user");
-        const notificationToken = await SecureStore.getItemAsync(
-          "notificationToken"
-        );
 
         if (json) {
           const user: User = JSON.parse(json);
           setUser(user);
-
-          if (notificationToken != token) {
-            console.log("notification token changed loggin out");
+          if (await validToken()) {
             this.logout();
           }
         }

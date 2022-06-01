@@ -4,7 +4,7 @@ import { colors, colorWithOpacity } from "../../res/colors";
 import { imageStyles } from "../../res/imageStyles";
 import { spacing } from "../../res/spacing";
 import { BoldTypography, Typography } from "../../res/typography";
-import { orderDescription, orderImage } from "../../services/order";
+import { orderDescription, orderImage, stateStr } from "../../services/order";
 
 interface Props<T> {
   order: T;
@@ -27,6 +27,9 @@ export const OrderPreview = ({ order, onDetails }: Props<any>) => {
         <View style={styles.orderInfoContainer}>
           <View style={styles.orderInfoRowContainer}>
             <BoldTypography># {order.id}</BoldTypography>
+            <BoldTypography style={{ color: colors.orange }}>
+              {stateStr[order.state]}
+            </BoldTypography>
           </View>
           <View style={styles.orderInfoRowContainer}>
             <Typography style={styles.orderDescription} numberOfLines={2}>
@@ -63,6 +66,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   orderInfoRowContainer: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
     paddingVertical: spacing.textSpacing,
   },
   orderName: {

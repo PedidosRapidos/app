@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Image, View } from "react-native";
+import { useUser } from "../../contexts/UserContext";
 import { colors } from "../../res/colors";
 import { imageStyles } from "../../res/imageStyles";
 import { widthPercentageToDP } from "../../res/responsive";
@@ -32,6 +33,7 @@ const buttonText = [
   "Cancelled",
 ];
 export const OrderPreviewOwner = ({ order }: Props<any>) => {
+  const user = useUser();
   const [index, setIndex] = useState(states.indexOf(order.state));
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
@@ -43,6 +45,7 @@ export const OrderPreviewOwner = ({ order }: Props<any>) => {
     try {
       await client.patch(`/orders/${order.id}/`, {
         new_state: states[index + 1],
+        seller_id: user.id,
       });
       setIndex(index + 1);
     } catch (err: any) {
@@ -60,6 +63,7 @@ export const OrderPreviewOwner = ({ order }: Props<any>) => {
     try {
       await client.patch(`/orders/${order.id}/`, {
         new_state: "CANCELLED",
+        seller_id: user.id,
       });
       setIndex(5);
     } catch (err: any) {
