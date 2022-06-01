@@ -29,7 +29,6 @@ export const PendingOrdersScreen = ({ navigation, route }: Props) => {
       const opts = {
         params: {
           client_id: user.id,
-          state: "TO_CONFIRM",
           page,
           page_size: 10,
         },
