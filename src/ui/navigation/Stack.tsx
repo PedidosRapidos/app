@@ -22,6 +22,7 @@ import { OrderHistoryScreen } from "../../screens/clientScreens/OrderHistoryScre
 import { OrderDetailScreen } from "../../screens/clientScreens/OrderDetailScreen";
 import { OrdersScreenOwner } from "../../screens/ownerScreens/OrdersScreenOwner";
 import { OrderDetailScreenOwner } from "../../screens/ownerScreens/OrderDetailScreenOwner";
+import { ProductShopsScreen } from "../../screens/clientScreens/ProductShopsScreen";
 
 export type RootStackParams = {
   WelcomeScreen: undefined;
@@ -38,6 +39,7 @@ export type RootStackParams = {
   ProductDetailScreen: { product: any };
   ProductDetailScreenOwner: { product: any };
   ShopProductsScreen: { sellerId: number; shopData: any };
+  ProductShopsScreen: { shopData: any };
   CheckOutScreen: undefined;
   PendingOrdersScreen: undefined;
   OrderHistoryScreen: undefined;
@@ -130,6 +132,11 @@ const MyStack = () => {
           <Drawer.Screen
             name={"ShopProductsScreen"}
             component={ShopProductsScreen}
+            options={{ headerShown: false }}
+          />
+          <Drawer.Screen
+            name={"ProductShopsScreen"}
+            component={ProductShopsScreen}
             options={{ headerShown: false }}
           />
           <Drawer.Screen
