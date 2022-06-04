@@ -50,7 +50,7 @@ export const ProductPreview2 = ({
           </View>
           <View style={styles.productInfoRowContainer}>
             <Typography style={styles.price}>$ {product.price}</Typography>
-            <Score score={4.5}></Score>
+            <Score score={product.qualification}></Score>
           </View>
         </View>
       </TouchableOpacity>

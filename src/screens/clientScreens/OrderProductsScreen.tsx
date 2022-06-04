@@ -25,12 +25,14 @@ import { ProductPreview2 } from "../../ui/components/ProductPreview2";
 import { Counter } from "../../ui/components/Counter";
 import client from "../../services/config";
 import { MainButton } from "../../ui/components/MainButton";
+import { PopUp } from "../../ui/components/PopUp";
 
 interface Props
   extends StackScreenProps<RootStackParams, "OrderProductsScreen"> {}
 
 export const OrderProductsScreen = ({ navigation, route }: Props) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [showPopUp, setShowPopUp] = useState(false);
   const [qualification, setQualification] = useState(1);
   const [reviewedProductId, setReviewedProductId] = useState(0);
 
@@ -51,14 +53,14 @@ export const OrderProductsScreen = ({ navigation, route }: Props) => {
         `/orders/${orderId}/product/${reviewedProductId}/review`,
         form
       );
-      Alert.alert("Your review was sent!");
+      setShowPopUp(true);
 
     } catch (err: any) {
       console.error(
         "Request failed, response:",
         err.response?.data || err.message || err
       );
-      
+
     } finally {
       setModalVisible(false);
     }
@@ -119,6 +121,7 @@ export const OrderProductsScreen = ({ navigation, route }: Props) => {
           </View>
         </View>
       </Modal>
+      <PopUp title="Your review was sent!" message="" visible={showPopUp} onAccept={() => setShowPopUp(false)} onRequestClose={() => setShowPopUp(false)}></PopUp>
     </SafeAreaView>
   );
 };
