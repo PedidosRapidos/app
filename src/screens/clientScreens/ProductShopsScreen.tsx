@@ -18,6 +18,7 @@ import { RadioButton } from "react-native-paper";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { SecondaryButton } from "../../ui/components/SecondaryButton";
 import { useIncrementalSearch } from "../../ui/hooks/useIncrementalSearch";
+import { ProductPreview2 } from "../../ui/components/ProductPreview2"
 
 interface Props extends StackScreenProps<RootStackParams, "ProductShopsScreen"> {}
 
@@ -35,7 +36,8 @@ export const ProductShopsScreen = ({ navigation, route }: Props) => {
     });
   };
 
-  const { data, search, nextPage, fetching } = useIncrementalSearch(
+
+  const { data, search, nextPage, fetching } =  useIncrementalSearch(
     async (page: number) => {
       try {
         const opts = {
@@ -47,14 +49,21 @@ export const ProductShopsScreen = ({ navigation, route }: Props) => {
             field: orderBy ? selectedField : undefined,
           },
         };
-        const { data: products } = await client.get(`shop/${shopData.id}/products`, opts);
-
-        return products;
+        const { data: shop } = await client.get(`shops/${shopData.id}/products`, opts);
+        return shop.products;
       } catch (e) {
         console.log("fetch failed", e);
       }
     }
   );
+
+
+
+  useEffect(() => {
+      console.log("UseEffectShopProductsScreen");
+      console.log(shopData);
+      search();
+    }, [shopData.id]);
 
   useEffect(() => {
     if (orderBy && data.length !== 0) search();
@@ -172,20 +181,21 @@ export const ProductShopsScreen = ({ navigation, route }: Props) => {
         </View>
       </View>
       {data.length === 0 ? <Typography>No search results</Typography> : null}
-      <FlatList
-        data={data}
-        renderItem={({ item: shop }) => (
-           <ShopPreview
-            shop={shop}
-            onPressMyProducts={navigateToShopProductsScreen}
-            onPressSeeOrders={navigateToOrdersProductsScreen}
-           />
-        )}
-        onEndReachedThreshold={0.1}
-        onEndReached={nextPage}
-        onRefresh={() => null}
-        refreshing={false}
-      />
+    <FlatList
+            style={globalStyles.sectionSpacing}
+            data={data}
+            renderItem={({ item }) => (
+              <ProductPreview2
+                product={item}
+                onDetails={displayProductDetails}
+                onCart={cart.add}
+              />
+            )}
+            onEndReachedThreshold={0.1}
+            onEndReached={nextPage}
+            onRefresh={() => null}
+            refreshing={false}
+          />
       <Loader visible={fetching} />
     </SafeAreaView>
   );

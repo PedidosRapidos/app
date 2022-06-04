@@ -34,9 +34,13 @@ export const HomeScreenClient = ({ navigation }: Props) => {
       async (page: number) => {
         setIsLoading(true);
         try {
+        const opts = {
+                  params: {
+                    q: searchValue.split(" ").join(",") || undefined
+                  },
+                };
           const { data: fetchedShops } = await client.get(
-            `/shops/`
-          );
+            `/shops/`, opts);
           console.log("Fetching");
           console.log(fetchedShops)
           setScreenShops(fetchedShops);
