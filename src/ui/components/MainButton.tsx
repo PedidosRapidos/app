@@ -49,12 +49,13 @@ export const MainButton = ({
 
 const styles = StyleSheet.create({
   buttonContainer: {
+    marginVertical: 4,
     borderWidth: 1,
     borderColor: colorWithOpacity(colors.orange, 0.08),
     alignContent: "center",
     justifyContent: "center",
     borderRadius: 15,
-    height: 60,
+    height: 56,
     backgroundColor: colors.orange
   },
   buttonText: {

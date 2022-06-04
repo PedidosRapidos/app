@@ -51,12 +51,15 @@ export const OrderProductsScreen = ({ navigation, route }: Props) => {
         `/orders/${orderId}/product/${reviewedProductId}/review`,
         form
       );
-      Alert.alert("El producto ha sido puntuado");
+      Alert.alert("Your review was sent!");
+
     } catch (err: any) {
       console.error(
         "Request failed, response:",
         err.response?.data || err.message || err
       );
+      
+    } finally {
       setModalVisible(false);
     }
   };
@@ -75,7 +78,7 @@ export const OrderProductsScreen = ({ navigation, route }: Props) => {
         renderItem={({ item: product }) => (
           <ProductPreview2
             product={product}
-            onReview={state === "DELIVERED" ? onReview : onReview}
+            onReview={state === "DELIVERED" ? onReview : undefined}
           />
         )}
         data={products}

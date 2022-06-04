@@ -58,7 +58,7 @@ export const OrderDetailScreen = ({ navigation, route }: Props) => {
         </SectionContainer>
         <SectionContainer>
           <MainButton
-            text="Review products"
+            text="Order products"
             onPress={navigateToOrderProductsScreen}
           />
         </SectionContainer>

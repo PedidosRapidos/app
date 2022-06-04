@@ -7,6 +7,7 @@ import { colors, colorWithOpacity } from "../../res/colors";
 import { spacing } from "../../res/spacing";
 import { IconButton } from "./IconButton";
 import { size } from "fp-ts/lib/ReadonlyRecord";
+import { Score } from './Score';
 
 interface Props<T> {
   product: T;
@@ -49,6 +50,7 @@ export const ProductPreview2 = ({
           </View>
           <View style={styles.productInfoRowContainer}>
             <Typography style={styles.price}>$ {product.price}</Typography>
+            <Score score={4.5}></Score>
           </View>
         </View>
       </TouchableOpacity>
@@ -101,6 +103,8 @@ const styles = StyleSheet.create({
   },
   productInfoRowContainer: {
     paddingVertical: spacing.textSpacing,
+    flexDirection: "row",
+    justifyContent:"space-between",
   },
   productName: {
     fontSize: sizes.productPreviewName,

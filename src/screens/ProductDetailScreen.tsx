@@ -15,6 +15,7 @@ import { useCart } from "../contexts/CartContext";
 import { Counter } from "../ui/components/Counter";
 import { IconButton } from "../ui/components/IconButton";
 import { sizes } from "../res/typography";
+import { Score } from "../ui/components/Score";
 
 interface Props
   extends StackScreenProps<RootStackParams, "ProductDetailScreen"> {}
@@ -68,9 +69,13 @@ export const ProductDetailScreen = ({ navigation, route }: Props) => {
           <Typography style={styles.productName}>{product.name}</Typography>
           <Typography style={styles.productPrice}>$ {product.price}</Typography>
         </View>
-        <Typography style={styles.productDescription}>
-          {product.description}
-        </Typography>
+        <View style={styles.productInfoFirstRowContainer}>
+          <Typography style={styles.productDescription}>
+            {product.description}
+            
+          </Typography>
+          <Score score={4.5}></Score>
+        </View>
       </View>
 
       <View style={styles.addProductContainer}>

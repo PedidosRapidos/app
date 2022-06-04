@@ -95,7 +95,7 @@ export const OrderHistoryScreen = ({ navigation, route }: Props) => {
           <View style={{ flex: 2 }}>
             <Picker
               style={{
-                backgroundColor: colors.black,
+                backgroundColor: colors.popupBackgroundGray,
                 color: colors.gray,
               }}
               selectedValue={orderState}
