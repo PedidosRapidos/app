@@ -72,9 +72,8 @@ export const ProductDetailScreen = ({ navigation, route }: Props) => {
         <View style={styles.productInfoFirstRowContainer}>
           <Typography style={styles.productDescription}>
             {product.description}
-            
           </Typography>
-          <Score score={4.5}></Score>
+          <Score score={product.qualification}></Score>
         </View>
       </View>
 
