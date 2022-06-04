@@ -8,16 +8,21 @@ import { sizes } from '../../res/typography';
 interface Props {
   counter: number;
   setCounter: (_: number) => any;
+  min?: number;
+  max?: number;
   style?: StyleProp<ViewStyle>;
+  buttonsStyles?: StyleProp<ViewStyle>;
 }
 
-export const Counter = ({ style, counter, setCounter }: Props) => {
+export const Counter = ({ style, buttonsStyles, counter, min, max = 99, setCounter }: Props) => {
   const inc = () => {
-    const value = counter + 1;
-    setCounter(value);
+    if(counter < max){
+      const value = counter + 1;
+      setCounter(value);
+    }
   };
   const dec = () => {
-    if (counter > 1) {
+    if (counter > 1 || min && counter > min) {
       const value = counter - 1;
       setCounter(value);
     }
@@ -26,14 +31,14 @@ export const Counter = ({ style, counter, setCounter }: Props) => {
   return (
     <View style={[styles.counterContainer, style]}>
       <IconButton
-        style={styles.icon}
+        style={[styles.icon, buttonsStyles]}
         name="minus"
         onPress={dec}
         size={sizes.productDescription}
       />
       <Text style={styles.textCount}>{counter}</Text>
       <IconButton
-        style={styles.icon}
+        style={[styles.icon, buttonsStyles]}
         name="plus"
         onPress={inc}
         size={sizes.productDescription}

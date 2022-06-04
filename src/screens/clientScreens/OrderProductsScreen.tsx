@@ -14,11 +14,17 @@ import { SectionTitle } from "../../ui/components/SectionTitle";
 import { SectionContainer } from "../../ui/components/SectionContainer";
 import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
-import { normalizeSize } from "../../res/typography";
+import {
+  MediumTypography,
+  normalizeSize,
+  sizes,
+  Typography,
+} from "../../res/typography";
 import { colors, colorWithOpacity } from "../../res/colors";
 import { ProductPreview2 } from "../../ui/components/ProductPreview2";
 import { Counter } from "../../ui/components/Counter";
 import client from "../../services/config";
+import { MainButton } from "../../ui/components/MainButton";
 
 interface Props
   extends StackScreenProps<RootStackParams, "OrderProductsScreen"> {}
@@ -37,7 +43,7 @@ export const OrderProductsScreen = ({ navigation, route }: Props) => {
     setModalVisible(true);
   };
 
-  const onSendReview = async () => {
+  const sendReview = async () => {
     let form = { qualification: qualification };
 
     try {
@@ -80,31 +86,33 @@ export const OrderProductsScreen = ({ navigation, route }: Props) => {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
           setModalVisible(!modalVisible);
         }}
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>
-              Leave a review of this product!
-            </Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => onSendReview()}
-            >
-              <Text style={styles.textStyle}>Send review</Text>
-            </Pressable>
+            <Typography style={styles.textStyle}>
+              Review product
+            </Typography>
             <Counter
               counter={qualification}
               setCounter={setQualification}
+              max={5}
+              style={styles.counter}
+              buttonsStyles={styles.counter}
             ></Counter>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
+            <View style={styles.optionsRow}>
+            <MainButton 
+            text="Review" 
+            onPress={sendReview}
+            style={[styles.buttonSize]} />
+            <MainButton
+              text="Cancel"
               onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={styles.textStyle}>Cancel</Text>
-            </Pressable>
+              style={[styles.cancelButton, styles.buttonSize]}
+              textStyle={styles.cancelButtonText}
+            />
+            </View>
           </View>
         </View>
       </Modal>
@@ -134,11 +142,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22,
   },
   modalView: {
-    margin: 20,
-    backgroundColor: "white",
+    backgroundColor: colorWithOpacity(colors.popupBackgroundGray, 1.0),
     borderRadius: 20,
     padding: 35,
     alignItems: "center",
@@ -151,24 +157,32 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonOpen: {
-    backgroundColor: "#F194FF",
-  },
-  buttonClose: {
-    backgroundColor: "#2196F3",
-  },
   textStyle: {
-    color: "white",
-    fontWeight: "bold",
+    fontSize: sizes.popUp,
     textAlign: "center",
   },
   modalText: {
     marginBottom: 15,
     textAlign: "center",
   },
+  counter:{
+    backgroundColor: colors.popupBackgroundGray,
+    marginVertical: 5,
+  },
+  optionsRow:{
+    flexDirection:"row",
+  },
+  buttonSize:{
+    width: 100,
+    marginHorizontal: 5,
+  },
+  cancelButton:{
+    backgroundColor: colorWithOpacity(colors.popupBackgroundGray, 1.0),
+    borderColor: colors.orange,
+    borderWidth: 1,
+  },
+  cancelButtonText:{
+    color: colorWithOpacity(colors.orange, 1.0),
+  }
+
 });

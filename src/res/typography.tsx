@@ -51,6 +51,7 @@ export const fonts = {
 
 export const sizes = {
   productName: 26,
+  popUp: 20,
   productPreviewName: 20,
   productDescription: 17,
 }
