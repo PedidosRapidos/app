@@ -13,6 +13,7 @@ interface Props<T> {
   onDetails?: (product: T) => void;
   onCart?: (product: T) => void;
   onDelete?: (product: T) => void;
+  onReview?: (product: T) => void;
 }
 
 export const ProductPreview2 = ({
@@ -20,6 +21,7 @@ export const ProductPreview2 = ({
   onDetails,
   onCart,
   onDelete,
+  onReview,
 }: Props<any>) => {
   return (
     <View style={styles.productPreviewContainer}>
@@ -63,6 +65,13 @@ export const ProductPreview2 = ({
             name="backspace"
             size={25}
             onPress={() => onDelete(product)}
+          />
+        )}
+        {onReview && (
+          <IconButton
+            name="star"
+            size={25}
+            onPress={() => onReview(product)}
           />
         )}
       </View>

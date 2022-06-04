@@ -22,6 +22,7 @@ import { OrderHistoryScreen } from "../../screens/clientScreens/OrderHistoryScre
 import { OrderDetailScreen } from "../../screens/clientScreens/OrderDetailScreen";
 import { OrdersScreenOwner } from "../../screens/ownerScreens/OrdersScreenOwner";
 import { OrderDetailScreenOwner } from "../../screens/ownerScreens/OrderDetailScreenOwner";
+import { OrderProductsScreen } from "../../screens/clientScreens/OrderProductsScreen";
 
 export type RootStackParams = {
   WelcomeScreen: undefined;
@@ -42,6 +43,7 @@ export type RootStackParams = {
   PendingOrdersScreen: undefined;
   OrderHistoryScreen: undefined;
   OrderDetailScreen: { order: any };
+  OrderProductsScreen: { order: any };
 };
 
 const Drawer = createDrawerNavigator();
@@ -157,6 +159,12 @@ const MyStack = () => {
             component={OrderDetailScreenOwner}
             options={{ headerShown: false }}
           />
+          <Drawer.Screen
+            name={"OrderProductsScreen"}
+            component={OrderProductsScreen}
+            options={{ headerShown: false }}
+          />
+          
         </Drawer.Navigator>
       </WithSession>
     </>

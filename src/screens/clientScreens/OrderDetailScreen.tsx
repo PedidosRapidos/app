@@ -27,6 +27,10 @@ export const OrderDetailScreen = ({ navigation, route }: Props) => {
   const description = orderDescription(order);
   const image = orderImage(order);
 
+  const navigateToOrderProductsScreen = () => {
+    navigation.navigate({name:"OrderProductsScreen", params:{order: order}})
+  }
+
   return (
     <SafeAreaView style={globalStyles.generalContainer}>
       <ScrollView style={globalStyles.innerContainer}>
@@ -54,19 +58,8 @@ export const OrderDetailScreen = ({ navigation, route }: Props) => {
         </SectionContainer>
         <SectionContainer>
           <MainButton
-            text="Complain"
-            onPress={() => undefined}
-            backgroundColor={colors.orange}
-          />
-          <MainButton
-            text="Cancel"
-            onPress={() => undefined}
-            backgroundColor={colors.orange}
-          />
-          <MainButton
-            text="Purchase Again"
-            onPress={() => undefined}
-            backgroundColor={colors.orange}
+            text="Review products"
+            onPress={navigateToOrderProductsScreen}
           />
         </SectionContainer>
       </ScrollView>
