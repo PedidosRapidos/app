@@ -7,12 +7,14 @@ import { colors, colorWithOpacity } from "../../res/colors";
 import { spacing } from "../../res/spacing";
 import { IconButton } from "./IconButton";
 import { size } from "fp-ts/lib/ReadonlyRecord";
+import { Score } from './Score';
 
 interface Props<T> {
   product: T;
   onDetails?: (product: T) => void;
   onCart?: (product: T) => void;
   onDelete?: (product: T) => void;
+  onReview?: (product: T) => void;
 }
 
 export const ProductPreview2 = ({
@@ -20,6 +22,7 @@ export const ProductPreview2 = ({
   onDetails,
   onCart,
   onDelete,
+  onReview,
 }: Props<any>) => {
   return (
     <View style={styles.productPreviewContainer}>
@@ -47,6 +50,7 @@ export const ProductPreview2 = ({
           </View>
           <View style={styles.productInfoRowContainer}>
             <Typography style={styles.price}>$ {product.price}</Typography>
+            <Score score={product.qualification}></Score>
           </View>
         </View>
       </TouchableOpacity>
@@ -63,6 +67,13 @@ export const ProductPreview2 = ({
             name="backspace"
             size={25}
             onPress={() => onDelete(product)}
+          />
+        )}
+        {onReview && (
+          <IconButton
+            name="star"
+            size={25}
+            onPress={() => onReview(product)}
           />
         )}
       </View>
@@ -92,6 +103,8 @@ const styles = StyleSheet.create({
   },
   productInfoRowContainer: {
     paddingVertical: spacing.textSpacing,
+    flexDirection: "row",
+    justifyContent:"space-between",
   },
   productName: {
     fontSize: sizes.productPreviewName,

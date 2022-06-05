@@ -17,6 +17,7 @@ export const colors = {
   grayLight: "#ADADAD",
   pureBlack: "#000000",
   popupBackground: "#2F3141",
+  popupBackgroundGray: "#292a2e",
   cream: "#FFEEEE",
 };
 
