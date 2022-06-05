@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { RefreshControl, ScrollView, View } from "react-native";
+import { RefreshControl, ScrollView, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../../res/globalStyles";
 import { SectionTitle } from "../../ui/components/SectionTitle";
@@ -100,10 +100,13 @@ export const OrdersScreenOwner = ({ navigation, route }: Props) => {
           {orders.length != 0 ? null : (
             <Typography>You do not have any orders for this shop</Typography>
           )}
+
           {orders.map((item: any) => (
-            <View key={item.id}>
-              <OrderPreviewOwner order={item} />
-            </View>
+            <TouchableOpacity onPress={() => displayOrderDetails(item)}>
+              <View key={item.id}>
+                <OrderPreviewOwner order={item} />
+              </View>
+          </TouchableOpacity>
           ))}
         </SectionContainer>
       </ScrollView>
@@ -111,3 +114,6 @@ export const OrdersScreenOwner = ({ navigation, route }: Props) => {
     </SafeAreaView>
   );
 };
+
+
+

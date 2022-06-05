@@ -14,20 +14,27 @@ import { Picker } from "@react-native-picker/picker";
 import { colors, colorWithOpacity } from '../../res/colors';
 import client from "../../services/config";
 import { useUser } from '../../contexts/UserContext';
+import { useForm } from "../../ui/hooks/useForm";
+import { Input } from "../../ui/components/Input";
+import { height } from "../../res/responsive";
 
-interface Props extends StackScreenProps<RootStackParams, "CheckOutScreen"> {}
+interface Props extends StackScreenProps<RootStackParams, "CheckOutScreen"> { }
 
 export const CheckOutScreen = ({ navigation }: Props) => {
   const [cart] = useCart();
   const user = useUser();
-  
+
   const products = cart?.products || [];
   const [selectedField, setSelectedField] = useState("cash");
+
+  const { address, onChange } = useForm({
+    address: "",
+  });
 
   const total = products
     .map(({ price, quantity }: Product) => price * quantity)
     .reduce((acc, v) => acc + v, 0);
-  
+
   const displayProductDetails = (item: any) => {
     navigation.navigate("ProductDetailScreen", {
       product: item,
@@ -36,20 +43,21 @@ export const CheckOutScreen = ({ navigation }: Props) => {
 
   const order = async () => {
 
-    let form = {"payment_method": selectedField};
-    
+    let form = { "payment_method": selectedField, "address": address };
+
     try {
 
       const { data: response } = await client.post(
         `/orders/${user.id}`,
         form
       );
+      console.log("Form of order", form)
       //fetcheo la nueva data del user que tiene un nuevo cartid
       const { data: userResponse } = await client.get(
         `/users/${user.id}`
       )
       user.updateCartId(userResponse.cartId)
-      navigation.reset({index:0, routes:[{name:'HomeScreenClient'}]})
+      navigation.reset({ index: 0, routes: [{ name: 'HomeScreenClient' }] })
 
     } catch (err: any) {
 
@@ -62,64 +70,85 @@ export const CheckOutScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <SafeAreaView style={{...globalStyles.generalContainer, ...globalStyles.innerContainer}}>
+    <SafeAreaView style={{ ...globalStyles.generalContainer, ...globalStyles.innerContainer }}>
       <SectionContainer>
-          <SectionTitle text="Check out" />
-        </SectionContainer>
+        <SectionTitle text="Check out" />
+      </SectionContainer>
       <FlatList
-          renderItem={({ item: product }) => (
+        renderItem={({ item: product }) => (
           <CartProductPreview
-              product={product}
-              onDetails={displayProductDetails}
-              onDelete={cart.remove}
+            product={product}
+            onDetails={displayProductDetails}
+            onDelete={cart.remove}
           />
-          )}
-          data={products}
-          keyExtractor={(product, index) => `${index}-${product.id}`}
+        )}
+        data={products}
+        keyExtractor={(product, index) => `${index}-${product.id}`}
       />
-      
 
-        <View style={{...styles.totalPriceContainer, ...globalStyles.thinSeparator}}>
-            <BoldTypography style={{ fontSize: 24 }}>{`Total `}</BoldTypography>
-            <BoldTypography style={{ fontSize: 24 }}>{`$ ${total} `}</BoldTypography>
-        </View>
+
+      <View style={{ ...styles.totalPriceContainer, ...globalStyles.thinSeparator }}>
+        <BoldTypography style={{ fontSize: 24 }}>{`Total `}</BoldTypography>
+        <BoldTypography style={{ fontSize: 24 }}>{`$ ${total} `}</BoldTypography>
+      </View>
 
       <SectionContainer>
-        <View style={{...styles.paymentMethodContainer, ...globalStyles.thinSeparator}}>
+        <View style={{ ...styles.paymentMethodContainer, ...globalStyles.thinSeparator }}>
           <LightTypography style={styles.paymentText}>Payment method</LightTypography>
-          <Picker
-            style={styles.section}
-            selectedValue={selectedField}
-            onValueChange={(itemValue, itemIndex) =>
-              setSelectedField(itemValue)
-            }
-          >
-            <Picker.Item label="Cash" value="cash" />
-          </Picker>
+          <View style={styles.section}>
+            <Picker
+              selectedValue={selectedField}
+              onValueChange={(itemValue, itemIndex) =>
+                setSelectedField(itemValue)
+              }
+            >
+              <Picker.Item label="Cash" value="cash" />
+            </Picker>
+          </View>
+
         </View>
-          <MainButton text="Order" onPress={order}></MainButton>
+        <View style={{ ...styles.paymentMethodContainer, ...styles.bottomThinSeparator, alignItems: "center" }}>
+          <LightTypography >Address</LightTypography>
+          <View style={{ flex: 0.6 }}>
+            <Input
+              onChangeText={(nextAddressName) =>
+                onChange("address", nextAddressName)
+              }
+              value={address}
+              placeholder="your address"
+            />
+          </View>
+
+        </View>
+        <MainButton text="Order" onPress={order}></MainButton>
       </SectionContainer>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  paymentText:{
+  paymentText: {
     alignSelf: "center",
   },
-  totalPriceContainer:{
+  totalPriceContainer: {
     flexDirection: "row",
     justifyContent: "space-between"
   },
-  paymentMethodContainer:{
+  paymentMethodContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
   },
   section: {
-    flex:0.5,
-    color: colors.blue,
-    fontSize: normalizeSize(17),
-    backgroundColor: colorWithOpacity(colors.black, 0.8)
+    flex: 0.5,
+    color: colors.black,
+    fontSize: normalizeSize(10),
+    backgroundColor: colorWithOpacity(colors.white, 0.8),
+    marginTop: 5,
+    marginBottom: 10
+  },
+  bottomThinSeparator: {
+    borderBottomColor: colorWithOpacity(colors.grayLight, 0.5),
+    borderBottomWidth: 1
   },
 
 })

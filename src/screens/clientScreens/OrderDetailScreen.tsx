@@ -55,10 +55,13 @@ export const OrderDetailScreen = ({ navigation, route }: Props) => {
           <Typography style={[styles.textSection, { fontSize: 20 }]}>
             Payment Method: {order.payment_method}
           </Typography>
+          <Typography style={[styles.textSection, { fontSize: 20 }]}>
+            Send to: {order.address}
+          </Typography>
         </SectionContainer>
         <SectionContainer>
           <MainButton
-            text="Order products"
+            text="View order products"
             onPress={navigateToOrderProductsScreen}
           />
         </SectionContainer>
