@@ -24,6 +24,7 @@ import { OrdersScreenOwner } from "../../screens/ownerScreens/OrdersScreenOwner"
 import { OrderDetailScreenOwner } from "../../screens/ownerScreens/OrderDetailScreenOwner";
 import { OrderProductsScreen } from "../../screens/clientScreens/OrderProductsScreen";
 import { ProductShopsScreen } from "../../screens/clientScreens/ProductShopsScreen";
+import { NotificationSnackbar } from "../components/NotificationSnackbar";
 
 export type RootStackParams = {
   WelcomeScreen: undefined;
@@ -171,8 +172,8 @@ const MyStack = () => {
             component={OrderProductsScreen}
             options={{ headerShown: false }}
           />
-          
         </Drawer.Navigator>
+        <NotificationSnackbar />
       </WithSession>
     </>
   );

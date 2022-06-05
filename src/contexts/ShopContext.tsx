@@ -12,6 +12,8 @@ interface Product {
   name: string;
   description: string;
   price: string;
+  qualification?: number;
+  image_url?: string;
 }
 
 interface Shop {

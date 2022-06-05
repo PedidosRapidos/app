@@ -43,14 +43,17 @@ async function getNotificationToken() {
 
 interface Notification {
   token?: string;
-  notification?: NotificationContent;
-  response?: NotificationContent;
+  notification?: NotificationContent & { identifier: string };
+  response?: NotificationContent & { identifier: string };
+  identifier: string;
 }
 
 interface NotificationAction {
   unplug: () => any;
   plugin: () => any;
   validToken: () => Promise<boolean>;
+  clearNotification: () => any;
+  clearNotificationResponse: () => any;
 }
 
 const NotificationContext = createContext<Notification & NotificationAction>({
@@ -67,7 +70,7 @@ export const useNotification = () => {
 };
 
 export const NotificationProvider = ({ children }: PropsWithChildren<any>) => {
-  const [state, setState] = useState<Notification>({});
+  const [state, setState] = useState<Notification>({} as Notification);
   const notificationListener = useRef<any>();
   const responseListener = useRef<any>();
 
@@ -76,7 +79,7 @@ export const NotificationProvider = ({ children }: PropsWithChildren<any>) => {
     Notifications.removeNotificationSubscription(notificationListener.current);
     Notifications.removeNotificationSubscription(responseListener.current);
     await SecureStore.deleteItemAsync("notificationToken");
-    setState({});
+    setState({} as Notification);
   };
 
   const validToken = async () => {
@@ -91,15 +94,15 @@ export const NotificationProvider = ({ children }: PropsWithChildren<any>) => {
 
       notificationListener.current =
         Notifications.addNotificationReceivedListener((notification) => {
-          const content = notification.request.content;
-          setState({ ...state, notification: content });
+          const { content, identifier } = notification.request;
+          setState({ ...state, notification: { ...content, identifier } });
         });
 
       responseListener.current =
         Notifications.addNotificationResponseReceivedListener((response) => {
           console.log("notification user response", response);
-          const content = response.notification.request.content;
-          setState({ ...state, response: content });
+          const { content, identifier } = response.notification.request;
+          setState({ ...state, response: { ...content, identifier } });
         });
 
       if (notificationToken) {
@@ -117,6 +120,19 @@ export const NotificationProvider = ({ children }: PropsWithChildren<any>) => {
     }
   };
 
+  const clearNotification = () => {
+    if (state?.notification?.identifier) {
+      Notifications.dismissNotificationAsync(state.notification.identifier);
+    }
+    setState({ ...state, notification: undefined });
+  };
+
+  const clearNotificationResponse = () => {
+    if (state?.response?.identifier) {
+      Notifications.dismissNotificationAsync(state.response.identifier);
+    }
+    setState({ ...state, response: undefined });
+  };
   useEffect(() => {
     plugin();
     return () => {
@@ -126,7 +142,14 @@ export const NotificationProvider = ({ children }: PropsWithChildren<any>) => {
 
   return (
     <NotificationContext.Provider
-      value={{ ...state, unplug, plugin, validToken }}
+      value={{
+        ...state,
+        unplug,
+        plugin,
+        validToken,
+        clearNotification,
+        clearNotificationResponse,
+      }}
     >
       {children}
     </NotificationContext.Provider>

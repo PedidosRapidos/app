@@ -10,7 +10,7 @@ import { normalizeSize, Typography } from "../../res/typography";
 import { colors, colorWithOpacity } from "../../res/colors";
 import { spacing } from "../../res/spacing";
 import { imageStyles } from "../../res/imageStyles";
-import { API_URL } from "../../services/config";
+import { imageURL } from "../../services/config";
 import Icon from "react-native-vector-icons/AntDesign";
 import { useShopDetail } from "../../contexts/ShopContext";
 
@@ -77,7 +77,7 @@ export const ProductDetailScreenOwner = ({ navigation, route }: Props) => {
           </View>
           <Image
             source={{
-              uri: `${API_URL}/products/${product.id}/image?q=${new Date()}`,
+              uri: imageURL(product),
             }}
             style={{
               ...imageStyles.categorieIcon,

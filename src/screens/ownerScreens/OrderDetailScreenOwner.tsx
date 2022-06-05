@@ -10,7 +10,6 @@ import { normalizeSize, Typography } from "../../res/typography";
 import { colors, colorWithOpacity } from "../../res/colors";
 import { spacing } from "../../res/spacing";
 import { imageStyles } from "../../res/imageStyles";
-import { API_URL } from "../../services/config";
 import Icon from "react-native-vector-icons/AntDesign";
 import { useShopDetail } from "../../contexts/ShopContext";
 
