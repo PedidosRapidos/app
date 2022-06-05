@@ -29,6 +29,7 @@ export const ShopProductsScreen = ({ navigation, route }: Props) => {
     setIsLoading(true);
     try {
       const { data } = await client.get(`/shops/${shopData.id}/products`);
+      console.log(data)
       setShop(data);
     } catch (err: any) {
       console.error(
