@@ -4,13 +4,10 @@ import { RootStackParams } from "../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../res/globalStyles";
-import {
-  normalizeSize,
-  Typography,
-} from "../res/typography";
+import { normalizeSize, Typography } from "../res/typography";
 import { colors, colorWithOpacity } from "../res/colors";
 import { spacing } from "../res/spacing";
-import { API_URL } from "../services/config";
+import { imageURL } from "../services/config";
 import { useCart } from "../contexts/CartContext";
 import { Counter } from "../ui/components/Counter";
 import { IconButton } from "../ui/components/IconButton";
@@ -47,7 +44,7 @@ export const ProductDetailScreen = ({ navigation, route }: Props) => {
     >
       <Image
         source={{
-          uri: `${API_URL}/products/${product.id}/image`,
+          uri: imageURL(product),
         }}
         style={{
           width: "100%",
@@ -78,10 +75,21 @@ export const ProductDetailScreen = ({ navigation, route }: Props) => {
       </View>
 
       <View style={styles.addProductContainer}>
-        <Counter style={styles.counterContainer} counter={quantity} setCounter={setQuantity} />
-        <IconButton style={[styles.cartContainer , cart.has(product) ? styles.disabled : {}  ]}name="cart-plus" size={25} onPress={!cart.has(product) ? addProductToCart : () => {}} />
+        <Counter
+          style={styles.counterContainer}
+          counter={quantity}
+          setCounter={setQuantity}
+        />
+        <IconButton
+          style={[
+            styles.cartContainer,
+            cart.has(product) ? styles.disabled : {},
+          ]}
+          name="cart-plus"
+          size={25}
+          onPress={!cart.has(product) ? addProductToCart : () => {}}
+        />
       </View>
-
     </SafeAreaView>
   );
 };
@@ -108,16 +116,15 @@ const styles = StyleSheet.create({
   },
   addProductContainer: {
     flexDirection: "row",
-    backgroundColor: colors.orange
+    backgroundColor: colors.orange,
   },
-  counterContainer:{
-    flex:1,
+  counterContainer: {
+    flex: 1,
   },
-  cartContainer:{
-    flex:1,
+  cartContainer: {
+    flex: 1,
   },
-  disabled:{
+  disabled: {
     opacity: 0.2,
   },
-
 });

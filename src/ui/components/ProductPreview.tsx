@@ -2,7 +2,7 @@ import React from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { imageStyles } from "../../res/imageStyles";
 import { BoldTypography, Typography } from "../../res/typography";
-import { API_URL } from "../../services/config";
+import { imageURL } from "../../services/config";
 import { IconButton } from "./IconButton";
 
 interface Props<T> {
@@ -18,7 +18,7 @@ export const ProductPreview = ({ product, onDetails, onCart }: Props<any>) => {
         <View style={{ ...styles.columns, ...styles.margin }}>
           <Image
             source={{
-              uri: `${API_URL}/products/${product.id}/image`,
+              uri: imageURL(product),
             }}
             style={{
               ...imageStyles.categorieIcon,

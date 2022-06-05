@@ -1,8 +1,8 @@
 import React from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { imageStyles } from "../../res/imageStyles";
-import { Typography, sizes } from '../../res/typography';
-import { API_URL } from "../../services/config";
+import { Typography, sizes } from "../../res/typography";
+import { imageURL } from "../../services/config";
 import { colors, colorWithOpacity } from "../../res/colors";
 import { spacing } from "../../res/spacing";
 import { IconButton } from "./IconButton";
@@ -34,7 +34,7 @@ export const ProductPreview2 = ({
         <View style={styles.productImageContainer}>
           <Image
             source={{
-              uri: `${API_URL}/products/${product.id}/image?q=${new Date()}`,
+              uri: imageURL(product),
             }}
             style={imageStyles.preview}
           ></Image>

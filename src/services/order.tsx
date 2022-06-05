@@ -1,13 +1,11 @@
-import { API_URL } from "../services/config";
+import { imageURL } from "../services/config";
 
 const noImage = require("../../assets/noimage.png");
 
 export const orderImage = (order: any) => {
   const products = order.cart?.products;
-  const productId = products && products.length > 0 ? products[0].id : null;
-  return productId
-    ? { uri: `${API_URL}/products/${productId}/image` }
-    : noImage;
+  const product = products && products.length > 0 ? products[0] : null;
+  return product ? { uri: imageURL(product) } : noImage;
 };
 
 export const orderDescription = (order: any): string => {

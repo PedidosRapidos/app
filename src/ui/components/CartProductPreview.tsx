@@ -2,7 +2,7 @@ import React from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { imageStyles } from "../../res/imageStyles";
 import { Typography } from "../../res/typography";
-import { API_URL } from "../../services/config";
+import { imageURL } from "../../services/config";
 import { colors, colorWithOpacity } from "../../res/colors";
 import { spacing } from "../../res/spacing";
 import { IconButton } from "./IconButton";
@@ -29,7 +29,7 @@ export const CartProductPreview = ({
         <View style={styles.productImageContainer}>
           <Image
             source={{
-              uri: `${API_URL}/products/${product.id}/image`,
+              uri: imageURL(product),
             }}
             style={imageStyles.preview}
           ></Image>
@@ -45,7 +45,8 @@ export const CartProductPreview = ({
           </View>
           <View style={styles.productInfoRowContainer}>
             <Typography style={styles.price}>
-              $ {product.price} x {product.quantity || 1} = {product.price * product.quantity}
+              $ {product.price} x {product.quantity || 1} ={" "}
+              {product.price * product.quantity}
             </Typography>
           </View>
         </View>

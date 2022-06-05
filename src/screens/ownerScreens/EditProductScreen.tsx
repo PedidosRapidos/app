@@ -12,7 +12,7 @@ import { useForm } from "../../ui/hooks/useForm";
 import * as ImagePicker from "expo-image-picker";
 import { useEffect, useState } from "react";
 import { MainButton } from "../../ui/components/MainButton";
-import client, { API_URL } from "../../services/config";
+import client, { imageURL } from "../../services/config";
 import { SecondaryButton } from "../../ui/components/SecondaryButton";
 import { SectionContainer } from "../../ui/components/SectionContainer";
 import { SectionTitle } from "../../ui/components/SectionTitle";
@@ -60,9 +60,7 @@ export const EditProductScreen = ({ navigation, route }: Props) => {
 
   useEffect(() => {
     if (product) {
-      setSelectedImage(
-        `${API_URL}/products/${product.id}/image?q=${new Date()}`
-      );
+      setSelectedImage(imageURL(product));
       setForm({
         productName: product.name,
         description: product.description,
