@@ -6,18 +6,18 @@ import { useUser } from "../../contexts/UserContext";
 import { globalStyles } from "../../res/globalStyles";
 import { Typography } from "../../res/typography";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { Badge } from "react-native-paper";
 
 export const DrawerContent = ({ navigation }: PropsWithChildren<any>) => {
   const user = useUser();
   const [cart] = useCart();
-  const cartCount = cart?.products?.length ? `(${cart?.products?.length})` : "";
+  const cartCount = cart?.products?.length;
   return (
     <DrawerContentScrollView style={globalStyles.drawerContainer}>
       <View style={{ flex: 2 }}></View>
       <View style={styles.container}>
         <Typography style={styles.welcome}>
-          {" "}
-          Welcome {user?.username}!{" "}
+          Welcome {user?.username}!
         </Typography>
         {user?.isClient && (
           <>
@@ -32,19 +32,14 @@ export const DrawerContent = ({ navigation }: PropsWithChildren<any>) => {
             <TouchableOpacity onPress={() => navigation.navigate("CartScreen")}>
               <View style={styles.divider}>
                 <Icon name="shopping-cart" size={20} style={styles.icon} />
-                <Typography style={styles.option}>
-                  {`My Cart ${cartCount}`}
-                </Typography>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("PendingOrdersScreen")}
-            >
-              <View style={styles.divider}>
-                <Icon name="box" size={20} style={styles.icon} />
-                <Typography style={styles.option}>
-                  {`Pending Orders`}
-                </Typography>
+                <Typography style={styles.option}>{`My Cart`}</Typography>
+                <View style={{ alignSelf: "flex-start" }}>
+                  {cartCount ? (
+                    <Badge size={25} style={{ position: "absolute", start: 0 }}>
+                      {cartCount}
+                    </Badge>
+                  ) : null}
+                </View>
               </View>
             </TouchableOpacity>
             <TouchableOpacity
@@ -52,7 +47,7 @@ export const DrawerContent = ({ navigation }: PropsWithChildren<any>) => {
             >
               <View style={styles.divider}>
                 <Icon name="truck-loading" size={20} style={styles.icon} />
-                <Typography style={styles.option}>{`Order History`}</Typography>
+                <Typography style={styles.option}>{`Orders`}</Typography>
               </View>
             </TouchableOpacity>
           </>
