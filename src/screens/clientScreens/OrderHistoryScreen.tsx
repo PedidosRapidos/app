@@ -24,6 +24,7 @@ interface Props
 export const OrderHistoryScreen = ({ navigation, route }: Props) => {
   const user = useUser();
   const [cart] = useCart();
+  const [showOptions, setShowOptions] = useState(false);
   const [query, setQuery] = useState("");
   const [orderState, setOrderState] = useState();
   const { notification } = useNotification();
@@ -74,47 +75,54 @@ export const OrderHistoryScreen = ({ navigation, route }: Props) => {
       }}
     >
       <SectionContainer>
-        <SectionTitle text="Order History" />
+        <SectionTitle text="Orders" />
         <SearchBar
           onChangeText={(nextSearchValue) => setQuery(nextSearchValue)}
           value={query}
-          placeholder="Search order by product name"
+          placeholder="Search product"
           onSearch={() => search()}
+          onFilter={() => setShowOptions(!showOptions)}
+          filterBadge={orderState ? true : false}
         />
       </SectionContainer>
-      <SectionContainer>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <View style={{ flex: 1 }}>
-            <Typography>Order State:</Typography>
+      {showOptions && (
+        <SectionContainer>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <View style={{ flex: 1 }}>
+              <Typography>Order State:</Typography>
+            </View>
+            <View style={{ flex: 2 }}>
+              <Picker
+                style={{
+                  backgroundColor: colors.gray,
+                  color: colors.black,
+                }}
+                selectedValue={orderState}
+                onValueChange={(itemValue) => setOrderState(itemValue)}
+              >
+                <Picker.Item label="" value="" />
+                <Picker.Item
+                  label={stateStr["TO_CONFIRM"]}
+                  value="TO_CONFIRM"
+                />
+                <Picker.Item label={stateStr["CONFIRMED"]} value="CONFIRMED" />
+                <Picker.Item
+                  label={stateStr["IN_PREPARATION"]}
+                  value="IN_PREPARATION"
+                />
+                <Picker.Item label={stateStr["UNDER_WAY"]} value="UNDER_WAY" />
+                <Picker.Item label={stateStr["DELIVERED"]} value="DELIVERED" />
+                <Picker.Item label={stateStr["CANCELLED"]} value="CANCELLED" />
+              </Picker>
+            </View>
           </View>
-          <View style={{ flex: 2 }}>
-            <Picker
-              style={{
-                backgroundColor: colors.popupBackgroundGray,
-                color: colors.gray,
-              }}
-              selectedValue={orderState}
-              onValueChange={(itemValue) => setOrderState(itemValue)}
-            >
-              <Picker.Item label="" value="" />
-              <Picker.Item label={stateStr["TO_CONFIRM"]} value="TO_CONFIRM" />
-              <Picker.Item label={stateStr["CONFIRMED"]} value="CONFIRMED" />
-              <Picker.Item
-                label={stateStr["IN_PREPARATION"]}
-                value="IN_PREPARATION"
-              />
-              <Picker.Item label={stateStr["UNDER_WAY"]} value="UNDER_WAY" />
-              <Picker.Item label={stateStr["DELIVERED"]} value="DELIVERED" />
-              <Picker.Item label={stateStr["CANCELLED"]} value="CANCELLED" />
-            </Picker>
-          </View>
-        </View>
-      </SectionContainer>
+        </SectionContainer>
+      )}
       <FlatList
         style={{ flex: 1 }}
         renderItem={({ item: order }) => (

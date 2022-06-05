@@ -10,10 +10,13 @@ export const orderImage = (order: any) => {
 
 export const orderDescription = (order: any): string => {
   const products = order.cart?.products || [];
-  const description = products
-    .map(({ name }: any) => name as string)
-    .reduce((acc: string, name: string) => `${acc}, ${name}`);
-  return description || "...";
+  if (products.length > 0) {
+    const description = products
+      .map(({ name }: any) => name as string)
+      .reduce((acc: string, name: string) => `${acc}, ${name}`);
+    return description || "...";
+  }
+  return "...";
 };
 
 export const stateStr: Record<string, string | undefined> = {

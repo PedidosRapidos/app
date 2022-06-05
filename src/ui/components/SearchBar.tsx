@@ -6,11 +6,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { Badge } from "react-native-paper";
 import Icon from "react-native-vector-icons/Ionicons";
 import { colors, colorWithOpacity } from "../../res/colors";
-import { spacing } from "../../res/spacing";
 import { normalizeSize } from "../../res/typography";
-import { Title } from "./Title";
 
 interface Props {
   onChangeText: (text: string) => void;
@@ -18,6 +17,8 @@ interface Props {
   placeholder: string;
   keyboardType?: KeyboardTypeOptions;
   onSearch?: () => any;
+  onFilter?: () => any;
+  filterBadge: boolean;
 }
 
 export const SearchBar = ({
@@ -25,6 +26,8 @@ export const SearchBar = ({
   value,
   placeholder,
   onSearch = undefined,
+  onFilter = undefined,
+  filterBadge = false,
   keyboardType = "default",
 }: Props) => {
   return (
@@ -48,6 +51,20 @@ export const SearchBar = ({
           value={value}
           keyboardType={keyboardType}
         />
+        {onFilter && (
+          <View style={styles.searchIcon}>
+            <TouchableOpacity onPress={onFilter}>
+              <Icon
+                name="options"
+                size={25}
+                color={colorWithOpacity(colors.grayLight, 0.61)}
+              />
+              {filterBadge && (
+                <Badge size={8} style={{ position: "absolute" }} />
+              )}
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </View>
   );
