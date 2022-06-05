@@ -26,6 +26,7 @@ import { Counter } from "../../ui/components/Counter";
 import client from "../../services/config";
 import { MainButton } from "../../ui/components/MainButton";
 import { PopUp } from "../../ui/components/PopUp";
+import { ErrorPopUp } from "../../ui/components/ErrorPopUp";
 
 interface Props
   extends StackScreenProps<RootStackParams, "OrderProductsScreen"> {}
@@ -35,6 +36,8 @@ export const OrderProductsScreen = ({ navigation, route }: Props) => {
   const [showPopUp, setShowPopUp] = useState(false);
   const [qualification, setQualification] = useState(1);
   const [reviewedProductId, setReviewedProductId] = useState(0);
+  const [showErrorPopUp, setShowErrorPopUp] = useState(false);
+  const [errorDescription, setErrorDescription] = useState("unknown error");
 
   const orderId = route.params?.order.id;
   const products = route.params?.order.cart.products;
@@ -54,13 +57,13 @@ export const OrderProductsScreen = ({ navigation, route }: Props) => {
         form
       );
       setShowPopUp(true);
-
     } catch (err: any) {
       console.error(
         "Request failed, response:",
         err.response?.data || err.message || err
       );
-
+      setErrorDescription("You cannot review a product more than once");
+      setShowErrorPopUp(true);
     } finally {
       setModalVisible(false);
     }
@@ -96,9 +99,7 @@ export const OrderProductsScreen = ({ navigation, route }: Props) => {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Typography style={styles.textStyle}>
-              Review product
-            </Typography>
+            <Typography style={styles.textStyle}>Review product</Typography>
             <Counter
               counter={qualification}
               setCounter={setQualification}
@@ -107,21 +108,35 @@ export const OrderProductsScreen = ({ navigation, route }: Props) => {
               buttonsStyles={styles.counter}
             ></Counter>
             <View style={styles.optionsRow}>
-            <MainButton 
-            text="Review" 
-            onPress={sendReview}
-            style={[styles.buttonSize]} />
-            <MainButton
-              text="Cancel"
-              onPress={() => setModalVisible(!modalVisible)}
-              style={[styles.cancelButton, styles.buttonSize]}
-              textStyle={styles.cancelButtonText}
-            />
+              <MainButton
+                text="Review"
+                onPress={sendReview}
+                style={[styles.buttonSize]}
+              />
+              <MainButton
+                text="Cancel"
+                onPress={() => setModalVisible(!modalVisible)}
+                style={[styles.cancelButton, styles.buttonSize]}
+                textStyle={styles.cancelButtonText}
+              />
             </View>
           </View>
         </View>
       </Modal>
-      <PopUp title="Your review was sent!" message="" visible={showPopUp} onAccept={() => setShowPopUp(false)} onRequestClose={() => setShowPopUp(false)}></PopUp>
+      <PopUp
+        title="Your review was sent!"
+        message=""
+        visible={showPopUp}
+        onAccept={() => setShowPopUp(false)}
+        onRequestClose={() => setShowPopUp(false)}
+      ></PopUp>
+      <ErrorPopUp
+        visible={showErrorPopUp}
+        onRequestClose={() => setShowErrorPopUp(false)}
+        buttonOnPress={() => setShowErrorPopUp(false)}
+        title="Error sending review"
+        description={errorDescription}
+      ></ErrorPopUp>
     </SafeAreaView>
   );
 };
@@ -171,24 +186,23 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: "center",
   },
-  counter:{
+  counter: {
     backgroundColor: colors.popupBackgroundGray,
     marginVertical: 5,
   },
-  optionsRow:{
-    flexDirection:"row",
+  optionsRow: {
+    flexDirection: "row",
   },
-  buttonSize:{
+  buttonSize: {
     width: 100,
     marginHorizontal: 5,
   },
-  cancelButton:{
+  cancelButton: {
     backgroundColor: colorWithOpacity(colors.popupBackgroundGray, 1.0),
     borderColor: colors.orange,
     borderWidth: 1,
   },
-  cancelButtonText:{
+  cancelButtonText: {
     color: colorWithOpacity(colors.orange, 1.0),
-  }
-
+  },
 });

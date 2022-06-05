@@ -29,7 +29,6 @@ export const HomeScreenClient = ({ navigation }: Props) => {
 
     let shops: any[] = [];
 
-
     const getShops = useCallback(
       async (page: number) => {
         setIsLoading(true);
@@ -41,8 +40,7 @@ export const HomeScreenClient = ({ navigation }: Props) => {
                 };
           const { data: fetchedShops } = await client.get(
             `/shops/`, opts);
-          console.log("Fetching");
-          console.log(fetchedShops)
+
           setScreenShops(fetchedShops);
 
           return fetchedShops;
@@ -55,7 +53,7 @@ export const HomeScreenClient = ({ navigation }: Props) => {
         } finally {
           setIsLoading(false);
         }
-      }
+      },[searchValue]
     );
 
     const navigateToShopProductsScreen = (shop: any) => {
