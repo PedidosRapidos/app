@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, View, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../../res/globalStyles";
@@ -50,10 +50,9 @@ export const CheckOutScreen = ({ navigation }: Props) => {
 
   const checkoutDone = async () => {
     try {
-      const { data: userResponse } = await client.get(`/users/${user.id}`);
-      setShowOrderOk(false);
-      user.updateCartId(userResponse.cartId);
       navigation.reset({ index: 0, routes: [{ name: "HomeScreenClient" }] });
+      const { data: userResponse } = await client.get(`/users/${user.id}`);
+      user.updateCartId(userResponse.cartId);
     } catch (err) {
       console.log(
         "Request failed, response:",
@@ -61,6 +60,10 @@ export const CheckOutScreen = ({ navigation }: Props) => {
       );
     }
   };
+
+  useEffect(() => {
+    setShowOrderOk(false);
+  }, [cart, user]);
 
   const order = async () => {
     try {
