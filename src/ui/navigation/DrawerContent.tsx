@@ -7,58 +7,72 @@ import { globalStyles } from "../../res/globalStyles";
 import { Typography } from "../../res/typography";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { Badge } from "react-native-paper";
+import { Column, Row } from "../components/Layout";
+
+const DrawerOption = ({
+  icon,
+  text,
+  onPress,
+  iconSize = 20,
+  badgeCount,
+}: {
+  icon: string;
+  text: string;
+  onPress: () => any;
+  iconSize?: number;
+  children?: any;
+  badgeCount?: number;
+}) => {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <Row style={styles.paddingVertical}>
+        <Icon name={icon} size={iconSize} style={styles.icon} />
+        <Typography style={styles.option}>{text}</Typography>
+        <View style={styles.alignSelfStart}>
+          {badgeCount ? (
+            <Badge size={25} style={styles.absolute0}>
+              {badgeCount}
+            </Badge>
+          ) : null}
+        </View>
+      </Row>
+    </TouchableOpacity>
+  );
+};
 
 export const DrawerContent = ({ navigation }: PropsWithChildren<any>) => {
   const user = useUser();
   const [cart] = useCart();
   const cartCount = cart?.products?.length;
+
   return (
     <DrawerContentScrollView style={globalStyles.drawerContainer}>
-      <View style={{ flex: 2 }}></View>
-      <View style={styles.container}>
+      <Column style={styles.alignItemsStrech}>
         <Typography style={styles.welcome}>
           Welcome {user?.username}!
         </Typography>
         {user?.isClient && (
           <>
-            <TouchableOpacity
+            <DrawerOption
+              icon="home"
+              text="Home"
               onPress={() => navigation.navigate("HomeScreenClient")}
-            >
-              <View style={styles.divider}>
-                <Icon name="home" size={20} style={styles.icon} />
-                <Typography style={styles.option}>Home</Typography>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate("CartScreen")}>
-              <View style={styles.divider}>
-                <Icon name="shopping-cart" size={20} style={styles.icon} />
-                <Typography style={styles.option}>{`My Cart`}</Typography>
-                <View style={{ alignSelf: "flex-start" }}>
-                  {cartCount ? (
-                    <Badge size={25} style={{ position: "absolute", start: 0 }}>
-                      {cartCount}
-                    </Badge>
-                  ) : null}
-                </View>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
+            />
+            <DrawerOption
+              icon="shopping-cart"
+              text="My Cart"
+              badgeCount={cartCount}
+              onPress={() => navigation.navigate("CartScreen")}
+            />
+            <DrawerOption
+              icon="truck-loading"
+              text="Orders"
               onPress={() => navigation.navigate("OrderHistoryScreen")}
-            >
-              <View style={styles.divider}>
-                <Icon name="truck-loading" size={20} style={styles.icon} />
-                <Typography style={styles.option}>{`Orders`}</Typography>
-              </View>
-            </TouchableOpacity>
+            />
           </>
         )}
-        <TouchableOpacity onPress={user!.logout}>
-          <View style={styles.divider}>
-            <Icon name="power-off" size={20} style={styles.icon} />
-            <Typography style={styles.option}>Logout</Typography>
-          </View>
-        </TouchableOpacity>
-      </View>
+        <DrawerOption icon="power-off" text="Logout" onPress={user!.logout} />
+      </Column>
     </DrawerContentScrollView>
   );
 };
@@ -76,13 +90,8 @@ const styles = StyleSheet.create({
     textAlign: "left",
     paddingHorizontal: 10,
   },
-  divider: {
-    borderTopWidth: 1,
-    borderTopColor: "gray",
-    flexDirection: "row",
+  paddingVertical: {
     paddingVertical: 10,
-    display: "flex",
-    alignItems: "center",
   },
   icon: {
     color: "white",
@@ -90,4 +99,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   container: { flex: 2 },
+  alignSelfStart: { alignSelf: "flex-start" },
+  alignItemsStrech: { alignItems: "stretch" },
+  absolute0: { position: "absolute", start: 0 },
 });

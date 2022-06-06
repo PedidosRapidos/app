@@ -102,7 +102,7 @@ export const CheckOutScreen = ({ navigation }: Props) => {
             }}
           >
             <BoldTypography>Thank you for your purchase!</BoldTypography>
-            <Row>
+            <Row style={{ justifyContent: "space-between" }}>
               <Typography>Your order has been accepted</Typography>
               <Icon name="check" size={15} color={colors.white} />
             </Row>

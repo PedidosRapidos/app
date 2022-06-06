@@ -19,6 +19,7 @@ export const globalStyles = StyleSheet.create({
     flex: 1,
   },
   drawerContainer: {
+    color: colors.white,
     backgroundColor: colors.black,
     flex: 1,
     padding: 5,

@@ -11,7 +11,6 @@ export const Row = ({
         {
           flexDirection: "row",
           alignItems: "center",
-          justifyContent: "space-between",
           width: "100%",
         },
         style,
