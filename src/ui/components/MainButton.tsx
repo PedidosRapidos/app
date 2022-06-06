@@ -7,7 +7,7 @@ import {
   Text,
   StyleProp,
   ViewStyle,
-  TextStyle
+  TextStyle,
 } from "react-native";
 import { colors, colorWithOpacity } from "../../res/colors";
 import { normalizeSize } from "../../res/typography";
@@ -26,19 +26,17 @@ export const MainButton = ({
   onPress,
   disable = false,
   style,
-  textStyle
-
+  textStyle,
 }: Props) => {
   return (
     <View
       style={{
         opacity: disable ? 0.5 : 1,
+        width: "100%",
       }}
     >
       <TouchableOpacity
-        style={[
-          styles.buttonContainer, style
-        ]}
+        style={[styles.buttonContainer, style]}
         onPress={disable ? () => {} : onPress}
       >
         <Text style={[styles.buttonText, textStyle]}>{text}</Text>
@@ -56,7 +54,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 15,
     height: 56,
-    backgroundColor: colors.orange
+    backgroundColor: colors.orange,
   },
   buttonText: {
     color: colors.white,

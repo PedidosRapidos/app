@@ -1,6 +1,7 @@
 import "react-native-gesture-handler";
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
+import { Provider as PaperProvider } from "react-native-paper";
 import MyStack from "./src/ui/navigation/Stack";
 import { LogBox, StatusBar } from "react-native";
 import AppLoading from "expo-app-loading";
@@ -16,12 +17,14 @@ const App = () => {
     return <AppLoading />;
   } else {
     return (
-      <SessionProvider>
-        <NavigationContainer>
-          <StatusBar translucent backgroundColor={"transparent"} />
-          <MyStack />
-        </NavigationContainer>
-      </SessionProvider>
+      <PaperProvider>
+        <SessionProvider>
+          <NavigationContainer>
+            <StatusBar translucent backgroundColor={"transparent"} />
+            <MyStack />
+          </NavigationContainer>
+        </SessionProvider>
+      </PaperProvider>
     );
   }
 };
