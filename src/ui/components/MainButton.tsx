@@ -32,7 +32,6 @@ export const MainButton = ({
     <View
       style={{
         opacity: disable ? 0.5 : 1,
-        width: "100%",
       }}
     >
       <TouchableOpacity

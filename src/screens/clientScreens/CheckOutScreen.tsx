@@ -30,14 +30,13 @@ interface Props extends StackScreenProps<RootStackParams, "CheckOutScreen"> {}
 export const CheckOutScreen = ({ navigation, route }: Props) => {
   const [cart] = useCart();
   const user = useUser();
-  const prev_order = route.params?.order
+  const prev_order = route.params?.order;
   const products = cart?.products || [];
   const [selectedField, setSelectedField] = useState("cash");
   const [showOrderOk, setShowOrderOk] = useState(false);
 
-
   const { address, onChange } = useForm({
-    address: (prev_order == null ? "" :  prev_order.address),
+    address: prev_order == null ? "" : prev_order.address,
   });
 
   const total = products
@@ -92,19 +91,11 @@ export const CheckOutScreen = ({ navigation, route }: Props) => {
         <Modal
           visible={showOrderOk}
           onDismiss={checkoutDone}
-          contentContainerStyle={{ padding: 40 }}
+          contentContainerStyle={styles.padding40}
         >
-          <Column
-            style={{
-              paddingHorizontal: "10%",
-              paddingVertical: "10%",
-              justifyContent: "space-evenly",
-              borderRadius: 10,
-              backgroundColor: colors.black,
-            }}
-          >
+          <Column style={styles.modalContainer}>
             <BoldTypography>Thank you for your purchase!</BoldTypography>
-            <Row style={{ justifyContent: "space-between" }}>
+            <Row style={styles.justifyContentSpaceBetween}>
               <Typography>Your order has been accepted</Typography>
               <Icon name="check" size={15} color={colors.white} />
             </Row>
@@ -132,9 +123,9 @@ export const CheckOutScreen = ({ navigation, route }: Props) => {
           ...globalStyles.thinSeparator,
         }}
       >
-        <BoldTypography style={{ fontSize: 24 }}>{`Total `}</BoldTypography>
+        <BoldTypography style={styles.fontSize24}>{`Total `}</BoldTypography>
         <BoldTypography
-          style={{ fontSize: 24 }}
+          style={styles.fontSize24}
         >{`$ ${total} `}</BoldTypography>
       </View>
       <SectionContainer>
@@ -177,8 +168,8 @@ export const CheckOutScreen = ({ navigation, route }: Props) => {
           </View>
         </View>
         <MainButton text="Order" onPress={order}></MainButton>
-      </SectionContainer >
-    </SafeAreaView >
+      </SectionContainer>
+    </SafeAreaView>
   );
 };
 
@@ -206,4 +197,15 @@ const styles = StyleSheet.create({
     borderBottomColor: colorWithOpacity(colors.grayLight, 0.5),
     borderBottomWidth: 1,
   },
+  modalContainer: {
+    paddingHorizontal: "10%",
+    paddingVertical: "10%",
+    justifyContent: "space-evenly",
+    alignItems: "stretch",
+    borderRadius: 10,
+    backgroundColor: colors.black,
+  },
+  padding40: { padding: 40 },
+  justifyContentSpaceBetween: { justifyContent: "space-between" },
+  fontSize24: { fontSize: 24 },
 });
