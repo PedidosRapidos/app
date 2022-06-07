@@ -23,7 +23,7 @@ export const HomeScreenClient = ({ navigation }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [screenShops, setScreenShops] = useState([]);
   const [lastSerchValue, setLastSeachValue] = useState("");
-
+  const [hasSearched, setHasSearched] = useState(false);
   const getShops = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -35,7 +35,7 @@ export const HomeScreenClient = ({ navigation }: Props) => {
       const { data: fetchedShops } = await client.get(`/shops/`, opts);
       setLastSeachValue((oldValue) => searchValue);
       setScreenShops(fetchedShops);
-
+      setHasSearched(true);
       return fetchedShops;
     } catch (err: any) {
       console.error(
@@ -74,7 +74,7 @@ export const HomeScreenClient = ({ navigation }: Props) => {
           Shops that sell "{lastSerchValue}" :
         </Typography>
       )}
-      {screenShops.length === 0 && lastSerchValue !== "" && (
+      {screenShops.length === 0 && hasSearched && (
         <>
           <View
             style={{

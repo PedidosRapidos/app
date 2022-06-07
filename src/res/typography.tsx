@@ -53,8 +53,9 @@ export const sizes = {
   productName: 26,
   popUp: 20,
   productPreviewName: 20,
-  productDescription: 17,
-}
+  productDescription: 18,
+  productPrice: 23,
+};
 
 const { width, height } = Dimensions.get("window");
 const scale = width / 411;

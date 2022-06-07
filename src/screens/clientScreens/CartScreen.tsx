@@ -28,11 +28,14 @@ export const CartScreen = ({ navigation }: Props) => {
   };
 
   const navigateToPaymentMethodsScreen = () => {
-    navigation.navigate("CheckOutScreen", {order: null})
+    navigation.navigate("CheckOutScreen", { order: null });
   };
 
   const navigateToHome = () => {
     navigation.navigate("HomeScreenClient");
+  };
+  const add = (item: any) => {
+    cart.add(item, item.quantity + 1);
   };
 
   return (
@@ -54,6 +57,7 @@ export const CartScreen = ({ navigation }: Props) => {
                 product={product}
                 onDetails={displayProductDetails}
                 onDelete={cart.remove}
+                onAdd={() => add(product)}
               />
             )}
             data={products}

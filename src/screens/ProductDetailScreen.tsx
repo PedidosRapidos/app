@@ -13,6 +13,7 @@ import { Counter } from "../ui/components/Counter";
 import { IconButton } from "../ui/components/IconButton";
 import { sizes } from "../res/typography";
 import { Score } from "../ui/components/Score";
+import { has } from "fp-ts/lib/ReadonlyRecord";
 
 interface Props
   extends StackScreenProps<RootStackParams, "ProductDetailScreen"> {}
@@ -20,21 +21,29 @@ interface Props
 export const ProductDetailScreen = ({ navigation, route }: Props) => {
   const { product } = route.params;
   const [cart] = useCart();
-  const [quantity, setQuantity] = useState(1);
-  const addProductToCart = () => {
-    cart.add(product, quantity);
+  const [quantity, setQuantity] = useState(cart.unitsOf(product) + 1);
+
+  const addProductToCart = async () => {
+    await cart.add(product, quantity);
   };
 
   useEffect(() => {
     if (cart.has(product)) {
-      cart.add(product, quantity);
+      addProductToCart();
     }
   }, [quantity]);
 
   useEffect(() => {
-    setQuantity(product.quantity || 1);
+    setQuantity(cart.unitsOf(product) + 1);
   }, [product]);
 
+  useEffect(() => {
+    if (!cart.has(product)) {
+      setQuantity(0);
+    }
+  }, [cart]);
+
+  console.log(product);
   return (
     <SafeAreaView
       style={{
@@ -53,6 +62,7 @@ export const ProductDetailScreen = ({ navigation, route }: Props) => {
           marginBottom: (spacing.inputSpacing * 2) / 6,
           marginTop: (spacing.inputSpacing * 2) / 6,
           alignSelf: "center",
+          borderRadius: 10,
         }}
       ></Image>
 
@@ -64,31 +74,37 @@ export const ProductDetailScreen = ({ navigation, route }: Props) => {
       >
         <View style={styles.productInfoFirstRowContainer}>
           <Typography style={styles.productName}>{product.name}</Typography>
-          <Typography style={styles.productPrice}>$ {product.price}</Typography>
+          {product.qualification !== null && (
+            <Score score={product.qualification + 5}></Score>
+          )}
         </View>
         <View style={styles.productInfoFirstRowContainer}>
           <Typography style={styles.productDescription}>
             {product.description}
           </Typography>
-          <Score score={product.qualification}></Score>
+        </View>
+        <View>
+          <Typography style={styles.productPrice}>$ {product.price}</Typography>
         </View>
       </View>
 
       <View style={styles.addProductContainer}>
-        <Counter
-          style={styles.counterContainer}
-          counter={quantity}
-          setCounter={setQuantity}
-        />
-        <IconButton
-          style={[
-            styles.cartContainer,
-            cart.has(product) ? styles.disabled : {},
-          ]}
-          name="cart-plus"
-          size={25}
-          onPress={!cart.has(product) ? addProductToCart : () => {}}
-        />
+        <View style={{ flex: 5 }}>
+          <Counter
+            counter={quantity}
+            setCounter={setQuantity}
+            buttonsStyles={{ maxWidth: "70%", borderRadius: 10 }}
+          />
+        </View>
+
+        <View style={{ flex: 2 }}>
+          <IconButton
+            style={[cart.has(product) ? styles.disabled : {}]}
+            name="cart-plus"
+            size={25}
+            onPress={!cart.has(product) ? addProductToCart : () => {}}
+          />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -108,7 +124,10 @@ const styles = StyleSheet.create({
     marginBottom: spacing.textSpacing,
   },
   productPrice: {
-    fontSize: normalizeSize(sizes.productDescription),
+    fontSize: normalizeSize(sizes.productPrice),
+    textAlign: "right",
+    marginRight: "5%",
+    marginTop: "5%",
   },
   productDescription: {
     fontSize: normalizeSize(sizes.productDescription),
@@ -116,14 +135,10 @@ const styles = StyleSheet.create({
   },
   addProductContainer: {
     flexDirection: "row",
-    backgroundColor: colors.orange,
+    alignItems: "center",
+    justifyContent: "space-around",
   },
-  counterContainer: {
-    flex: 1,
-  },
-  cartContainer: {
-    flex: 1,
-  },
+
   disabled: {
     opacity: 0.2,
   },

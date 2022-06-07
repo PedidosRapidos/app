@@ -26,6 +26,8 @@ interface CartActions {
   add: (product: Product, units?: number) => any;
   remove: (product: Product, units?: number) => any;
   has: (product: Product) => boolean;
+  unitsOf: (product: Product) => number;
+  setUnits: (product: Product, units: number) => any;
   replace: (cart_id: number) => any;
 }
 
@@ -55,10 +57,22 @@ export const CartProvider: FC = ({ children }: PropsWithChildren<any>) => {
       init(cartId);
     }
   }, [cartId]);
+
   const products = cart.products || [];
   const ids = new Set(products.map(({ id }) => id));
+
   const cartActions = {
     ...cart,
+    setUnits({ id: productId }: Product, quantity: number) {
+      if (!ids.has(productId)) {
+        products.forEach((value, index) => {
+          if (value.id === productId) {
+            value.quantity = quantity;
+          }
+        });
+      }
+    },
+
     async add({ id: productId }: Product, quantity: number = 1) {
       // console.log(cart)
       if (cart.id) {
@@ -70,7 +84,7 @@ export const CartProvider: FC = ({ children }: PropsWithChildren<any>) => {
               quantity,
             }
           );
-          setCart(updatedCart);
+          setCart((old) => updatedCart);
         } catch (e) {
           console.log("add item", e);
         }
@@ -78,8 +92,21 @@ export const CartProvider: FC = ({ children }: PropsWithChildren<any>) => {
         console.log("trying to add item, but cart doesnt exits");
       }
     },
+
     has({ id: productId }: Product) {
       return ids.has(productId);
+    },
+
+    unitsOf({ id: productId }: Product) {
+      var cant = 0;
+      if (!ids.has(productId)) {
+        products.forEach((value, index) => {
+          if (value.id === productId) {
+            cant = value.quantity;
+          }
+        });
+      }
+      return cant;
     },
     async remove({ id: productId }: { id: number }, units: number = 1) {
       if (cart.id) {
@@ -87,7 +114,7 @@ export const CartProvider: FC = ({ children }: PropsWithChildren<any>) => {
           const { data: updatedCart } = await client.delete(
             `/shopping_cart/${cart.id}/products/${productId}`
           );
-          setCart(updatedCart);
+          setCart((old) => updatedCart);
         } catch (e) {
           console.log("add item", e);
         }
@@ -103,7 +130,6 @@ export const CartProvider: FC = ({ children }: PropsWithChildren<any>) => {
             {
               cart_id: other_cart_id,
             }
-    
           );
           setCart(updatedCart);
         } catch (e) {

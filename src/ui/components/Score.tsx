@@ -4,7 +4,7 @@ import { colors, colorWithOpacity } from "../../res/colors";
 import { Typography } from "../../res/typography";
 
 interface Props {
-    style?: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle>;
   size?: number;
   score: number;
 }
@@ -26,9 +26,10 @@ const styles = StyleSheet.create({
   icon: {
     color: colors.white,
     textAlign: "left",
-    marginBottom: 1,
+    marginRight: 10,
   },
-  score:{
-      marginLeft: 10,
-  }
+  score: {
+    fontSize: 18,
+    marginRight: "2%",
+  },
 });

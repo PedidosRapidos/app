@@ -6,18 +6,21 @@ import { imageURL } from "../../services/config";
 import { colors, colorWithOpacity } from "../../res/colors";
 import { spacing } from "../../res/spacing";
 import { IconButton } from "./IconButton";
+import { Counter } from "./Counter";
 
 interface Props<T> {
   product: T;
   onDetails?: (product: T) => void;
   onCart?: (product: T) => void;
   onDelete?: (product: T) => void;
+  onAdd?: () => void;
 }
 
 export const CartProductPreview = ({
   product,
   onDetails,
   onDelete,
+  onAdd,
 }: Props<any>) => {
   return (
     <View style={styles.productPreviewContainer}>
@@ -53,11 +56,26 @@ export const CartProductPreview = ({
       </TouchableOpacity>
       <View style={styles.shopCartContainer}>
         {onDelete && (
-          <IconButton
-            name="backspace"
-            size={25}
-            onPress={() => onDelete(product)}
-          />
+          <View>
+            <View style={{ marginBottom: "10%", marginLeft: "5%" }}>
+              <Counter
+                counter={product.quantity}
+                setCounter={onAdd}
+                buttonsStyles={{
+                  maxWidth: "70%",
+                  borderRadius: 10,
+                  height: 35,
+                }}
+              />
+            </View>
+
+            <IconButton
+              name="cart-remove"
+              mat
+              size={25}
+              onPress={() => onDelete(product)}
+            />
+          </View>
         )}
       </View>
     </View>

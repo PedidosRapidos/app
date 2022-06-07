@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { imageStyles } from "../../res/imageStyles";
 import { Typography, sizes } from "../../res/typography";
@@ -7,10 +7,13 @@ import { colors, colorWithOpacity } from "../../res/colors";
 import { spacing } from "../../res/spacing";
 import { IconButton } from "./IconButton";
 import { size } from "fp-ts/lib/ReadonlyRecord";
-import { Score } from './Score';
+import { Score } from "./Score";
+import { Counter } from "./Counter";
+import { useCart } from "../../contexts/CartContext";
 
 interface Props<T> {
   product: T;
+  removePreview?: (product: T) => void;
   onDetails?: (product: T) => void;
   onCart?: (product: T) => void;
   onDelete?: (product: T) => void;
@@ -19,11 +22,35 @@ interface Props<T> {
 
 export const ProductPreview2 = ({
   product,
+  removePreview,
   onDetails,
   onCart,
   onDelete,
   onReview,
 }: Props<any>) => {
+  const [cart] = useCart();
+  const [isAdded, setIsAdded] = useState(cart.has(product));
+  const [quantity, setQuantity] = useState(1);
+
+  const addProductToCart = async () => {
+    cart.setUnits(product, quantity);
+    await cart.add(product, quantity);
+  };
+
+  useEffect(() => {
+    if (cart.has(product)) {
+      addProductToCart();
+    }
+  }, [quantity]);
+
+  useEffect(() => {
+    const isInCart = cart.has(product);
+    setIsAdded(isInCart);
+    if (isInCart) {
+      setQuantity(cart.unitsOf(product) + 1);
+    }
+  }, [cart.has(product)]);
+
   return (
     <View style={styles.productPreviewContainer}>
       <TouchableOpacity
@@ -43,38 +70,83 @@ export const ProductPreview2 = ({
           <View style={styles.productInfoRowContainer}>
             <Typography style={styles.productName}>{product.name}</Typography>
           </View>
-          <View style={styles.productInfoRowContainer}>
-            <Typography style={styles.productDescription} numberOfLines={2}>
-              {product.description}
-            </Typography>
-          </View>
+
           <View style={styles.productInfoRowContainer}>
             <Typography style={styles.price}>$ {product.price}</Typography>
-            <Score score={product.qualification}></Score>
+
+            {product.qualification !== null && (
+              <Score score={product.qualification}></Score>
+            )}
           </View>
         </View>
       </TouchableOpacity>
       <View style={styles.shopCartContainer}>
         {onCart && (
-          <IconButton
-            name="cart-plus"
-            size={25}
-            onPress={() => onCart(product)}
-          />
+          <>
+            {!isAdded && (
+              <IconButton
+                name="cart-plus"
+                mat
+                size={25}
+                onPress={() => {
+                  onCart(product);
+                  setIsAdded(true);
+                }}
+              />
+            )}
+            {isAdded && (
+              <View>
+                <View style={{ marginBottom: "10%", marginLeft: "5%" }}>
+                  <Counter
+                    counter={quantity}
+                    setCounter={setQuantity}
+                    buttonsStyles={{
+                      maxWidth: "70%",
+                      borderRadius: 10,
+                      height: 35,
+                    }}
+                  />
+                </View>
+
+                {removePreview && (
+                  <IconButton
+                    name="cart-remove"
+                    mat
+                    size={25}
+                    onPress={() => {
+                      removePreview(product);
+                      setIsAdded(false);
+                    }}
+                  />
+                )}
+              </View>
+            )}
+          </>
         )}
         {onDelete && (
-          <IconButton
-            name="backspace"
-            size={25}
-            onPress={() => onDelete(product)}
-          />
+          <View>
+            <View style={{ marginBottom: "10%", marginLeft: "5%" }}>
+              <Counter
+                counter={quantity}
+                setCounter={setQuantity}
+                buttonsStyles={{
+                  maxWidth: "70%",
+                  borderRadius: 10,
+                  height: 35,
+                }}
+              />
+            </View>
+
+            <IconButton
+              name="cart-remove"
+              mat
+              size={25}
+              onPress={() => onDelete(product)}
+            />
+          </View>
         )}
         {onReview && (
-          <IconButton
-            name="star"
-            size={25}
-            onPress={() => onReview(product)}
-          />
+          <IconButton name="star" size={25} onPress={() => onReview(product)} />
         )}
       </View>
     </View>
@@ -104,7 +176,7 @@ const styles = StyleSheet.create({
   productInfoRowContainer: {
     paddingVertical: spacing.textSpacing,
     flexDirection: "row",
-    justifyContent:"space-between",
+    justifyContent: "space-between",
   },
   productName: {
     fontSize: sizes.productPreviewName,
