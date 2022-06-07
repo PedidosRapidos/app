@@ -25,7 +25,7 @@ export const SearchBar = ({
   onChangeText,
   value,
   placeholder,
-  onSearch = undefined,
+  onSearch,
   onFilter = undefined,
   filterBadge = false,
   keyboardType = "default",
@@ -33,15 +33,6 @@ export const SearchBar = ({
   return (
     <View>
       <View style={styles.inputContainer}>
-        <View style={styles.searchIcon}>
-          <TouchableOpacity onPress={onSearch}>
-            <Icon
-              name="search-outline"
-              size={25}
-              color={colorWithOpacity(colors.grayLight, 0.61)}
-            />
-          </TouchableOpacity>
-        </View>
         <TextInput
           style={styles.searchBar}
           onChangeText={onChangeText}
@@ -51,13 +42,23 @@ export const SearchBar = ({
           value={value}
           keyboardType={keyboardType}
         />
+        <View style={styles.searchIcon}>
+          <TouchableOpacity onPress={onSearch}>
+            <Icon
+              name="search-outline"
+              size={25}
+              color={colorWithOpacity(colors.orange, 0.61)}
+            />
+          </TouchableOpacity>
+        </View>
+
         {onFilter && (
           <View style={styles.searchIcon}>
             <TouchableOpacity onPress={onFilter}>
               <Icon
                 name="options"
                 size={25}
-                color={colorWithOpacity(colors.grayLight, 0.61)}
+                color={colorWithOpacity(colors.orange, 0.61)}
               />
               {filterBadge && (
                 <Badge size={8} style={{ position: "absolute" }} />
@@ -75,7 +76,8 @@ const styles = StyleSheet.create({
     backgroundColor: colorWithOpacity(colors.gray, 0.1),
     //borderWidth: 1,
     flexDirection: "row",
-    borderRadius: 5,
+    borderRadius: 8,
+    marginBottom: "5%",
   },
   searchBar: {
     flex: 1,
