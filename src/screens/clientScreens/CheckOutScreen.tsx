@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, View, StyleSheet } from "react-native";
+import { FlatList, View, StyleSheet, Modal } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../../res/globalStyles";
 import { SectionTitle } from "../../ui/components/SectionTitle";
@@ -21,7 +21,6 @@ import client from "../../services/config";
 import { useUser } from "../../contexts/UserContext";
 import { useForm } from "../../ui/hooks/useForm";
 import { Input } from "../../ui/components/Input";
-import { Portal, Modal } from "react-native-paper";
 import { Column, Row } from "../../ui/components/Layout";
 import Icon from "react-native-vector-icons/FontAwesome5";
 
@@ -87,22 +86,6 @@ export const CheckOutScreen = ({ navigation, route }: Props) => {
         ...globalStyles.innerContainer,
       }}
     >
-      <Portal>
-        <Modal
-          visible={showOrderOk}
-          onDismiss={checkoutDone}
-          contentContainerStyle={styles.padding40}
-        >
-          <Column style={styles.modalContainer}>
-            <BoldTypography>Thank you for your purchase!</BoldTypography>
-            <Row style={styles.justifyContentSpaceBetween}>
-              <Typography>Your order has been accepted</Typography>
-              <Icon name="check" size={15} color={colors.white} />
-            </Row>
-            <MainButton text="Ok" onPress={checkoutDone} />
-          </Column>
-        </Modal>
-      </Portal>
       <SectionContainer>
         <SectionTitle text="Check out" />
       </SectionContainer>
@@ -169,6 +152,24 @@ export const CheckOutScreen = ({ navigation, route }: Props) => {
         </View>
         <MainButton text="Order" onPress={order}></MainButton>
       </SectionContainer>
+      <Modal
+        visible={showOrderOk}
+        onDismiss={checkoutDone}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={checkoutDone}
+      >
+        <View style={styles.modalBackground}>
+          <Column style={styles.modalContainer}>
+            <BoldTypography>Thank you for your purchase!</BoldTypography>
+            <Row style={styles.justifyContentSpaceBetween}>
+              <Typography>Your order has been accepted</Typography>
+              <Icon name="check" size={15} color={colors.white} />
+            </Row>
+            <MainButton text="Ok" onPress={checkoutDone} />
+          </Column>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -198,12 +199,27 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   modalContainer: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
     paddingHorizontal: "10%",
     paddingVertical: "10%",
     justifyContent: "space-evenly",
     alignItems: "stretch",
     borderRadius: 10,
     backgroundColor: colors.black,
+  },
+  modalBackground: {
+    backgroundColor: colorWithOpacity(colors.popupBackgroundGray, 0.5),
+    padding: 35,
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100%",
   },
   padding40: { padding: 40 },
   justifyContentSpaceBetween: { justifyContent: "space-between" },
