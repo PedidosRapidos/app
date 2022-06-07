@@ -27,15 +27,17 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 
 interface Props extends StackScreenProps<RootStackParams, "CheckOutScreen"> {}
 
-export const CheckOutScreen = ({ navigation }: Props) => {
+export const CheckOutScreen = ({ navigation, route }: Props) => {
   const [cart] = useCart();
   const user = useUser();
+  const prev_order = route.params?.order
   const products = cart?.products || [];
   const [selectedField, setSelectedField] = useState("cash");
   const [showOrderOk, setShowOrderOk] = useState(false);
 
+
   const { address, onChange } = useForm({
-    address: "",
+    address: (prev_order == null ? "" :  prev_order.address),
   });
 
   const total = products
@@ -175,8 +177,8 @@ export const CheckOutScreen = ({ navigation }: Props) => {
           </View>
         </View>
         <MainButton text="Order" onPress={order}></MainButton>
-      </SectionContainer>
-    </SafeAreaView>
+      </SectionContainer >
+    </SafeAreaView >
   );
 };
 

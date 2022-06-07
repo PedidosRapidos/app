@@ -41,7 +41,8 @@ export type RootStackParams = {
   ProductDetailScreenOwner: { product: any };
   ShopProductsScreen: { sellerId: number; shopData: any };
   ProductShopsScreen: { shopData: any };
-  CheckOutScreen: undefined;
+  CheckOutScreen: { order: any };
+  PendingOrdersScreen: undefined;
   OrderHistoryScreen: undefined;
   OrderDetailScreen: { order: any };
   OrderProductsScreen: { order: any };

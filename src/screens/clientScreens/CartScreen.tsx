@@ -28,7 +28,7 @@ export const CartScreen = ({ navigation }: Props) => {
   };
 
   const navigateToPaymentMethodsScreen = () => {
-    navigation.navigate("CheckOutScreen");
+    navigation.navigate("CheckOutScreen", {order: null})
   };
 
   const navigateToHome = () => {
@@ -96,5 +96,3 @@ export const CartScreen = ({ navigation }: Props) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({});

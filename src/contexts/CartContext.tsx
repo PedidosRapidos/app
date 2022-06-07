@@ -26,6 +26,7 @@ interface CartActions {
   add: (product: Product, units?: number) => any;
   remove: (product: Product, units?: number) => any;
   has: (product: Product) => boolean;
+  replace: (cart_id: number) => any;
 }
 
 type UseCart = [Cart & CartActions, Dispatch<SetStateAction<Cart>>];
@@ -92,6 +93,24 @@ export const CartProvider: FC = ({ children }: PropsWithChildren<any>) => {
         }
       } else {
         console.log("trying to add item, but cart doesnt exits");
+      }
+    },
+    async replace(other_cart_id: number) {
+      if (cart.id) {
+        try {
+          const { data: updatedCart } = await client.put(
+            `/shopping_cart/${cart.id}`,
+            {
+              cart_id: other_cart_id,
+            }
+    
+          );
+          setCart(updatedCart);
+        } catch (e) {
+          console.log("replace cart", e);
+        }
+      } else {
+        console.log("trying to replace cart, but client cart doesnt exist");
       }
     },
   };
