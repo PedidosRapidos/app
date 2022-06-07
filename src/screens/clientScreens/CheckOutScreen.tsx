@@ -121,12 +121,15 @@ export const CheckOutScreen = ({ navigation, route }: Props) => {
           <LightTypography style={styles.paymentText}>
             Payment method
           </LightTypography>
-          <View style={styles.section}>
+          <View style={{ flex: 0.5 }}>
             <Picker
               selectedValue={selectedField}
+              style={globalStyles.picker}
               onValueChange={(itemValue, itemIndex) =>
                 setSelectedField(itemValue)
               }
+              dropdownIconColor="white"
+              dropdownIconRippleColor={colorWithOpacity(colors.orange, 0.1)}
             >
               <Picker.Item label="Cash" value="cash" />
             </Picker>

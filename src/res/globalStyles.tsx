@@ -43,4 +43,10 @@ export const globalStyles = StyleSheet.create({
   sectionSpacing: {
     marginBottom: spacing.sectionSpacing,
   },
+  picker: {
+    color: colors.white,
+    fontSize: normalizeSize(15),
+    padding: 5,
+    backgroundColor: colorWithOpacity(colors.gray, 0.1),
+  },
 });

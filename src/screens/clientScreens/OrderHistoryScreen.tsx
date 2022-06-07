@@ -13,7 +13,7 @@ import { useIncrementalSearch } from "../../ui/hooks/useIncrementalSearch";
 import { useCart } from "../../contexts/CartContext";
 import { SearchBar } from "../../ui/components/SearchBar";
 import { Picker } from "@react-native-picker/picker";
-import { colors } from "../../res/colors";
+import { colors, colorWithOpacity } from "../../res/colors";
 import { Typography } from "../../res/typography";
 import { stateStr } from "../../services/order";
 import { useNotification } from "../../contexts/NotificationContext";
@@ -98,12 +98,11 @@ export const OrderHistoryScreen = ({ navigation, route }: Props) => {
             </View>
             <View style={{ flex: 2 }}>
               <Picker
-                style={{
-                  backgroundColor: colors.gray,
-                  color: colors.black,
-                }}
+                style={globalStyles.picker}
                 selectedValue={orderState}
                 onValueChange={(itemValue) => setOrderState(itemValue)}
+                dropdownIconColor="white"
+                dropdownIconRippleColor={colorWithOpacity(colors.orange, 0.1)}
               >
                 <Picker.Item label="" value="" />
                 <Picker.Item
