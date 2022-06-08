@@ -39,7 +39,7 @@ export const Counter = ({
 
   return (
     <View style={[styles.counterContainer, style]}>
-      <View style={{ flex: 3 }}>
+      <View style={styles.button}>
         <IconButton
           style={[styles.icon, buttonsStyles]}
           name="minus"
@@ -47,10 +47,10 @@ export const Counter = ({
           size={sizes.productDescription}
         />
       </View>
-      <View style={{ flex: 1, alignSelf: "center", marginRight: "5%" }}>
+      <View style={{ flex: 1, alignSelf: "center" }}>
         <Typography style={styles.textCount}>{counter}</Typography>
       </View>
-      <View style={{ flex: 3 }}>
+      <View style={styles.button}>
         <IconButton
           style={[styles.icon, buttonsStyles]}
           name="plus"
@@ -66,13 +66,17 @@ const styles = StyleSheet.create({
   counterContainer: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-evenly",
+  },
+  button:{
+    flex: 3,
   },
   icon: {
+    alignSelf: "center",
     backgroundColor: colorWithOpacity(colors.darkOrange, 1.0),
   },
   textCount: {
     color: colorWithOpacity(colors.white, 1.0),
     fontSize: 19,
+    alignSelf: "center"
   },
 });

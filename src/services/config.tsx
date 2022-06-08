@@ -8,8 +8,8 @@ const profiles = {
   fran: "http://10.0.2.2:8080",
 };
 
-export const API_URL = profiles.prod; // prod
-// profiles.agus; // agus
+export const API_URL = //profiles.prod; // prod
+profiles.agus; // agus
 // profiles.paulo; // paulo
 //profiles.fran;
 

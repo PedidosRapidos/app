@@ -50,7 +50,10 @@ export const CheckOutScreen = ({ navigation, route }: Props) => {
 
   const checkoutDone = async () => {
     try {
-      navigation.reset({ index: 0, routes: [{ name: "HomeScreenClient" }] });
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "HomeScreenClient" }],
+      });
       const { data: userResponse } = await client.get(`/users/${user.id}`);
       user.updateCartId(userResponse.cartId);
     } catch (err) {
@@ -100,9 +103,11 @@ export const CheckOutScreen = ({ navigation, route }: Props) => {
         data={products}
         keyExtractor={(product, index) => `${index}-${product.id}`}
       />
+      <View style={[globalStyles.sectionSpacing, styles.checkOutInfo]}>
+      
       <View
         style={{
-          ...styles.totalPriceContainer,
+          ...styles.checkoutRow,
           ...globalStyles.thinSeparator,
         }}
       >
@@ -111,39 +116,32 @@ export const CheckOutScreen = ({ navigation, route }: Props) => {
           style={styles.fontSize24}
         >{`$ ${total} `}</BoldTypography>
       </View>
-      <SectionContainer>
         <View
           style={{
-            ...styles.paymentMethodContainer,
-            ...globalStyles.thinSeparator,
+            ...styles.checkoutRow,
           }}
         >
-          <LightTypography style={styles.paymentText}>
+          <LightTypography style={styles.checkoutInfoText}>
             Payment method
           </LightTypography>
-          <View style={{ flex: 0.5 }}>
-            <Picker
-              selectedValue={selectedField}
-              style={globalStyles.picker}
-              onValueChange={(itemValue, itemIndex) =>
-                setSelectedField(itemValue)
-              }
-              dropdownIconColor="white"
-              dropdownIconRippleColor={colorWithOpacity(colors.orange, 0.1)}
-            >
-              <Picker.Item label="Cash" value="cash" />
-            </Picker>
-          </View>
+
+          <Picker
+            selectedValue={selectedField}
+            style={[globalStyles.picker, styles.picker]}
+            onValueChange={(itemValue, itemIndex) =>
+              setSelectedField(itemValue)
+            }
+            dropdownIconColor="white"
+            dropdownIconRippleColor={colorWithOpacity(colors.orange, 0.1)}
+          >
+            <Picker.Item label="Cash" value="cash" />
+          </Picker>
         </View>
-        <View
-          style={{
-            ...styles.paymentMethodContainer,
-            ...styles.bottomThinSeparator,
-            alignItems: "center",
-          }}
-        >
-          <LightTypography>Address</LightTypography>
-          <View style={{ flex: 0.6 }}>
+        <View style={styles.checkoutRow}>
+          <LightTypography style={styles.checkoutInfoText}>
+            Address
+          </LightTypography>
+          <View style={styles.picker}>
             <Input
               onChangeText={(nextAddressName) =>
                 onChange("address", nextAddressName)
@@ -153,8 +151,8 @@ export const CheckOutScreen = ({ navigation, route }: Props) => {
             />
           </View>
         </View>
-        <MainButton text="Order" onPress={order}></MainButton>
-      </SectionContainer>
+      </View>
+      <MainButton text="Order" onPress={order}></MainButton>
       <Modal
         visible={showOrderOk}
         onDismiss={checkoutDone}
@@ -178,16 +176,19 @@ export const CheckOutScreen = ({ navigation, route }: Props) => {
 };
 
 const styles = StyleSheet.create({
-  paymentText: {
-    alignSelf: "center",
+  checkOutInfo: {
+
   },
-  totalPriceContainer: {
+  checkoutRow: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
   },
-  paymentMethodContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+  checkoutInfoText: {
+    flex: 2,
+  },
+  picker: {
+    flex: 1.4,
   },
   section: {
     flex: 0.5,

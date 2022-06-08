@@ -110,7 +110,7 @@ export const ProductPreview2 = ({
 
                 {removePreview && (
                   <IconButton
-                    name="cart-remove"
+                    name="trash-can-outline"
                     mat
                     size={25}
                     onPress={() => {

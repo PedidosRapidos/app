@@ -24,25 +24,33 @@ export const HomeScreenClient = ({ navigation }: Props) => {
   const [screenShops, setScreenShops] = useState([]);
   const [lastSerchValue, setLastSeachValue] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
+
   const getShops = useCallback(async () => {
     setIsLoading(true);
+    
     try {
+      
       const opts = {
         params: {
           q: searchValue.split(" ").join(",") || undefined,
         },
       };
+
       const { data: fetchedShops } = await client.get(`/shops/`, opts);
       setLastSeachValue((oldValue) => searchValue);
       setScreenShops(fetchedShops);
       setHasSearched(true);
+
       return fetchedShops;
+
     } catch (err: any) {
       console.error(
         "Request failed, response:",
         err.response?.data || err.message || err
       );
+      
       return [];
+
     } finally {
       setIsLoading(false);
     }

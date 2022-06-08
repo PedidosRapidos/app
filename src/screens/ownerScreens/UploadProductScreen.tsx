@@ -17,34 +17,10 @@ import { SecondaryButton } from "../../ui/components/SecondaryButton";
 import { SectionContainer } from "../../ui/components/SectionContainer";
 import { SectionTitle } from "../../ui/components/SectionTitle";
 import { useShopDetail } from "../../contexts/ShopContext";
+import React from "react";
 
 interface Props
   extends StackScreenProps<RootStackParams, "UploadProductScreen"> {}
-
-const styles = StyleSheet.create({
-  section: {
-    color: colorWithOpacity(colors.white, 0.6),
-    fontSize: normalizeSize(17),
-  },
-  sectionMarginBotton: {
-    marginBottom: (spacing.inputSpacing * 2) / 3,
-  },
-  button: {
-    backgroundColor: colors.red,
-    padding: 20,
-    borderRadius: 5,
-    width: "50%",
-  },
-  buttonText: {
-    color: colorWithOpacity(colors.white, 0.6),
-    fontSize: normalizeSize(17),
-    textAlign: "center",
-  },
-  thumbnail: {
-    width: 150,
-    height: 150,
-  },
-});
 
 export const UploadProductScreen = ({ navigation, route }: Props) => {
   const { sellerId, shopId } = route.params;
@@ -147,19 +123,16 @@ export const UploadProductScreen = ({ navigation, route }: Props) => {
         </SectionContainer>
         <SectionContainer>
           <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-            }}
+            style={styles.pickImage}
           >
-            <View style={{ flex: 1 }}>
+            <View>
               <SecondaryButton
                 text="Pick an image"
                 onPress={openImagePickerAsync}
                 left={false}
               />
             </View>
-            <View style={{ flex: 1 }}>
+            <View>
               {selectedImage && (
                 <Image
                   source={{ uri: selectedImage.uri }}
@@ -178,3 +151,33 @@ export const UploadProductScreen = ({ navigation, route }: Props) => {
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  section: {
+    color: colorWithOpacity(colors.white, 0.6),
+    fontSize: normalizeSize(17),
+  },
+  sectionMarginBotton: {
+    marginBottom: (spacing.inputSpacing * 2) / 3,
+  },
+  button: {
+    backgroundColor: colors.red,
+    padding: 20,
+    borderRadius: 5,
+    width: "50%",
+  },
+  buttonText: {
+    color: colorWithOpacity(colors.white, 0.6),
+    fontSize: normalizeSize(17),
+    textAlign: "center",
+  },
+  thumbnail: {
+    width: 150,
+    height: 150,
+  },
+  pickImage:{
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent:"space-between"
+  }
+});

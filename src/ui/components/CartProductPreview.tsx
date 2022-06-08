@@ -57,7 +57,7 @@ export const CartProductPreview = ({
       <View style={styles.shopCartContainer}>
         {onDelete && (
           <View>
-            <View style={{ marginBottom: "10%", marginLeft: "5%" }}>
+            <View style={{ marginBottom: "10%"}}>
               <Counter
                 counter={product.quantity}
                 setCounter={onAdd}
@@ -70,7 +70,7 @@ export const CartProductPreview = ({
             </View>
 
             <IconButton
-              name="cart-remove"
+              name="trash-can-outline"
               mat
               size={25}
               onPress={() => onDelete(product)}

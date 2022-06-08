@@ -75,7 +75,7 @@ export const ShopProductsScreen = ({ navigation, route }: Props) => {
       <View>
         <SectionTitle text="My products" />
         {products.length != 0 ? null : (
-          <Typography>You do not have any product in this shop</Typography>
+          <Typography>You do not have any products in this shop</Typography>
         )}
       </View>
       <FlatList
