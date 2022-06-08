@@ -6,16 +6,22 @@ import { useCart } from "../../contexts/CartContext";
 import { useNavigation } from "@react-navigation/native";
 
 interface Props<T> {
-  onPress?: () => void;
+  onPress: () => void;
+  onPressOptions: () => void;
 }
 
-export const AppBar = ({ onPress }:Props<any>) => {
+export const AppBar = ({ onPress, onPressOptions }:Props<any>) => {
   const [cart] = useCart();
   const products = cart?.products || [];
   return (
     <View>
 
       <Appbar style={styles.appBar}>
+      <Appbar.Action
+          icon="menu"
+          onPress={onPressOptions}
+          style={styles.icon}
+        />
         <Appbar.Action
           icon="cart"
           onPress={onPress}

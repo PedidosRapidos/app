@@ -12,6 +12,7 @@ import { View, StyleSheet, FlatList, Image } from "react-native";
 import { ShopViewClient } from "../../ui/components/ShopViewClient";
 import { normalizeSize, Typography } from "../../res/typography";
 import { AppBar } from "../../ui/components/AppBar";
+import { DrawerActions } from "@react-navigation/native";
 
 interface Props extends StackScreenProps<RootStackParams, "HomeScreenClient"> {}
 
@@ -25,9 +26,8 @@ export const HomeScreenClient = ({ navigation }: Props) => {
 
   const getShops = useCallback(async () => {
     setIsLoading(true);
-    
+
     try {
-      
       const opts = {
         params: {
           q: searchValue.split(" ").join(",") || undefined,
@@ -40,15 +40,13 @@ export const HomeScreenClient = ({ navigation }: Props) => {
       setHasSearched(true);
 
       return fetchedShops;
-
     } catch (err: any) {
       console.error(
         "Request failed, response:",
         err.response?.data || err.message || err
       );
-      
-      return [];
 
+      return [];
     } finally {
       setIsLoading(false);
     }
@@ -56,7 +54,7 @@ export const HomeScreenClient = ({ navigation }: Props) => {
 
   const navigateToShopProductsScreen = (shop: any) => {
     navigation.navigate("ProductShopsScreen", {
-      shopData: shop,
+      shopData: shop
     });
   };
 
@@ -69,7 +67,10 @@ export const HomeScreenClient = ({ navigation }: Props) => {
     >
       <View style={styles.header}>
         <SectionTitle style={styles.title} text="Search" />
-        <AppBar onPress={() => navigation.navigate("CartScreen")}/>
+        <AppBar
+          onPress={() => navigation.navigate("CartScreen")}
+          onPressOptions={() => navigation.dispatch(DrawerActions.openDrawer())}
+        />
       </View>
       <SearchBar
         onChangeText={(nextSearchValue) => setSearchValue(nextSearchValue)}
@@ -121,10 +122,10 @@ export const HomeScreenClient = ({ navigation }: Props) => {
 };
 
 const styles = StyleSheet.create({
-  header:{
-    flexDirection:"row",
+  header: {
+    flexDirection: "row",
   },
-  title:{
+  title: {
     flex: 1,
   },
   section: {
