@@ -4,16 +4,14 @@ import { SearchBar } from "../../ui/components/SearchBar";
 import React, { useEffect, useState, useCallback } from "react";
 import { colors } from "../../res/colors";
 import { SectionTitle } from "../../ui/components/SectionTitle";
-import { MainButton } from "../../ui/components/MainButton";
 import client, { imageURL } from "../../services/config";
-import { Loader } from "../../ui/components/Loader";
 import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 import { useCart } from "../../contexts/CartContext";
 import { View, StyleSheet, FlatList, Image } from "react-native";
 import { ShopViewClient } from "../../ui/components/ShopViewClient";
-import { Picker } from "@react-native-picker/picker";
 import { normalizeSize, Typography } from "../../res/typography";
+import { AppBar } from "../../ui/components/AppBar";
 
 interface Props extends StackScreenProps<RootStackParams, "HomeScreenClient"> {}
 
@@ -69,7 +67,10 @@ export const HomeScreenClient = ({ navigation }: Props) => {
         ...globalStyles.innerContainer,
       }}
     >
-      <SectionTitle text="Search" />
+      <View style={styles.header}>
+        <SectionTitle style={styles.title} text="Search" />
+        <AppBar onPress={() => navigation.navigate("CartScreen")}/>
+      </View>
       <SearchBar
         onChangeText={(nextSearchValue) => setSearchValue(nextSearchValue)}
         value={searchValue}
@@ -120,6 +121,12 @@ export const HomeScreenClient = ({ navigation }: Props) => {
 };
 
 const styles = StyleSheet.create({
+  header:{
+    flexDirection:"row",
+  },
+  title:{
+    flex: 1,
+  },
   section: {
     color: colors.black,
     fontSize: normalizeSize(17),

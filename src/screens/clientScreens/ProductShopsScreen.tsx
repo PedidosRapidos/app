@@ -20,6 +20,7 @@ import { SecondaryButton } from "../../ui/components/SecondaryButton";
 import { useIncrementalSearch } from "../../ui/hooks/useIncrementalSearch";
 import { ProductPreview2 } from "../../ui/components/ProductPreview2";
 import { ProductPreview } from "../../ui/components/ProductPreview";
+import { AppBar } from "../../ui/components/AppBar";
 
 interface Props
   extends StackScreenProps<RootStackParams, "ProductShopsScreen"> {}
@@ -81,7 +82,10 @@ export const ProductShopsScreen = ({ navigation, route }: Props) => {
         ...globalStyles.innerContainer,
       }}
     >
-      <SectionTitle text="Search" />
+      <View style={styles.header}>
+        <SectionTitle style={styles.title} text={`Shop: ${shopData.name}`} />
+        <AppBar onPress={() => navigation.navigate("CartScreen")}/>
+      </View>
       <SearchBar
         onChangeText={(nextSearchValue) => setSearchValue(nextSearchValue)}
         value={searchValue}
@@ -174,9 +178,16 @@ export const ProductShopsScreen = ({ navigation, route }: Props) => {
 };
 
 const styles = StyleSheet.create({
+  header:{
+    flexDirection:"row",
+  },
+  title:{
+    flex: 1,
+  },
   section: {
     color: colors.white,
     fontSize: normalizeSize(15),
     padding: 5,
   },
+
 });

@@ -71,7 +71,7 @@ export const OrderHistoryScreen = ({ navigation, route }: Props) => {
     <SafeAreaView
       style={{
         ...globalStyles.generalContainer,
-        padding: 15,
+        ...globalStyles.innerContainer
       }}
     >
       <SectionContainer>
