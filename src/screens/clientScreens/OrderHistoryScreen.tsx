@@ -79,7 +79,7 @@ export const OrderHistoryScreen = ({ navigation, route }: Props) => {
         <SearchBar
           onChangeText={(nextSearchValue) => setQuery(nextSearchValue)}
           value={query}
-          placeholder="Search product"
+          placeholder="Search orders by product"
           onSearch={() => search()}
           onFilter={() => setShowOptions(!showOptions)}
           filterBadge={orderState ? true : false}
