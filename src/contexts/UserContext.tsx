@@ -65,8 +65,12 @@ export const UserProvider: FC = ({ children }: PropsWithChildren<any>) => {
         if (json) {
           const user: User = JSON.parse(json);
           setUser(user);
-          if (await validToken()) {
-            this.logout();
+          if (!(await validToken())) {
+            const notificationToken = await plugin();
+            await client.post("/users/refresh", {
+              email: user.email,
+              token: notificationToken,
+            });
           }
         }
       } catch (e) {
