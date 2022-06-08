@@ -70,9 +70,17 @@ export const ProductPreview2 = ({
           <View style={styles.productInfoRowContainer}>
             <Typography style={styles.productName}>{product.name}</Typography>
           </View>
-
           <View style={styles.productInfoRowContainer}>
-            <Typography style={styles.price}>$ {product.price}</Typography>
+            {onDetails ? (
+              <Typography style={styles.price}>$ {product.price}</Typography>
+            ) : (
+              <>
+                <Typography style={styles.price}>
+                  $ {product.price} x {product.quantity || 1} ={" "}
+                  {product.price * product.quantity}
+                </Typography>
+              </>
+            )}
 
             {product.qualification !== null && (
               <Score score={product.qualification}></Score>

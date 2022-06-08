@@ -74,17 +74,15 @@ export const ProductDetailScreen = ({ navigation, route }: Props) => {
       >
         <View style={styles.productInfoFirstRowContainer}>
           <Typography style={styles.productName}>{product.name}</Typography>
-          {product.qualification !== null && (
-            <Score score={product.qualification + 5}></Score>
-          )}
+          <Typography style={styles.productPrice}>$ {product.price}</Typography>
         </View>
         <View style={styles.productInfoFirstRowContainer}>
           <Typography style={styles.productDescription}>
             {product.description}
           </Typography>
-        </View>
-        <View>
-          <Typography style={styles.productPrice}>$ {product.price}</Typography>
+          {product.qualification !== null && (
+            <Score score={product.qualification}></Score>
+          )}
         </View>
       </View>
 
@@ -96,7 +94,6 @@ export const ProductDetailScreen = ({ navigation, route }: Props) => {
             buttonsStyles={{ maxWidth: "70%", borderRadius: 10 }}
           />
         </View>
-
         <View style={{ flex: 2 }}>
           <IconButton
             style={[cart.has(product) ? styles.disabled : {}]}
@@ -106,6 +103,7 @@ export const ProductDetailScreen = ({ navigation, route }: Props) => {
           />
         </View>
       </View>
+
     </SafeAreaView>
   );
 };
@@ -125,9 +123,7 @@ const styles = StyleSheet.create({
   },
   productPrice: {
     fontSize: normalizeSize(sizes.productPrice),
-    textAlign: "right",
-    marginRight: "5%",
-    marginTop: "5%",
+    
   },
   productDescription: {
     fontSize: normalizeSize(sizes.productDescription),
