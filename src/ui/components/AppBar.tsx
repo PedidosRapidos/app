@@ -1,42 +1,34 @@
 import React, { PropsWithChildren } from "react";
 import { Appbar, Badge } from "react-native-paper";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { colors } from "../../res/colors";
 import { useCart } from "../../contexts/CartContext";
-import { useNavigation } from "@react-navigation/native";
+import { DrawerActions, useNavigation } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-interface Props<T> {
-  onPress: () => void;
-  onPressOptions: () => void;
-}
-
-export const AppBar = ({ onPress, onPressOptions }:Props<any>) => {
+export const AppBar = () => {
   const [cart] = useCart();
   const products = cart?.products || [];
-  return (
-    <View>
+  const navigation = useNavigation();
 
-      <Appbar style={styles.appBar}>
-      <Appbar.Action
-          icon="menu"
-          onPress={onPressOptions}
-          style={styles.icon}
-        />
-        <Appbar.Action
-          icon="cart"
-          onPress={onPress}
-          style={styles.icon}
-        />
-        <Badge style={styles.badge}>{products.length}</Badge>
-      </Appbar>
-    </View>
+  return (
+      <TouchableOpacity
+        onPress={() => {
+          navigation.dispatch(DrawerActions.openDrawer());
+        }}
+        style={styles.appBar}
+      >
+        <Icon name="cart" size={25} color={colors.white} />
+        <Badge style={styles.badge} size={15}>{products.length}</Badge>
+      </TouchableOpacity>
+    
   );
 };
 
 const styles = StyleSheet.create({
   appBar: {
-    backgroundColor: colors.black,
-    //justifyContent: "flex-end"
+    flexDirection: "row",
+    marginRight: 10,
   },
   icon: {},
   badge: {

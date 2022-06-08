@@ -24,6 +24,10 @@ import { OrderDetailScreenOwner } from "../../screens/ownerScreens/OrderDetailSc
 import { OrderProductsScreen } from "../../screens/clientScreens/OrderProductsScreen";
 import { ProductShopsScreen } from "../../screens/clientScreens/ProductShopsScreen";
 import { NotificationSnackbar } from "../components/NotificationSnackbar";
+import { colors } from "../../res/colors";
+import { AppBar } from '../components/AppBar';
+import { TouchableOpacity } from "react-native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 export type RootStackParams = {
   WelcomeScreen: undefined;
@@ -85,11 +89,22 @@ const MyStack = () => {
           }
           drawerContent={(props) => <DrawerContent {...props} />}
           backBehavior="history"
+          screenOptions={{
+            headerTitleAlign:"center",
+            headerStyle:{backgroundColor:colors.black},
+            headerTintColor: "white",
+        }}
+          
         >
           <Drawer.Screen
             name={"HomeScreenClient"}
             component={HomeScreenClient}
-            options={{ headerShown: false }}
+            options={{
+              title:"Search",
+              headerRight: () => <AppBar/>,
+    
+
+            }}
           />
           <Drawer.Screen
             name={"HomeScreenOwner"}

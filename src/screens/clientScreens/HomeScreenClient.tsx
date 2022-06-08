@@ -59,19 +59,12 @@ export const HomeScreenClient = ({ navigation }: Props) => {
   };
 
   return (
-    <SafeAreaView
+    <View
       style={{
         ...globalStyles.generalContainer,
         ...globalStyles.innerContainer,
       }}
     >
-      <View style={styles.header}>
-        <SectionTitle style={styles.title} text="Search" />
-        <AppBar
-          onPress={() => navigation.navigate("CartScreen")}
-          onPressOptions={() => navigation.dispatch(DrawerActions.openDrawer())}
-        />
-      </View>
       <SearchBar
         onChangeText={(nextSearchValue) => setSearchValue(nextSearchValue)}
         value={searchValue}
@@ -117,13 +110,14 @@ export const HomeScreenClient = ({ navigation }: Props) => {
         )}
         data={screenShops}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
+    justifyContent: "flex-end"
   },
   title: {
     flex: 1,
