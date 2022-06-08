@@ -86,8 +86,6 @@ export const ProductShopsScreen = ({ navigation, route }: Props) => {
       <View style={styles.header}>
         <SectionTitle style={styles.title} text={`Shop: ${shopData.name}`} />
         <AppBar
-          onPress={() => navigation.navigate("CartScreen")}
-          onPressOptions={() => navigation.dispatch(DrawerActions.openDrawer())}
         />
       </View>
       <SearchBar
@@ -183,7 +181,7 @@ export const ProductShopsScreen = ({ navigation, route }: Props) => {
 
 const styles = StyleSheet.create({
   header: {
-    flexDirection: "row",
+    flexDirection: "row"
   },
   title: {
     flex: 1,
