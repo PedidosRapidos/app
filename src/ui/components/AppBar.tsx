@@ -5,6 +5,7 @@ import { colors } from "../../res/colors";
 import { useCart } from "../../contexts/CartContext";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { normalizeSize } from "../../res/typography";
 
 export const AppBar = () => {
   const [cart] = useCart();
@@ -12,16 +13,15 @@ export const AppBar = () => {
   const navigation = useNavigation();
 
   return (
-      <TouchableOpacity
-        onPress={() => {
-          navigation.dispatch(DrawerActions.openDrawer());
-        }}
-        style={styles.appBar}
-      >
-        <Icon name="cart" size={25} color={colors.white} />
-        <Badge style={styles.badge} size={15}>{products.length}</Badge>
-      </TouchableOpacity>
-    
+    <TouchableOpacity
+      onPress={() => navigation.navigate("CartScreen")}
+      style={styles.appBar}
+    >
+      <Icon name="cart" size={26} color={colors.white} />
+      <Badge style={styles.badge} size={normalizeSize(20)}>
+        {products.length}
+      </Badge>
+    </TouchableOpacity>
   );
 };
 
@@ -33,5 +33,6 @@ const styles = StyleSheet.create({
   icon: {},
   badge: {
     alignSelf: "flex-start",
+    fontSize: normalizeSize(17),
   },
 });

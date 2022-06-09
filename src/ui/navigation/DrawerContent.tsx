@@ -58,12 +58,7 @@ export const DrawerContent = ({ navigation }: PropsWithChildren<any>) => {
               text="Home"
               onPress={() => navigation.navigate("HomeScreenClient")}
             />
-            <DrawerOption
-              icon="shopping-cart"
-              text="My Cart"
-              badgeCount={cartCount}
-              onPress={() => navigation.navigate("CartScreen")}
-            />
+
             <DrawerOption
               icon="truck-loading"
               text="Orders"
