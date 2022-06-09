@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, View } from "react-native";
+import { FlatList, View, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../../res/globalStyles";
 import { SectionTitle } from "../../ui/components/SectionTitle";
@@ -14,7 +14,7 @@ import { useCart } from "../../contexts/CartContext";
 import { SearchBar } from "../../ui/components/SearchBar";
 import { Picker } from "@react-native-picker/picker";
 import { colors, colorWithOpacity } from "../../res/colors";
-import { Typography } from "../../res/typography";
+import { normalizeSize, Typography } from "../../res/typography";
 import { stateStr } from "../../services/order";
 import { useNotification } from "../../contexts/NotificationContext";
 
@@ -71,7 +71,7 @@ export const OrderHistoryScreen = ({ navigation, route }: Props) => {
     <SafeAreaView
       style={{
         ...globalStyles.generalContainer,
-        ...globalStyles.innerContainer
+        ...globalStyles.innerContainer,
       }}
     >
       <SectionContainer>
@@ -121,6 +121,29 @@ export const OrderHistoryScreen = ({ navigation, route }: Props) => {
             </View>
           </View>
         </SectionContainer>
+      )}
+      {orders.length === 0 && (
+        <>
+          <View
+            style={{
+              marginTop: "5%",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Image
+              source={require("../../res/img/not_found.png")}
+              style={{
+                width: "90%",
+                height: "50%",
+                resizeMode: "contain",
+              }}
+            />
+            <Typography style={{ fontSize: normalizeSize(18), margin: "5%" }}>
+              We couldn't find any order with "{query}".
+            </Typography>
+          </View>
+        </>
       )}
       <FlatList
         style={{ flex: 1 }}

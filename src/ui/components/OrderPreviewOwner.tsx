@@ -129,7 +129,7 @@ export const OrderPreviewOwner = ({ order }: Props<any>) => {
             backgroundColor={colors.orange}
           />
         ) : null}
-        {index < 2 ? (
+        {index < 1 ? (
           <SmallButton
             text="Reject"
             onPress={() => {
