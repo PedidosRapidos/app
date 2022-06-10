@@ -85,14 +85,13 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
   }, [route.params?.shops]);
 
   return (
-    <SafeAreaView
+    <View
       style={{
         ...globalStyles.generalContainer,
         ...globalStyles.innerContainer,
       }}
     >
       <View style={globalStyles.sectionSpacing}>
-        <SectionTitle text="My shops" />
         {screenShops.length != 0 ? null : (
           <Typography>You do not have any shops yet</Typography>
         )}
@@ -119,6 +118,6 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
         />
       )}
       <Loader visible={isLoading} />
-    </SafeAreaView>
+    </View>
   );
 };

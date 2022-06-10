@@ -107,7 +107,9 @@ const MyStack = () => {
           <Drawer.Screen
             name={"HomeScreenOwner"}
             component={HomeScreenOwner}
-            options={{ headerShown: false }}
+            options={{
+              title:"My shops",
+            }}
           />
           <Drawer.Screen
             name={"CartScreen"}
@@ -150,7 +152,12 @@ const MyStack = () => {
           <Drawer.Screen
             name={"ShopProductsScreen"}
             component={ShopProductsScreen}
-            options={{ headerShown: false }}
+            options={({route}) => {
+              return{
+                title:"Shop: " + route.params?.shopData.name,
+                
+              }
+            }}
           />
           <Drawer.Screen
             name={"ProductShopsScreen"}
@@ -159,8 +166,7 @@ const MyStack = () => {
               return{
                 title:"Shop: " + route.params?.shopData.name,
                 headerRight: () => <AppBar/>,
-              }
-              
+              }  
             }}
           />
           <Drawer.Screen
@@ -184,7 +190,11 @@ const MyStack = () => {
           <Drawer.Screen
             name={"OrdersScreenOwner"}
             component={OrdersScreenOwner}
-            options={{ headerShown: false }}
+            options={({route}) => {
+              return{
+                title:"My orders"
+              }
+            }}
           />
           <Drawer.Screen
             name={"OrderDetailScreenOwner"}
