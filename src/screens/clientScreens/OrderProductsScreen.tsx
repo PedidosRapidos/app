@@ -4,18 +4,11 @@ import {
   View,
   StyleSheet,
   Modal,
-  Text,
-  Pressable,
-  Alert,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { globalStyles } from "../../res/globalStyles";
-import { SectionTitle } from "../../ui/components/SectionTitle";
-import { SectionContainer } from "../../ui/components/SectionContainer";
 import { RootStackParams } from "../../ui/navigation/Stack";
 import { StackScreenProps } from "@react-navigation/stack";
 import {
-  MediumTypography,
   normalizeSize,
   sizes,
   Typography,
@@ -70,15 +63,12 @@ export const OrderProductsScreen = ({ navigation, route }: Props) => {
   };
 
   return (
-    <SafeAreaView
+    <View
       style={{
         ...globalStyles.generalContainer,
         ...globalStyles.innerContainer,
       }}
     >
-      <SectionContainer>
-        <SectionTitle text="Order products" />
-      </SectionContainer>
       <FlatList
         renderItem={({ item: product }) => (
           <ProductPreview2
@@ -137,7 +127,7 @@ export const OrderProductsScreen = ({ navigation, route }: Props) => {
         title="Error sending review"
         description={errorDescription}
       ></ErrorPopUp>
-    </SafeAreaView>
+    </View>
   );
 };
 

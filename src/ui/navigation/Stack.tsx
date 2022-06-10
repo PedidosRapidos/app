@@ -194,7 +194,12 @@ const MyStack = () => {
           <Drawer.Screen
             name={"OrderProductsScreen"}
             component={OrderProductsScreen}
-            options={{ headerShown: false }}
+            options={({route}) => {
+              return{
+                title:"Order #" + route.params?.order.id,
+                headerRight: user.isClient ? (() => <AppBar/>) : (undefined),
+              }
+            }}
           />
         </Drawer.Navigator>
         <NotificationSnackbar />
