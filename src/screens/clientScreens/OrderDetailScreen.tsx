@@ -20,6 +20,7 @@ import { SectionTitle } from "../../ui/components/SectionTitle";
 import { MainButton } from "../../ui/components/MainButton";
 import { Product, useCart } from "../../contexts/CartContext";
 import client from "../../services/config";
+import { useUser } from '../../contexts/UserContext';
 
 interface Props
   extends StackScreenProps<RootStackParams, "OrderDetailScreen"> { }
@@ -28,23 +29,15 @@ export const OrderDetailScreen = ({ navigation, route }: Props) => {
   const { order } = route.params;
   const description = orderDescription(order);
   const image = orderImage(order);
-  const [cart] = useCart();
+  const user = useUser();
+  // undefined previene de que un owner haga operaciones con el cart
+  const [cart] = user.isClient ? useCart() : [undefined];
 
   const navigateToOrderProductsScreen = () => {
     navigation.navigate({ name: "OrderProductsScreen", params: { order: order } })
   }
 
   const orderAgain = async () => {
-
-    /* for (var i = cart.products.length - 1; i >= 0; i--) {
-      let product = cart.products[i]
-      await cart.remove(product, product.quantity)
-    }
-
-    for (const prod of order.cart.products) {
-      await cart.add(prod, prod.quantity)
-    } */
-
     await cart.replace(order.cart.id)
     navigation.navigate("CheckOutScreen", { order: order })
   }
@@ -79,7 +72,7 @@ export const OrderDetailScreen = ({ navigation, route }: Props) => {
             text="View order products"
             onPress={navigateToOrderProductsScreen}
           />
-          {order.state == "DELIVERED" ? (
+          {user.isClient && order.state == "DELIVERED" ? (
             <MainButton
               text="Order again"
               onPress={orderAgain}
