@@ -20,6 +20,7 @@ import client from "../../services/config";
 import { MainButton } from "../../ui/components/MainButton";
 import { PopUp } from "../../ui/components/PopUp";
 import { ErrorPopUp } from "../../ui/components/ErrorPopUp";
+import { useUser } from '../../contexts/UserContext';
 
 interface Props
   extends StackScreenProps<RootStackParams, "OrderProductsScreen"> {}
@@ -31,6 +32,8 @@ export const OrderProductsScreen = ({ navigation, route }: Props) => {
   const [reviewedProductId, setReviewedProductId] = useState(0);
   const [showErrorPopUp, setShowErrorPopUp] = useState(false);
   const [errorDescription, setErrorDescription] = useState("unknown error");
+
+  const user = useUser();
 
   const orderId = route.params?.order.id;
   const products = route.params?.order.cart.products;
@@ -73,7 +76,7 @@ export const OrderProductsScreen = ({ navigation, route }: Props) => {
         renderItem={({ item: product }) => (
           <ProductPreview2
             product={product}
-            onReview={state === "DELIVERED" ? onReview : undefined}
+            onReview={user.isClient && state === "DELIVERED" ? onReview : undefined}
           />
         )}
         data={products}

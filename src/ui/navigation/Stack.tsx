@@ -13,21 +13,17 @@ import { ShopProductsScreen } from "../../screens/ownerScreens/ShopProductsScree
 import { DrawerContent } from "./DrawerContent";
 import { CartScreen } from "../../screens/clientScreens/CartScreen";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { ProductDetailScreenOwner } from "../../screens/ownerScreens/ProductDetailScreenOwner";
 import { useUser } from "../../contexts/UserContext";
 import { EditProductScreen } from "../../screens/ownerScreens/EditProductScreen";
 import { CheckOutScreen } from "../../screens/clientScreens/CheckOutScreen";
 import { OrderHistoryScreen } from "../../screens/clientScreens/OrderHistoryScreen";
 import { OrderDetailScreen } from "../../screens/clientScreens/OrderDetailScreen";
 import { OrdersScreenOwner } from "../../screens/ownerScreens/OrdersScreenOwner";
-import { OrderDetailScreenOwner } from "../../screens/ownerScreens/OrderDetailScreenOwner";
 import { OrderProductsScreen } from "../../screens/clientScreens/OrderProductsScreen";
 import { ProductShopsScreen } from "../../screens/clientScreens/ProductShopsScreen";
 import { NotificationSnackbar } from "../components/NotificationSnackbar";
 import { colors } from "../../res/colors";
 import { AppBar } from '../components/AppBar';
-import { TouchableOpacity } from "react-native";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 export type RootStackParams = {
   WelcomeScreen: undefined;
@@ -35,14 +31,12 @@ export type RootStackParams = {
   SigninScreen: { email: string; password: string };
   SignupScreen: undefined;
   OrdersScreenOwner: { shopId: number };
-  OrderDetailScreenOwner: { order: any };
   HomeScreenOwner: { shops: Array<any> };
   HomeScreenClient: undefined;
   AddShopScreen: { sellerId: number; shops: Array<any> };
   UploadProductScreen: { sellerId: number; shopId: number };
   EditProductScreen: { product: any };
   ProductDetailScreen: { product: any };
-  ProductDetailScreenOwner: { product: any };
   ShopProductsScreen: { sellerId: number; shopData: any };
   ProductShopsScreen: { shopData: any };
   CheckOutScreen: { order: any };
@@ -144,11 +138,7 @@ const MyStack = () => {
               headerRight: user.isClient ? (() => <AppBar/>) : (undefined)
             }}
           />
-          <Drawer.Screen
-            name={"ProductDetailScreenOwner"}
-            component={ProductDetailScreenOwner}
-            options={{headerShown: false }}
-          />
+          
           <Drawer.Screen
             name={"ShopProductsScreen"}
             component={ShopProductsScreen}
@@ -183,7 +173,7 @@ const MyStack = () => {
             options={({route}) => {
               return{
                 title:"Order #" + route.params?.order.id,
-                headerRight: () => <AppBar/>,
+                headerRight: () => user.isClient ? <AppBar/> : undefined,
               }
             }}
           />
@@ -195,11 +185,6 @@ const MyStack = () => {
                 title:"My orders"
               }
             }}
-          />
-          <Drawer.Screen
-            name={"OrderDetailScreenOwner"}
-            component={OrderDetailScreenOwner}
-            options={{ headerShown: false }}
           />
           <Drawer.Screen
             name={"OrderProductsScreen"}

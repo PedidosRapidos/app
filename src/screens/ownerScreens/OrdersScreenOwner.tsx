@@ -30,7 +30,7 @@ export const OrdersScreenOwner = ({ navigation, route }: Props) => {
   const shopId = route.params.shopId;
 
   const displayOrderDetails = (item: any) => {
-    navigation.navigate("OrderDetailScreenOwner", {
+    navigation.navigate("OrderDetailScreen", {
       order: item,
     });
   };
