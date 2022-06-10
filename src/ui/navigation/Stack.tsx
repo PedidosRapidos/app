@@ -102,8 +102,6 @@ const MyStack = () => {
             options={{
               title:"Search",
               headerRight: () => <AppBar/>,
-    
-
             }}
           />
           <Drawer.Screen
@@ -139,12 +137,15 @@ const MyStack = () => {
           <Drawer.Screen
             name={"ProductDetailScreen"}
             component={ProductDetailScreen}
-            options={{ headerShown: false }}
+            options={{
+              title:"Details",
+              headerRight: user.isClient ? (() => <AppBar/>) : (undefined)
+            }}
           />
           <Drawer.Screen
             name={"ProductDetailScreenOwner"}
             component={ProductDetailScreenOwner}
-            options={{ headerShown: false }}
+            options={{headerShown: false }}
           />
           <Drawer.Screen
             name={"ShopProductsScreen"}
@@ -154,17 +155,31 @@ const MyStack = () => {
           <Drawer.Screen
             name={"ProductShopsScreen"}
             component={ProductShopsScreen}
-            options={{ headerShown: false }}
+            options={({ route }) => {
+              return{
+                title:"Shop: " + route.params?.shopData.name,
+                headerRight: () => <AppBar/>,
+              }
+              
+            }}
           />
           <Drawer.Screen
             name={"OrderHistoryScreen"}
             component={OrderHistoryScreen}
-            options={{ headerShown: false }}
+            options={{
+              title:"Orders",
+              headerRight: () => <AppBar/>,
+            }}
           />
           <Drawer.Screen
             name={"OrderDetailScreen"}
             component={OrderDetailScreen}
-            options={{ headerShown: false }}
+            options={({route}) => {
+              return{
+                title:"Order #" + route.params?.order.id,
+                headerRight: () => <AppBar/>,
+              }
+            }}
           />
           <Drawer.Screen
             name={"OrdersScreenOwner"}

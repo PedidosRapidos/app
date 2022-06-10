@@ -45,7 +45,7 @@ export const ProductDetailScreen = ({ navigation, route }: Props) => {
 
   console.log(product);
   return (
-    <SafeAreaView
+    <View
       style={{
         ...globalStyles.generalContainer,
         ...globalStyles.innerContainer,
@@ -59,6 +59,7 @@ export const ProductDetailScreen = ({ navigation, route }: Props) => {
           width: "100%",
           height: 300,
           borderColor: colors.popupBackground,
+          borderWidth: 1,
           marginBottom: (spacing.inputSpacing * 2) / 6,
           marginTop: (spacing.inputSpacing * 2) / 6,
           alignSelf: "center",
@@ -104,7 +105,7 @@ export const ProductDetailScreen = ({ navigation, route }: Props) => {
         </View>
       </View>
 
-    </SafeAreaView>
+    </View>
   );
 };
 
