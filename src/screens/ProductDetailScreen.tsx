@@ -14,12 +14,15 @@ import { IconButton } from "../ui/components/IconButton";
 import { sizes } from "../res/typography";
 import { Score } from "../ui/components/Score";
 import { has } from "fp-ts/lib/ReadonlyRecord";
+import { useUser } from "../contexts/UserContext";
+import Icon from "react-native-vector-icons/AntDesign";
 
 interface Props
   extends StackScreenProps<RootStackParams, "ProductDetailScreen"> {}
 
 export const ProductDetailScreen = ({ navigation, route }: Props) => {
   const { product } = route.params;
+  const user = useUser();
   const [cart] = useCart();
   const [quantity, setQuantity] = useState(cart.unitsOf(product) + 1);
 
@@ -27,23 +30,28 @@ export const ProductDetailScreen = ({ navigation, route }: Props) => {
     await cart.add(product, quantity);
   };
 
+  const editProduct = () => {
+    navigation.navigate("EditProductScreen", { product });
+  };
+
   useEffect(() => {
-    if (cart.has(product)) {
+    if (user.isClient && cart.has(product)) {
       addProductToCart();
     }
   }, [quantity]);
 
   useEffect(() => {
-    setQuantity(cart.unitsOf(product) + 1);
+    if (user.isClient) {
+      setQuantity(cart.unitsOf(product) + 1);
+    }
   }, [product]);
 
   useEffect(() => {
-    if (!cart.has(product)) {
+    if (user.isClient && !cart.has(product)) {
       setQuantity(0);
     }
   }, [cart]);
 
-  console.log(product);
   return (
     <View
       style={{
@@ -66,7 +74,6 @@ export const ProductDetailScreen = ({ navigation, route }: Props) => {
           borderRadius: 10,
         }}
       ></Image>
-
       <View
         style={{
           ...styles.productInfoContainer,
@@ -85,31 +92,51 @@ export const ProductDetailScreen = ({ navigation, route }: Props) => {
             <Score score={product.qualification}></Score>
           )}
         </View>
+
+        {user.isOwner && (
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity onPress={editProduct}>
+              <Icon name="edit" size={25} style={styles.buttonText}></Icon>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
 
-      <View style={styles.addProductContainer}>
-        <View style={{ flex: 5 }}>
-          <Counter
-            counter={quantity}
-            setCounter={setQuantity}
-            buttonsStyles={{ maxWidth: "70%", borderRadius: 10 }}
-          />
+      {user.isClient && (
+        <View style={styles.addProductContainer}>
+          <View style={{ flex: 5 }}>
+            <Counter
+              counter={quantity}
+              setCounter={setQuantity}
+              buttonsStyles={{ maxWidth: "70%", borderRadius: 10 }}
+            />
+          </View>
+          <View style={{ flex: 2 }}>
+            <IconButton
+              style={[cart.has(product) ? styles.disabled : {}]}
+              name="cart-plus"
+              size={25}
+              onPress={!cart.has(product) ? addProductToCart : () => {}}
+            />
+          </View>
         </View>
-        <View style={{ flex: 2 }}>
-          <IconButton
-            style={[cart.has(product) ? styles.disabled : {}]}
-            name="cart-plus"
-            size={25}
-            onPress={!cart.has(product) ? addProductToCart : () => {}}
-          />
-        </View>
-      </View>
-
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  buttonContainer: {
+    borderColor: colorWithOpacity(colors.orange, 0.08),
+    borderRadius: 10,
+    width: "20%",
+    backgroundColor: colors.orange,
+    marginVertical: spacing.paddingVertical / 3,
+  },
+  buttonText: {
+    color: colors.white,
+    textAlign: "center",
+  },
   productInfoContainer: {
     marginBottom: spacing.sectionSpacing,
   },
@@ -124,7 +151,6 @@ const styles = StyleSheet.create({
   },
   productPrice: {
     fontSize: normalizeSize(sizes.productPrice),
-    
   },
   productDescription: {
     fontSize: normalizeSize(sizes.productDescription),

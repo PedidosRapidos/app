@@ -43,7 +43,7 @@ export const ShopProductsScreen = ({ navigation, route }: Props) => {
 
   const navigateToProductsDetailScreen = (product: any) => {
     console.log(product);
-    navigation.navigate("ProductDetailScreenOwner", {
+    navigation.navigate("ProductDetailScreen", {
       product: product,
     });
   };
