@@ -62,14 +62,13 @@ export const ShopProductsScreen = ({ navigation, route }: Props) => {
   }, [shopData.id]);
 
   return (
-    <SafeAreaView
+    <View
       style={{
         ...globalStyles.generalContainer,
         ...globalStyles.innerContainer,
       }}
     >
       <View style={globalStyles.sectionSpacing}>
-        <SectionTitle text="Shop" />
         <ShopPreview shop={shopData} />
       </View>
       <View>
@@ -104,6 +103,6 @@ export const ShopProductsScreen = ({ navigation, route }: Props) => {
       )}
 
       <Loader visible={isLoading} />
-    </SafeAreaView>
+    </View>
   );
 };

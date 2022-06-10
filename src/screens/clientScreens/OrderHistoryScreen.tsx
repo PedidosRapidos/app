@@ -68,14 +68,13 @@ export const OrderHistoryScreen = ({ navigation, route }: Props) => {
   };
 
   return (
-    <SafeAreaView
+    <View
       style={{
         ...globalStyles.generalContainer,
         ...globalStyles.innerContainer,
       }}
     >
       <SectionContainer>
-        <SectionTitle text="Orders" />
         <SearchBar
           onChangeText={(nextSearchValue) => setQuery(nextSearchValue)}
           value={query}
@@ -156,6 +155,6 @@ export const OrderHistoryScreen = ({ navigation, route }: Props) => {
         onRefresh={() => search()}
         refreshing={fetching}
       />
-    </SafeAreaView>
+    </View>
   );
 };

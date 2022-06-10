@@ -71,7 +71,7 @@ export const OrdersScreenOwner = ({ navigation, route }: Props) => {
   }, [notification]);
 
   return (
-    <SafeAreaView style={globalStyles.generalContainer}>
+    <View style={globalStyles.generalContainer}>
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
@@ -84,7 +84,6 @@ export const OrdersScreenOwner = ({ navigation, route }: Props) => {
         }
       >
         <SectionContainer>
-          <SectionTitle text="My orders" />
           {orders.length != 0 ? null : (
             <Typography>You do not have any orders for this shop</Typography>
           )}
@@ -99,6 +98,6 @@ export const OrdersScreenOwner = ({ navigation, route }: Props) => {
         </SectionContainer>
       </ScrollView>
       <Loader visible={isLoading} />
-    </SafeAreaView>
+    </View>
   );
 };

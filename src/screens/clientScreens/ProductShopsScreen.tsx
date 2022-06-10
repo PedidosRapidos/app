@@ -77,17 +77,12 @@ export const ProductShopsScreen = ({ navigation, route }: Props) => {
 
   console.log("reloading" + selectedField);
   return (
-    <SafeAreaView
+    <View
       style={{
         ...globalStyles.generalContainer,
         ...globalStyles.innerContainer,
       }}
     >
-      <View style={styles.header}>
-        <SectionTitle style={styles.title} text={`Shop: ${shopData.name}`} />
-        <AppBar
-        />
-      </View>
       <SearchBar
         onChangeText={(nextSearchValue) => setSearchValue(nextSearchValue)}
         value={searchValue}
@@ -175,7 +170,7 @@ export const ProductShopsScreen = ({ navigation, route }: Props) => {
         refreshing={false}
       />
       <Loader visible={fetching} />
-    </SafeAreaView>
+    </View>
   );
 };
 

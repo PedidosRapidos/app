@@ -50,11 +50,8 @@ export const OrderDetailScreen = ({ navigation, route }: Props) => {
   }
 
   return (
-    <SafeAreaView style={globalStyles.generalContainer}>
+    <View style={globalStyles.generalContainer}>
       <ScrollView style={globalStyles.innerContainer}>
-        <SectionContainer>
-          <SectionTitle text={"Order Details"} />
-        </SectionContainer>
         <SectionContainer>
           <View style={styles.row}>
             <Image source={image} style={styles.image} />
@@ -90,7 +87,7 @@ export const OrderDetailScreen = ({ navigation, route }: Props) => {
           ) : null}
         </SectionContainer>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 
