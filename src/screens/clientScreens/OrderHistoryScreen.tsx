@@ -22,11 +22,12 @@ interface Props
   extends StackScreenProps<RootStackParams, "OrderHistoryScreen"> {}
 
 export const OrderHistoryScreen = ({ navigation, route }: Props) => {
+  const pending = ['TO_CONFIRM', 'CONFIRMED', 'IN_PREPARATION', 'UNDER_WAY'];
   const user = useUser();
   const [cart] = useCart();
   const [showOptions, setShowOptions] = useState(false);
   const [query, setQuery] = useState("");
-  const [orderState, setOrderState] = useState();
+  const [orderState, setOrderState] = useState("PENDING");
   const { notification } = useNotification();
   const {
     data: orders,
@@ -39,7 +40,7 @@ export const OrderHistoryScreen = ({ navigation, route }: Props) => {
         params: {
           client_id: user.id,
           q: query || undefined,
-          state: orderState || undefined,
+          states: (orderState == "PENDING" ? pending : [orderState]),
           page,
           page_size: 10,
         },
@@ -103,17 +104,7 @@ export const OrderHistoryScreen = ({ navigation, route }: Props) => {
                 dropdownIconColor="white"
                 dropdownIconRippleColor={colorWithOpacity(colors.orange, 0.1)}
               >
-                <Picker.Item label="" value="" />
-                <Picker.Item
-                  label={stateStr["TO_CONFIRM"]}
-                  value="TO_CONFIRM"
-                />
-                <Picker.Item label={stateStr["CONFIRMED"]} value="CONFIRMED" />
-                <Picker.Item
-                  label={stateStr["IN_PREPARATION"]}
-                  value="IN_PREPARATION"
-                />
-                <Picker.Item label={stateStr["UNDER_WAY"]} value="UNDER_WAY" />
+                <Picker.Item label={"Pending"} value="PENDING" />
                 <Picker.Item label={stateStr["DELIVERED"]} value="DELIVERED" />
                 <Picker.Item label={stateStr["CANCELLED"]} value="CANCELLED" />
               </Picker>
