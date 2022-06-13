@@ -13,19 +13,20 @@ import { Counter } from "../ui/components/Counter";
 import { IconButton } from "../ui/components/IconButton";
 import { sizes } from "../res/typography";
 import { Score } from "../ui/components/Score";
-import { has } from "fp-ts/lib/ReadonlyRecord";
 import { useUser } from "../contexts/UserContext";
 import Icon from "react-native-vector-icons/AntDesign";
+import { useShopDetail } from "../contexts/ShopContext";
 
 interface Props
   extends StackScreenProps<RootStackParams, "ProductDetailScreen"> {}
 
 export const ProductDetailScreen = ({ navigation, route }: Props) => {
+  const [shop] = useShopDetail();
+
   const { product } = route.params;
   const user = useUser();
   const [cart] = useCart();
   const [quantity, setQuantity] = useState(cart.unitsOf(product) + 1);
-
   const addProductToCart = async () => {
     await cart.add(product, quantity);
   };
@@ -51,6 +52,16 @@ export const ProductDetailScreen = ({ navigation, route }: Props) => {
       setQuantity(0);
     }
   }, [cart]);
+
+  useEffect(() => {
+    if (product && product?.id && shop.products && user.isOwner) {
+      const updatedProduct = shop.products.find((p) => p.id === product.id);
+      if (product != updatedProduct) {
+        console.log(updatedProduct);
+        navigation.setParams({ product: updatedProduct });
+      }
+    }
+  }, [shop]);
 
   return (
     <View
