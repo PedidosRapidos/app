@@ -15,24 +15,29 @@ import { ShopPreview } from "../../ui/components/ShopPreview";
 import { ProductPreview2 } from "../../ui/components/ProductPreview2";
 import { useShopDetail } from "../../contexts/ShopContext";
 import { SecondaryButton } from "../../ui/components/SecondaryButton";
+import { useNotification } from "../../contexts/NotificationContext";
 
 interface Props
   extends StackScreenProps<RootStackParams, "ShopProductsScreen"> {}
 
 export const ShopProductsScreen = ({ navigation, route }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [shop, setShop] = useShopDetail();
-  const products = shop.products || [];
+  const [shopDetail, setShopDetail] = useShopDetail();
+  const [shop, setShop] = useState(null);
+  const notification = useNotification();
+  const products = shopDetail.products || [];
   const { sellerId, shopData } = route.params;
 
   const getShopProducts = async () => {
     setIsLoading(true);
     try {
+      const { data: shop } = await client.get(`/shops/${shopData.id}`);
       const { data } = await client.get(`/shops/${shopData.id}/products`);
-      console.log(data)
-      setShop(data);
+      console.log(data);
+      setShop(shop);
+      setShopDetail(data);
     } catch (err: any) {
-      console.error(
+      console.log(
         "Request failed, response:",
         err.response?.data || err.message || err
       );
@@ -57,9 +62,9 @@ export const ShopProductsScreen = ({ navigation, route }: Props) => {
 
   useEffect(() => {
     console.log("UseEffectShopProductsScreen");
-    console.log(shop);
+    console.log(shopDetail);
     getShopProducts();
-  }, [shopData.id]);
+  }, [shopData, notification]);
 
   return (
     <View
@@ -69,12 +74,14 @@ export const ShopProductsScreen = ({ navigation, route }: Props) => {
       }}
     >
       <View style={globalStyles.sectionSpacing}>
-        <ShopPreview shop={shopData} />
+        {shop && <ShopPreview shop={shop} />}
       </View>
       <View>
         <SectionTitle text="My products" />
         {products.length != 0 ? null : (
-          <Typography>You do not have any products in this shop</Typography>
+          <Typography>
+            You do not have any products in this shopDetail
+          </Typography>
         )}
       </View>
       <FlatList

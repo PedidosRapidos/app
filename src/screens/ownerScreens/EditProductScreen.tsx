@@ -127,12 +127,12 @@ export const EditProductScreen = ({ navigation, route }: Props) => {
       navigation.goBack();
     } catch (err: any) {
       if (err.request) {
-        console.error(
+        console.log(
           "Request failed, response:",
           err.response?.data || err.message || err
         );
       } else {
-        console.error("Error:", err.response?.data || err.message || err);
+        console.log("log:", err.response?.data || err.message || err);
       }
     }
   };

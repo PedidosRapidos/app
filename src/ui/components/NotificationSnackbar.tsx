@@ -1,3 +1,4 @@
+import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Snackbar } from "react-native-paper";
 import { useNotification } from "../../contexts/NotificationContext";
@@ -21,7 +22,19 @@ export const NotificationSnackbar = () => {
       }
     }
     if (user.isOwner && data?.shop_id) {
-      navigation.navigate("OrdersScreenOwner", { shopId: data.shop_id });
+      switch (data.action) {
+        case "product_review":
+          navigation.navigate("ShopProductsScreen", {
+            shopData: { id: data.shop_id },
+            sellerId: data.seller_id,
+          });
+          break;
+        case "new_order":
+          navigation.navigate("OrdersScreenOwner", { shopId: data.shop_id });
+          break;
+        default:
+          break;
+      }
     }
   };
   return (

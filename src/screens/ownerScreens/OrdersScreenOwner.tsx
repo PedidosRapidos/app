@@ -47,7 +47,7 @@ export const OrdersScreenOwner = ({ navigation, route }: Props) => {
         setOrders(fetchedOrders);
         return fetchedOrders;
       } catch (err: any) {
-        console.error(
+        console.log(
           "Request failed, response:",
           err.response?.data || err.message || err
         );
@@ -89,8 +89,11 @@ export const OrdersScreenOwner = ({ navigation, route }: Props) => {
           )}
 
           {orders.map((item: any) => (
-            <TouchableOpacity onPress={() => displayOrderDetails(item)}>
-              <View key={item.id}>
+            <TouchableOpacity
+              key={item.id}
+              onPress={() => displayOrderDetails(item)}
+            >
+              <View>
                 <OrderPreviewOwner order={item} />
               </View>
             </TouchableOpacity>

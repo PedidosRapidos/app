@@ -41,7 +41,7 @@ export const HomeScreenClient = ({ navigation }: Props) => {
 
       return fetchedShops;
     } catch (err: any) {
-      console.error(
+      console.log(
         "Request failed, response:",
         err.response?.data || err.message || err
       );

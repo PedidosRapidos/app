@@ -20,7 +20,7 @@ export const formatError = (objOrCode: { type: string }) => {
       return acc.replace(`{{${key}}}`, val);
     }, template);
   } catch (e) {
-    console.error("formaError failed, args", objOrCode);
+    console.log("formaError failed, args", objOrCode);
     throw e;
   }
 };

@@ -49,7 +49,7 @@ export const OrderPreviewOwner = ({ order }: Props<any>) => {
       });
       setIndex(index + 1);
     } catch (err: any) {
-      console.error(
+      console.log(
         "Request failed, response:",
         err.response?.data || err.message || err
       );
@@ -67,7 +67,7 @@ export const OrderPreviewOwner = ({ order }: Props<any>) => {
       });
       setIndex(5);
     } catch (err: any) {
-      console.error(
+      console.log(
         "Request failed, response:",
         err.response?.data || err.message || err
       );

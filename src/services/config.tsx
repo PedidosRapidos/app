@@ -9,8 +9,8 @@ const profiles = {
 };
 
 export const API_URL = //profiles.prod; // prod
-profiles.agus; // agus
-// profiles.paulo; // paulo
+  // profiles.agus; // agus
+  profiles.paulo; // paulo
 //profiles.fran;
 
 const client = axios.create({

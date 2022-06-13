@@ -79,7 +79,7 @@ export const SigninScreen = ({ route }: Props) => {
       await user.login(form);
     } catch (err: any) {
       setIsLoading(false);
-      console.error(
+      console.log(
         "Request failed, response:",
         err.response?.data || err.message || err
       );

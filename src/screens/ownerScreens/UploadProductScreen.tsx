@@ -26,7 +26,7 @@ export const UploadProductScreen = ({ navigation, route }: Props) => {
   const { sellerId, shopId } = route.params;
   const [_, setShop] = useShopDetail();
 
-  const { productName, description, price, onChange } = useForm({
+  const { productName, description, price, onChange, setForm } = useForm({
     productName: "",
     description: "",
     price: "",
@@ -82,10 +82,16 @@ export const UploadProductScreen = ({ navigation, route }: Props) => {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
+      setForm({
+        productName: "",
+        description: "",
+        price: "",
+      });
+      setSelectedImage(null);
       setShop((shop) => ({ ...shop, products: [product, ...shop.products] }));
       navigation.goBack();
     } catch (err: any) {
-      console.error(
+      console.log(
         "Request failed, response:",
         err.response?.data || err.message || err
       );
@@ -122,9 +128,7 @@ export const UploadProductScreen = ({ navigation, route }: Props) => {
           />
         </SectionContainer>
         <SectionContainer>
-          <View
-            style={styles.pickImage}
-          >
+          <View style={styles.pickImage}>
             <View>
               <SecondaryButton
                 text="Pick an image"
@@ -175,9 +179,9 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
   },
-  pickImage:{
+  pickImage: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent:"space-between"
-  }
+    justifyContent: "space-between",
+  },
 });

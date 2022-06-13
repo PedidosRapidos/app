@@ -40,7 +40,7 @@ export const HomeScreenOwner = ({ navigation, route }: Props) => {
         setScreenShops(fetchedShops);
         return fetchedShops;
       } catch (err: any) {
-        console.error(
+        console.log(
           "Request failed, response:",
           err.response?.data || err.message || err
         );

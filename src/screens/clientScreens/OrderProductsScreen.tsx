@@ -54,7 +54,7 @@ export const OrderProductsScreen = ({ navigation, route }: Props) => {
       );
       setShowPopUp(true);
     } catch (err: any) {
-      console.error(
+      console.log(
         "Request failed, response:",
         err.response?.data || err.message || err
       );

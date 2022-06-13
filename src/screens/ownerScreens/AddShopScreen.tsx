@@ -76,7 +76,7 @@ export const AddShopScreen = ({ navigation, route }: Props) => {
         shops: updatedShops
       }, merge:true})
     } catch (err: any) {
-      console.error(
+      console.log(
         "Request failed, response:",
         err.response?.data || err.message || err
       );

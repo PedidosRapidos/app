@@ -1,3 +1,4 @@
+import React from "react";
 import * as Notifications from "expo-notifications";
 import { NotificationContent } from "expo-notifications";
 import * as SecureStore from "expo-secure-store";
@@ -115,7 +116,7 @@ export const NotificationProvider = ({ children }: PropsWithChildren<any>) => {
       }
       return notificationToken;
     } catch (e) {
-      console.error(e);
+      console.log(e);
       return null;
     }
   };
